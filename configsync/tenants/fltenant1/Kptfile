@@ -1,0 +1,20 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: fedlearn
+upstream:
+  type: git
+  git:
+    repo: https://github.com/GoogleCloudPlatform/gke-third-party-apps-blueprint
+    directory: /tenant-config-pkg
+    ref: tidyup
+  updateStrategy: resource-merge
+info:
+  description: sample description
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/apply-setters:v0.2
+      configMap:
+        gcp-service-account: flsilo-fedlearn-apps-sa@someproject.iam.gserviceaccount.com
+        tenant-developer: someuser@example.com
+        tenant-name: fedlearn

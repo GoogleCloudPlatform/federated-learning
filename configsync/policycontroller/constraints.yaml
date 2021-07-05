@@ -1,0 +1,79 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adds selected constraints from the PolicyController libbrary
+# https://cloud.google.com/anthos-config-management/docs/reference/constraint-template-library
+
+---
+# Prevent Services of type NodePort
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sBlockNodePort
+metadata:
+  name: block-node-port
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Service"]
+
+---
+# Prevent the creation of known resources that expose workloads to external IPs.
+# By default, this also prevents Istio Gateway objects - but we don't include Gateway
+# in the match condition below, so Gateway can be created
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoExternalServices
+metadata:
+  name: no-external-services
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Service"]
+      - apiGroups: ["networking.k8s.io"]
+        kinds: ["Ingress"]
+
+---
+# In tenant namespaces, only allow images to be pulled from
+# a named set of repositories
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: known-repos-only
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaceSelector:
+      matchLabels:
+          tenant-ns: "true"
+  parameters:
+    # In prod, make these more specific
+    repos:
+      - "gcr.io/"
+      - "eu.gcr.io/"
+      - "us-docker.pkg.dev/"
+      - "eu-docker.pkg.dev/"
+
+---
+# ASM/Istio DestinationRules must enable TLS
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: DestinationRuleTLSEnabled
+metadata:
+  name: istio-destination-rule-tls-required
+spec:
+  match:
+    kinds:
+      - apiGroups: ["networking.istio.io"]
+        kinds: ["DestinationRule"]
