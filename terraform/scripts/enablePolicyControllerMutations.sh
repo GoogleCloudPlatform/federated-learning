@@ -15,16 +15,16 @@
 
 
 # fetch the current ConfigSync configuration for the supplied Hub membership
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
     echo "Please specify the Hub membership name."
     exit 1
 fi
-CONFIGSYNC_SPEC=$(gcloud alpha container hub config-management fetch-for-apply --membership $1)
+CONFIGSYNC_SPEC=$(gcloud alpha container hub config-management fetch-for-apply --membership "$1")
 # write a local temp file, setting the value of mutations flag
 tmpfile=$(mktemp)
-echo "${CONFIGSYNC_SPEC//mutationEnabled: false/mutationEnabled: true}" > $tmpfile
+echo "${CONFIGSYNC_SPEC//mutationEnabled: false/mutationEnabled: true}" > "$tmpfile"
 # apply the updated config
-gcloud alpha container hub config-management apply --membership $1 --config $tmpfile
+gcloud alpha container hub config-management apply --membership "$1" --config "$tmpfile"
 echo "Enabled Policy Controller mutations"
 # cleanup
-rm $tmpfile
+rm "$tmpfile"
