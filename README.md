@@ -1,6 +1,7 @@
 # Blueprint: Preparing a GKE cluster for apps distributed by a third party
 
-This repository contains a blueprint that creates and secures a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) cluster that is ready to host custom apps distributed by a third party. The blueprint uses [federated learning](https://wikipedia.org/wiki/Federated_learning) as an example use case for hosting custom third party apps inside your cluster. Specifically, the blueprint creates and configures a GKE cluster and related infrastructure such that the cluster is ready to participate in *cross-silo federated learning*.
+This repository contains a blueprint that creates and secures a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) cluster that is ready to host custom apps distributed by a third party.
+The blueprint uses [federated learning](https://wikipedia.org/wiki/Federated_learning) as an example use case for hosting custom third party apps inside your cluster. Specifically, the blueprint creates and configures a GKE cluster and related infrastructure such that the cluster is ready to participate in *cross-silo federated learning*.
 
 Federated learning is a machine learning approach that allows a loose federation of participants (such as a group of organisations) to collaboratively improve a shared model, without sharing any sensitive data. In cross-silo federated learning, each participant uses its own data and compute resources, called a *silo*.
 Eash silo trains a shared model using only its local data and compute resources. Training results are shared with the *federation owner*, who updates the shared model and redistributes to the silos for further training rounds, and the process repeats. This way, silos can collaborate to improve the model without sharing data.
@@ -15,6 +16,7 @@ The initial version of the blueprint creates infrastructure in Google Cloud. It 
 or on other public clouds.
 
 ## Out of scope
+
 This blueprint is focussed on creating and configuring GKE clusters. The following items are out of scope for the blueprint:
 
 - Creation and orchestration of the federated learning workflows.
@@ -24,31 +26,34 @@ This blueprint is focussed on creating and configuring GKE clusters. The followi
 - Communication requirements between the cluster and the federation owner.
 
 ## Getting started
+
 To deploy this blueprint you need:
+
 - A Google Cloud project with billing enabled
 - Owner permissions on the project
 - It is expected that you deploy the blueprint using Cloud Shell.
 - You create the infastructure using Terraform. The blueprint uses a local [backend](https://www.terraform.io/docs/language/settings/backends/configuration.html). It is recommended to configure a remote backend for anything other than experimentation
 
 ## Understanding the repository structure
+
 This repository has the following key directories:
 
-* [terraform](terraform): contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
-
-* [configsync](configsync): contains the cluster-level resources and configurations that are applied to your GKE cluster.
-
-* [tenant-config-pkg](tenant-config-pkg): a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
-
+- [terraform](terraform): contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
+- [configsync](configsync): contains the cluster-level resources and configurations that are applied to your GKE cluster.
+- [tenant-config-pkg](tenant-config-pkg): a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
 
 ## Architecture
+
 The blueprint uses a [multi-tenant](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview) architecture.
 The federated learning workloads are treated as a tenant within the cluster. These tenant workloads are grouped in a dedicated namespace, and isolated on dedicated cluster nodes. This way, you can apply security controls and policies to the nodes and namespace that host the tenant workloads.
 
 ### Infrastructure
+
 The following diagram describes the infrastructure created by the blueprint
 ![alt_text](./assets/infra.png "Infrastructure overview")
 
 The infrastructure created by the blueprint includes:
+
 - A [VPC network](https://cloud.google.com/vpc/docs/vpc) and subnet.
 - A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept). The blueprint helps you create GKE clusters that implement recommended security settings, such as those described in the [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster). For example, the blueprint helps you:
   - Limit exposure of your cluster nodes and control plane to the internet by creating a private GKE cluster with [authorised networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
@@ -70,10 +75,12 @@ The infrastructure created by the blueprint includes:
   - A dedicated Service Account for use by tenant apps (via Workload Identity, discussed later)
 
 ### Applications
+
 The following diagram describes the apps and resources within the GKE cluster
 ![alt_text](./assets/apps.png "Cluster resources and applications")
 
 The cluster includes:
+
 - [Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview), which keeps cluster configuration in sync with config defined in a Git repository.
   - The config defined by the blueprint includes namespaces, service accounts, network policies, Policy Controller policies and Istio resources that are applied to the cluster.
   - See the [configsync](configsync) dir for the full set of resources applied to the cluster
@@ -82,7 +89,7 @@ The cluster includes:
     - Selected constraints [similar to PodSecurityPolicy](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security)
     - Selected constraints from the [template library](https://cloud.google.com/anthos-config-management/docs/reference/constraint-template-library), including:
       - Prevent creation of external services (Ingress, NodePort/LoadBalancer services)
-      - Allow pods to pull container images only from a named set of repos
+      - Allow pods to pull container images only from a named set of repositories
   - See the resources in the [configsync/policycontroller](configsync/policycontroller) directory for details of the constraints applied by this blueprint.
 - [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)(ASM) is powered by Istio and enables managed, observable, and secure communication across your services. The blueprint includes service mesh configuration that is applied to the cluster using Config Sync. The following points describe how this blueprint configures the service mesh.
   - The root istio namespace (istio-system) is configured with
@@ -96,38 +103,36 @@ The cluster includes:
   - Note that the mesh does not include an Ingress Gateway
   - See the [servicemesh](configsync/servicemesh) dir for the cluster-level mesh config
 
-
 The blueprint configures a dedicated namespace for tenant apps and resources:
-  - The tenant namespace is part of the service mesh. Pods in the namespace receive sidecar proxy containers. The namespace-level mesh resources include:
-    - Sidecar resource that allows egress only to known hosts (outboundTrafficPolicy: REGISTRY_ONLY)
-    - AuthorizationPolicy that defines the allowed communication paths within the namespace. The blueprint only allows requests that originate from within the same namespace. This
-    policy is added to the root policy in the istio-system namespace
-  - The tenant namespace has [network policies](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) to limit traffic to and from pods in the namespace. For example, the network policy:
-    - By default, denies all ingress and egress traffic to/from the pods. This acts as baseline 'deny all' rule,
-    - Allows traffic between pods in the namespace
-    - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server
-    - Allows egress to Google APIs (via Private Google Access)
-  - The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node-pool.
-    - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node
-    - The toleration and nodeAffinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
-  - The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.
-  - The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](configsync/tenants/fltenant1/rbac.yaml) that grants the role to an example user.
-    - For example, different teams might be responsible for managing apps within each tenant namespace
-    - Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
 
+- The tenant namespace is part of the service mesh. Pods in the namespace receive sidecar proxy containers. The namespace-level mesh resources include:
+  - Sidecar resource that allows egress only to known hosts (outboundTrafficPolicy: REGISTRY_ONLY)
+  - AuthorizationPolicy that defines the allowed communication paths within the namespace. The blueprint only allows requests that originate from within the same namespace. This
+  policy is added to the root policy in the istio-system namespace
+- The tenant namespace has [network policies](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) to limit traffic to and from pods in the namespace. For example, the network policy:
+  - By default, denies all ingress and egress traffic to/from the pods. This acts as baseline 'deny all' rule,
+  - Allows traffic between pods in the namespace
+  - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server
+  - Allows egress to Google APIs (via Private Google Access)
+- The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node-pool.
+  - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node
+  - The toleration and nodeAffinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
+- The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.
+- The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](configsync/tenants/fltenant1/rbac.yaml) that grants the role to an example user.
+  - For example, different teams might be responsible for managing apps within each tenant namespace
+  - Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
 
 ## Deploy the blueprint
+
 - Open [Cloud Shell](https://cloud.google.com/shell)
-
-- Clone this repo
-
+- Clone this repository
 - Change into the directory that contains the Terraform code
 
   ```cd [REPO]/terraform```
 
 - Set a Terraform environment variable for your project ID
 
-  ```
+  ```sh
   TF_VAR_project_id=[YOUR_PROJECT_ID]
   export TF_VAR_project_id
   ```
@@ -144,14 +149,16 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
   ```terraform apply terraform.out```
 
+## Test
 
-##  Test
 See [testing](testing) for some manual tests you can perform to verify setup
 
-
 ## Add another tenant
+
 Out-of-the-box the blueprint is configured with a single tenant called 'fltenant1'.
+
 Adding another tenant is a two-stage process:
+
 1. Create the project-level infra and resources for the tenant (node pool, service accounts, firewall rules...).
 You do this by updating the Terraform config and re-applying.
 1. Configure cluster-level resources for the tenant (namespace, network policies, service mesh policies...)
