@@ -1,29 +1,13 @@
 # Blueprint: Preparing a GKE cluster for apps distributed by a third party
 
 This repository contains a blueprint that creates and secures a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) cluster that is ready to host custom apps distributed by a third party.
-The blueprint uses [federated learning](https://wikipedia.org/wiki/Federated_learning) as an example use case for hosting custom third party apps inside your cluster. Specifically, the blueprint creates and configures a GKE cluster and related infrastructure such that the cluster is ready to participate in *cross-silo federated learning*.
 
-Federated learning is a machine learning approach that allows a loose federation of participants (such as a group of organisations) to collaboratively improve a shared model, without sharing any sensitive data. In cross-silo federated learning, each participant uses its own data and compute resources, called a *silo*.
-Eash silo trains a shared model using only its local data and compute resources. Training results are shared with the *federation owner*, who updates the shared model and redistributes to the silos for further training rounds, and the process repeats. This way, silos can collaborate to improve the model without sharing data.
-
-This blueprint suggests using a GKE cluster as the compute infrastructure for a silo. The cluster is designed to host containerised
-apps, distributed by the federation owner, that train the model against local data and manage interation between the silo and federation
-owner. As these apps are created by the federation owner, they need to be treated as untrusuted or semi-trusted workloads within
-the silo cluster. Therefore, the silo cluster is configured according to security best practices, and additional controls are put
-in place to isolate and constrain the trainer workloads. The blueprint uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise the configuration and security of the cluster.
+This blueprint suggests using a GKE cluster as the compute infrastructure to host containerized apps distributed by a third party.
+These apps are considered as untrusuted or semi-trusted workloads within the cluster. Therefore, the cluster is configured according to security best practices, and additional controls are put
+in place to isolate and constrain the workloads. The blueprint uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise the configuration and security of the cluster.
 
 The initial version of the blueprint creates infrastructure in Google Cloud. It can be extended to Anthos clusters running on premises
 or on other public clouds.
-
-## Out of scope
-
-This blueprint is focussed on creating and configuring GKE clusters. The following items are out of scope for the blueprint:
-
-- Creation and orchestration of the federated learning workflows.
-- Management of the federated learning consortium.
-- Preparation of local training data.
-- Deployment and management of the federated learning apps.
-- Communication requirements between the cluster and the federation owner.
 
 ## Getting started
 
@@ -45,7 +29,8 @@ This repository has the following key directories:
 ## Architecture
 
 The blueprint uses a [multi-tenant](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview) architecture.
-The federated learning workloads are treated as a tenant within the cluster. These tenant workloads are grouped in a dedicated namespace, and isolated on dedicated cluster nodes. This way, you can apply security controls and policies to the nodes and namespace that host the tenant workloads.
+The workloads provided by third parties are treated as a tenant within the cluster. These tenant workloads are grouped in a dedicated namespace, and isolated on dedicated cluster nodes.
+This way, you can apply security controls and policies to the nodes and namespace that host the tenant workloads.
 
 ### Infrastructure
 
