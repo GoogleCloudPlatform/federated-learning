@@ -9,6 +9,10 @@ resource "google_gke_hub_membership" "membership" {
     }
   }
   provider = google-beta
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 resource "google_gke_hub_feature" "feature" {
