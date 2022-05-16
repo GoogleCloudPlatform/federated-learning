@@ -44,6 +44,16 @@ variable "cluster_default_pool_max_nodes" {
   default     = 5
 }
 
+variable "cluster_gke_release_channel" {
+  default     = "REGULAR"
+  description = "Release channel of the GKE cluster"
+}
+
+variable "cluster_regional" {
+  default     = false
+  description = "Set to true to provision a regional GKE cluster"
+}
+
 variable "cluster_tenant_pool_machine_type" {
   description = "The machine type for a tenant node pool"
   type        = string
