@@ -19,6 +19,10 @@ resource "google_gke_hub_feature" "feature" {
   name     = "configmanagement"
   location = "global"
   provider = google-beta
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 resource "google_gke_hub_feature_membership" "feature_member" {

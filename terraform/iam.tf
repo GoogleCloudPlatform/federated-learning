@@ -4,6 +4,10 @@ resource "google_service_account" "tenant_nodepool_sa" {
   project      = var.project_id
   account_id   = each.value.tenant_nodepool_sa_name
   display_name = "Service account for ${each.key} node pool in cluster ${var.cluster_name}"
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 # Service Account used by apps in a tenant namespace
@@ -12,6 +16,10 @@ resource "google_service_account" "tenant_apps_sa" {
   project      = var.project_id
   account_id   = each.value.tenant_apps_sa_name
   display_name = "Service account for ${each.key} apps in cluster ${var.cluster_name}"
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 # default roles for the node SAs
@@ -36,6 +44,10 @@ module "project-iam-bindings" {
       format("serviceAccount:%s", each.value.email)
     ]
   }
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 # enable the tenant apps service accounts for Workload Identity
