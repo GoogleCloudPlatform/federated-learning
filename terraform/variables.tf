@@ -103,12 +103,7 @@ variable "acm_create_ssh_key" {
   default     = false
 }
 
-variable "asm_version" {
-  description = "ASM version"
-  default     = "1.10"
-}
-
-variable "asm_revision_label" {
-  description = "ASM revision label"
-  default     = "asm-110"
+variable "asm_release_channel" {
+  description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
+  default     = "regular"
 }
