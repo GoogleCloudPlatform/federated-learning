@@ -16,8 +16,8 @@ module "gke" {
 
   project_id        = var.project_id
   name              = var.cluster_name
-  release_channel   = "REGULAR"
-  regional          = false
+  release_channel   = var.cluster_gke_release_channel
+  regional          = var.cluster_regional
   region            = var.region
   zones             = var.zones
   network           = google_compute_network.vpc.name

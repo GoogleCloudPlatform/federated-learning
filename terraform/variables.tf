@@ -20,12 +20,12 @@ variable "cluster_name" {
 
 variable "tenant_names" {
   description = "Set of named tenants to be created in the cluster. Each tenant gets a dedicated nodepool, service accounts etc"
-  type = list
+  type        = list
 }
 
 variable "master_ipv4_cidr_block" {
   description = "The IP range in CIDR notation to use for the hosted master network"
-  default = "10.0.0.0/28"
+  default     = "10.0.0.0/28"
 }
 
 variable "cluster_default_pool_machine_type" {
@@ -42,6 +42,16 @@ variable "cluster_default_pool_min_nodes" {
 variable "cluster_default_pool_max_nodes" {
   description = "The min number of nodes in the default node pool"
   default     = 5
+}
+
+variable "cluster_gke_release_channel" {
+  default     = "REGULAR"
+  description = "Release channel of the GKE cluster"
+}
+
+variable "cluster_regional" {
+  default     = false
+  description = "Set to true to provision a regional GKE cluster"
 }
 
 variable "cluster_tenant_pool_machine_type" {
@@ -68,7 +78,7 @@ variable "cluster_secrets_keyname" {
 
 variable "acm_version" {
   description = "ACM version"
-  default = "1.9.0"
+  default     = "1.9.0"
 }
 
 variable "acm_repo_location" {
@@ -95,10 +105,10 @@ variable "acm_create_ssh_key" {
 
 variable "asm_version" {
   description = "ASM version"
-  default = "1.10"
+  default     = "1.10"
 }
 
 variable "asm_revision_label" {
   description = "ASM revision label"
-  default = "asm-110"
+  default     = "asm-110"
 }
