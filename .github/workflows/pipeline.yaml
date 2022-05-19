@@ -1,10 +1,11 @@
+---
 name: CI
 
 # Controls when the workflow will run
 on: # yamllint disable-line rule:truthy
   # Triggers the workflow on pull request events but only for the main branch
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push: null
 
   # Allows you to run this workflow manually from the Actions tab
@@ -25,12 +26,12 @@ jobs:
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_JSCPD_ALL_CODEBASE: true
+          VALIDATE_NATURAL_LANGUAGE: false
 
   ci:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
       - name: Setup Terraform
@@ -53,3 +54,4 @@ jobs:
         working-directory: terraform
         run: terraform plan -no-color
         continue-on-error: true
+...

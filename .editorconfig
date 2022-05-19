@@ -20,7 +20,7 @@ trim_trailing_whitespace = true
 spaces_around_operators = true
 spaces_around_brackets = false
 
-[*.{hcl.tpl,json,lock.hcl,sh,tf,tfvars,yml,yaml,yaml.jinja}]
+[*.{hcl.tpl,json,lock.hcl,md,sh,tf,tfvars,yml,yaml,yaml.jinja},Kptfile]
 indent_size = 2
 
 # Don't try to format binary files
