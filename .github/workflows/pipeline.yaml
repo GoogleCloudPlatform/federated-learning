@@ -1,0 +1,43 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pull request events but only for the main branch
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # All the following steps describes ci actions
+  ci:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      
+      # Initialize modules from Terraform
+      - name: Terraform Init
+        id: init
+        working-directory: terraform
+        run: terraform init
+
+      # Run basic linter on Terraform scripts
+      - name: Terraform Init
+        id: init
+        working-directory: terraform
+        run: terraform init
+
+      # Generate the Terraform plan
+      - name: Terraform Plan
+        id: plan
+        working-directory: terraform
+        run: terraform plan -no-color
+        continue-on-error: true
