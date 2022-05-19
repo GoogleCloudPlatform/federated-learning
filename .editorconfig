@@ -1,5 +1,5 @@
 # EditorConfig: http://EditorConfig.org
-root = false
+root = true
 
 # Unix-style newlines at the bottom of every file
 [*]

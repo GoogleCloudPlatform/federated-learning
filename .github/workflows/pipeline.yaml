@@ -25,9 +25,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_JSCPD_ALL_CODEBASE: true
+          # Those linters aren't reliable
+          VALIDATE_KUBERNETES_KUBEVAL: true
           VALIDATE_NATURAL_LANGUAGE: false
-
+          # We don't need to check for duplicates
+          VALIDATE_JSCPD: false
   ci:
     runs-on: ubuntu-latest
 
