@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # fetch the current ConfigSync configuration for the supplied Hub membership
 if [ -z "$1" ]; then
   echo "Please specify the Hub membership name."

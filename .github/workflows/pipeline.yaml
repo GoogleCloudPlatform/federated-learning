@@ -19,14 +19,13 @@ jobs:
       - name: Super-Linter
         uses: github/super-linter@v4.9.2
         env:
-          ANSIBLE_DIRECTORY: "/docker/ansible/etc/ansible"
           DISABLE_ERRORS: false
           ERROR_ON_MISSING_EXEC_BIT: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KUBERNETES_KUBEVAL_OPTIONS: "--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
           # Those linters aren't reliable
-          VALIDATE_KUBERNETES_KUBEVAL: false
           VALIDATE_NATURAL_LANGUAGE: false
           # We don't need to check for duplicates
           VALIDATE_JSCPD: false
