@@ -31,9 +31,9 @@ jobs:
 
       # Run basic linter on Terraform scripts
       - name: Terraform Lint
-        id: validate
+        id: lint
         working-directory: terraform
-        run: terraform init
+        run: terraform validate
 
       # Generate the Terraform plan
       - name: Terraform Plan
