@@ -26,7 +26,7 @@ jobs:
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
           # Those linters aren't reliable
-          VALIDATE_KUBERNETES_KUBEVAL: true
+          VALIDATE_KUBERNETES_KUBEVAL: false
           VALIDATE_NATURAL_LANGUAGE: false
           # We don't need to check for duplicates
           VALIDATE_JSCPD: false
