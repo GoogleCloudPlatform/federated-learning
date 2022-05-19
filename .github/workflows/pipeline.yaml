@@ -30,8 +30,8 @@ jobs:
         run: terraform init
 
       # Run basic linter on Terraform scripts
-      - name: Terraform Init
-        id: init
+      - name: Terraform Lint
+        id: validate
         working-directory: terraform
         run: terraform init
 
