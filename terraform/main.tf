@@ -12,7 +12,7 @@ module "gke" {
   #  - Dataplane V2 (which automatically enables network policy)
   #  - secrets encryption
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "18.0.0"
+  version = "21.0.0"
 
   project_id        = var.project_id
   name              = var.cluster_name
@@ -126,4 +126,12 @@ locals {
 
 data "google_project" "project" {
   project_id = var.project_id
+}
+
+data "google_client_config" "default" {}
+
+provider "kubernetes" {
+  host                   = "https://${module.gke.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
