@@ -24,17 +24,17 @@ spec:
   gateways:
     - mesh
   http:
-  - match:
-    - gateways:
-        - mesh
-      port: 80
-    route:
-      - destination:
-          host: istio-egressgateway.istio-system.svc.cluster.local
-          subset: target-egress-gateway-mTLS
-          port:
-            number: 80
-        weight: 100
+    - match:
+        - gateways:
+            - mesh
+          port: 80
+      route:
+        - destination:
+            host: istio-egressgateway.istio-system.svc.cluster.local
+            subset: target-egress-gateway-mTLS
+            port:
+              number: 80
+          weight: 100
 ...
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -48,16 +48,16 @@ spec:
   gateways:
     - istio-system/egress-gateway
   http:
-  - match:
-    - gateways:
-      - istio-system/egress-gateway
-      port: 80
-    route:
-      - destination:
-          host: example.com
-          port:
-            number: 80
-        weight: 100
+    - match:
+        - gateways:
+            - istio-system/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: example.com
+            port:
+              number: 80
+          weight: 100
 ...
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -71,14 +71,14 @@ spec:
   gateways:
     - istio-system/egress-gateway
   http:
-  - match:
-    - gateways:
-        - istio-system/egress-gateway
-      port: 80
-    route:
-      - destination:
-          host: httpbin.org
-          port:
-            number: 80
-        weight: 100
+    - match:
+        - gateways:
+            - istio-system/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: httpbin.org
+            port:
+              number: 80
+          weight: 100
 ...

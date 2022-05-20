@@ -32,10 +32,10 @@ spec:
     assign:
       value:
         - matchExpressions:
-          - key: "tenant"
-            operator: In
-            values:
-              - "fltenant1" # kpt-set: ${tenant-name}
+            - key: "tenant"
+              operator: In
+              values:
+                - "fltenant1" # kpt-set: ${tenant-name}
 ...
 ---
 # Adds a toleration to all pods in a specific namespace

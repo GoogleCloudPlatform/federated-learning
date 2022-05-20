@@ -20,7 +20,7 @@ metadata: # kpt-merge: ns/allow-within-namespace
 spec:
   rules:
     - from:
-      - source:
-          namespaces:
-            - "fltenant1" # kpt-set: ${tenant-name}
+        - source:
+            namespaces:
+              - "fltenant1" # kpt-set: ${tenant-name}
 ...

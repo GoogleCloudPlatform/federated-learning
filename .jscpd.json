@@ -1,0 +1,10 @@
+{
+  "threshold": 0,
+  "reporters": [
+    "consoleFull"
+  ],
+  "ignore": [
+    "**/tenants/**"
+  ],
+  "absolute": true
+}

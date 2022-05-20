@@ -34,8 +34,8 @@ metadata:
 spec:
   rules:
     - to:
-      - operation:
-          hosts:
-            - 'example.com'
-            - 'httpbin.org'
+        - operation:
+            hosts:
+              - 'example.com'
+              - 'httpbin.org'
 ...

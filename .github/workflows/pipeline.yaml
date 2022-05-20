@@ -25,10 +25,8 @@ jobs:
           KUBERNETES_KUBEVAL_OPTIONS: "--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-          # Those linters aren't reliable
+          VALIDATE_JSCPD_ALL_CODEBASE: true
           VALIDATE_NATURAL_LANGUAGE: false
-          # We don't need to check for duplicates
-          VALIDATE_JSCPD: false
   ci:
     runs-on: ubuntu-latest
 

@@ -6,6 +6,8 @@ locale: "en_US.UTF-8"
 rules:
   colons:
     max-spaces-after: 1
+  comments:
+    min-spaces-from-content: 1
   comments-indentation:
     level: error
   document-end:
@@ -13,8 +15,6 @@ rules:
   document-start:
     level: error
   empty-values: enable
-  indentation:
-    spaces: 2
   line-length:
     allow-non-breakable-inline-mappings: true
     max: 250
