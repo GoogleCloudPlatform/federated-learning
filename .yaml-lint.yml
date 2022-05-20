@@ -13,6 +13,8 @@ rules:
   document-start:
     level: error
   empty-values: enable
+  indentation:
+    spaces: 2
   line-length:
     allow-non-breakable-inline-mappings: true
     max: 250

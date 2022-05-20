@@ -23,11 +23,11 @@ spaces_around_brackets = false
 [*.{hcl.tpl,json,lock.hcl,md,sh,tf,tfvars,yml,yaml}]
 indent_size = 2
 
-[{Kptfile}]
+[Kptfile]
 indent_size = 2
 
-[{LICENSE}]
-indent_size = 3
+[LICENSE]
+indent_size = unset
 
 # Don't try to format binary files
 [*.tfvars.enc]
