@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -20,3 +20,4 @@ metadata:
     tenant-ns: "true"
     # version must match the ASM control plane revision
     istio.io/rev: asm-110 # kpt-set: ${istio-revision}
+...

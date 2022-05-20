@@ -26,6 +26,9 @@ indent_size = 2
 [{Kptfile}]
 indent_size = 2
 
+[{LICENSE}]
+indent_size = 3
+
 # Don't try to format binary files
 [*.tfvars.enc]
 charset = unset

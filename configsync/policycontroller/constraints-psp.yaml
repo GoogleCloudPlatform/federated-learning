@@ -28,7 +28,7 @@ spec:
       - apiGroups: [""]
         kinds: ["Pod"]
     excludedNamespaces: ["kube-system"]
-
+...
 ---
 # prevent hostPath volumes
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -44,7 +44,7 @@ spec:
     excludedNamespaces: ["kube-system"]
   parameters:
     allowedHostPaths: []
-
+...
 ---
 # prevent privilege escalation
 # Applied in tenant namespaces only
@@ -60,8 +60,8 @@ spec:
         kinds: ["Pod"]
     namespaceSelector:
       matchLabels:
-          tenant-ns: "true"
-
+        tenant-ns: "true"
+...
 ---
 # Require read only filesystem
 # Applied in tenant namespaces only
@@ -77,4 +77,5 @@ spec:
         kinds: ["Pod"]
     namespaceSelector:
       matchLabels:
-          tenant-ns: "true"
+        tenant-ns: "true"
+...

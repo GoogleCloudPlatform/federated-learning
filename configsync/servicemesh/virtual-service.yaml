@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -19,23 +19,23 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - example.com
-  - httpbin.org
+    - example.com
+    - httpbin.org
   gateways:
-  - mesh
+    - mesh
   http:
   - match:
     - gateways:
-      - mesh
+        - mesh
       port: 80
     route:
-    - destination:
-        host: istio-egressgateway.istio-system.svc.cluster.local
-        subset: target-egress-gateway-mTLS
-        port:
-          number: 80
-      weight: 100
-
+      - destination:
+          host: istio-egressgateway.istio-system.svc.cluster.local
+          subset: target-egress-gateway-mTLS
+          port:
+            number: 80
+        weight: 100
+...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -44,21 +44,21 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - example.com
+    - example.com
   gateways:
-  - istio-system/egress-gateway
+    - istio-system/egress-gateway
   http:
   - match:
     - gateways:
       - istio-system/egress-gateway
       port: 80
     route:
-    - destination:
-        host: example.com
-        port:
-          number: 80
-      weight: 100
-
+      - destination:
+          host: example.com
+          port:
+            number: 80
+        weight: 100
+...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -67,17 +67,18 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - httpbin.org
+    - httpbin.org
   gateways:
-  - istio-system/egress-gateway
+    - istio-system/egress-gateway
   http:
   - match:
     - gateways:
-      - istio-system/egress-gateway
+        - istio-system/egress-gateway
       port: 80
     route:
-    - destination:
-        host: httpbin.org
-        port:
-          number: 80
-      weight: 100
+      - destination:
+          host: httpbin.org
+          port:
+            number: 80
+        weight: 100
+...

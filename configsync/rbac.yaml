@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 # ClusterRole that defines a reasonable set of permissions for a developer persona.
 # It is expected that this ClusterRole is used by RoleBindings
 # such that the user has permissions for a particular namespace.
@@ -20,9 +20,10 @@ kind: ClusterRole
 metadata:
   name: developer-core
 rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["pods", "services", "persistentvolumes", "persistentvolumeclaims", "secrets", "configmaps"]
-  verbs: ["*"]
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["*"]
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["pods", "services", "persistentvolumes", "persistentvolumeclaims", "secrets", "configmaps"]
+    verbs: ["*"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["*"]
+...

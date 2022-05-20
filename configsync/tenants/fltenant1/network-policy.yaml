@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata: # kpt-merge: ns/default-deny-all
@@ -20,8 +20,9 @@ metadata: # kpt-merge: ns/default-deny-all
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
+...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -31,18 +32,19 @@ metadata: # kpt-merge: allow-within-own-namespace
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: fltenant1 # kpt-set: ${tenant-name}
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: fltenant1 # kpt-set: ${tenant-name}
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: fltenant1 # kpt-set: ${tenant-name}
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: fltenant1 # kpt-set: ${tenant-name}
+...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -52,22 +54,23 @@ metadata: # kpt-merge: ns/allow-egress-metadata-server
 spec:
   podSelector: {}
   policyTypes:
-  - Egress
+    - Egress
   egress:
-  - to:
-    - ipBlock: # For GKE dataplane v2
-        cidr: 169.254.169.254/32
-    ports:
-    - protocol: TCP
-      port: 80
-  - to:
-    - ipBlock:
-        cidr: 169.254.169.252/32
-    - ipBlock:
-        cidr: 127.0.0.1/32
-    ports:
-    - protocol: TCP
-      port: 988
+    - to:
+      - ipBlock: # For GKE dataplane v2
+          cidr: 169.254.169.254/32
+      ports:
+        - protocol: TCP
+          port: 80
+    - to:
+      - ipBlock:
+          cidr: 169.254.169.252/32
+      - ipBlock:
+          cidr: 127.0.0.1/32
+      ports:
+        - protocol: TCP
+          port: 988
+...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -77,12 +80,13 @@ metadata: # kpt-merge: ns/allow-egress-istio-system
 spec:
   podSelector: {}
   policyTypes:
-  - Egress
+    - Egress
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: istio-system
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: istio-system
+...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -92,17 +96,18 @@ metadata: # kpt-merge: ns/allow-egress-kube-system-dns
 spec:
   podSelector: {}
   policyTypes:
-  - Egress
+    - Egress
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-    ports:
-    - port: 53
-      protocol: UDP
-    - port: 53
-      protocol: TCP
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -115,8 +120,9 @@ spec:
     - Egress
   egress:
     - to:
-        - ipBlock:
-            cidr: 199.36.153.8/30
+      - ipBlock:
+          cidr: 199.36.153.8/30
+...
 ---
 # TESTING only! Remove this policy for prod.
 # Allow ingress from pods labelled 'app: test' in 'test' namespace
@@ -128,12 +134,13 @@ metadata: # kpt-merge: fltenant1/testing-allow-ingress-from-test-app
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: test
-      namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: test
+    - from:
+      - podSelector:
+          matchLabels:
+            app: test
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: test
+...

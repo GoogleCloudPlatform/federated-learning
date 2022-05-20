@@ -14,7 +14,7 @@
 
 # PolicyController mutations.
 # https://cloud.google.com/anthos-config-management/docs/how-to/mutation#writing_mutators
-
+---
 # Adds a node affinity to all pods in a specific namespace
 apiVersion: mutations.gatekeeper.sh/v1alpha1
 kind: Assign
@@ -22,12 +22,12 @@ metadata:
   name: mutator-add-nodeaffinity  # kpt-set: mutator-add-nodeaffinity-${tenant-name}
 spec:
   applyTo:
-  - groups: [""]
-    kinds: ["Pod"]
-    versions: ["v1"]
+    - groups: [""]
+      kinds: ["Pod"]
+      versions: ["v1"]
   match:
     namespaces:
-    - "ns"  # kpt-set: ${tenant-name}
+      - "ns"  # kpt-set: ${tenant-name}
   location: "spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms"
   parameters:
     assign:
@@ -36,8 +36,8 @@ spec:
           - key: "tenant"
             operator: In
             values:
-            - "ns"  # kpt-set: ${tenant-name}
-
+              - "ns"  # kpt-set: ${tenant-name}
+...
 ---
 # Adds a toleration to all pods in a specific namespace
 apiVersion: mutations.gatekeeper.sh/v1alpha1
@@ -46,21 +46,21 @@ metadata:
   name: mutator-add-toleration # kpt-set: mutator-add-toleration-${tenant-name}
 spec:
   applyTo:
-  - groups: [""]
-    kinds: ["Pod"]
-    versions: ["v1"]
+    - groups: [""]
+      kinds: ["Pod"]
+      versions: ["v1"]
   match:
     namespaces:
-    - "ns"  # kpt-set: ${tenant-name}
+      - "ns"  # kpt-set: ${tenant-name}
   location: "spec.tolerations"
   parameters:
     assign:
       value:
-      - key: "tenant"
-        operator: "Equal"
-        value: "ns"  # kpt-set: ${tenant-name}
-        effect: "NoExecute"
-
+        - key: "tenant"
+          operator: "Equal"
+          value: "ns"  # kpt-set: ${tenant-name}
+          effect: "NoExecute"
+...
 ---
 # Specifies that the pods in a namespace should use nodes with gVisor
 apiVersion: mutations.gatekeeper.sh/v1alpha1
@@ -69,13 +69,14 @@ metadata: # kpt-merge: /mutator-add-gvisor
   name: mutator-add-gvisor # kpt-set: mutator-add-gvisor-${tenant-name}
 spec:
   applyTo:
-  - groups: ["apps"]
-    kinds: ["Deployment"]
-    versions: ["v1"]
+    - groups: ["apps"]
+      kinds: ["Deployment"]
+      versions: ["v1"]
   match:
     namespaces:
-    - "ns" # kpt-set: ${tenant-name}
+      - "ns" # kpt-set: ${tenant-name}
   location: "spec.template.spec.runtimeClassName"
   parameters:
     assign:
       value: "gvisor"
+...

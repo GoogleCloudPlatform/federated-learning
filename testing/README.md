@@ -241,7 +241,7 @@ The mesh is configured to only allow requests to known services (via the REGISTR
     -- curl -i example.com
   ```
 
-- You see a successful 200 reponse, and the HTML of the page. There is a ServiceEntry for example.com, so the mesh forwards the request
+- You see a successful 200 response, and the HTML of the page. There is a ServiceEntry for example.com, so the mesh forwards the request
 
 ## Verify interaction with Google APIs
 
@@ -338,8 +338,8 @@ The tenant config is automatically applied to the cluster using Config Sync.
 cd configsync/tenants
 ```
 
-- Instantiate the tenant-config-pkg package into a new tenant2 dir. You reference the package from your local repo
-(NOTE in most cases the package would be defined in a remote repo)
+- Instantiate the tenant-config-pkg package into a new tenant2 dir. You reference the package from your local repository
+(NOTE in most cases the package would be defined in a remote repository)
 
 ```sh
 REPO=$(git rev-parse --show-toplevel)
@@ -355,7 +355,7 @@ kpt pkg get $REPO.git/tenant-config-pkg tenant2
     tenant-developer=someuser@email
   ```
 
-- Commit and push the changes to your git repo
+- Commit and push the changes to your git repository
 
 ```sh
 git commit -m "added tenant2"

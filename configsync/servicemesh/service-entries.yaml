@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -19,19 +19,19 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - metadata.google.internal
+    - metadata.google.internal
   addresses:
-  - 169.254.169.254
+    - 169.254.169.254
   ports:
-  - number: 80
-    name: http
-    protocol: HTTP
-  - number: 443
-    name: tls
-    protocol: TLS
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: tls
+      protocol: TLS
   resolution: DNS
   location: MESH_EXTERNAL
-
+...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
@@ -40,16 +40,16 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - "*.googleapis.com"
+    - "*.googleapis.com"
   ports:
-  - number: 80
-    name: http
-    protocol: HTTP
-  - number: 443
-    name: tls
-    protocol: TLS
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: tls
+      protocol: TLS
   location: MESH_EXTERNAL
-
+...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
@@ -58,14 +58,15 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - example.com
-  - httpbin.org
+    - example.com
+    - httpbin.org
   ports:
-  - number: 80
-    name: http
-    protocol: HTTP
-  - number: 443
-    name: tls
-    protocol: TLS
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: tls
+      protocol: TLS
   resolution: DNS
   location: MESH_EXTERNAL
+...

@@ -26,7 +26,7 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Service"]
-
+...
 ---
 # Prevent the creation of known resources that expose workloads to external IPs.
 # By default, this also prevents Istio Gateway objects - but we don't include Gateway
@@ -42,7 +42,7 @@ spec:
         kinds: ["Service"]
       - apiGroups: ["networking.k8s.io"]
         kinds: ["Ingress"]
-
+...
 ---
 # In tenant namespaces, only allow images to be pulled from
 # a named set of repositories
@@ -57,7 +57,7 @@ spec:
         kinds: ["Pod"]
     namespaceSelector:
       matchLabels:
-          tenant-ns: "true"
+        tenant-ns: "true"
   parameters:
     # In prod, make these more specific
     repos:
@@ -65,7 +65,7 @@ spec:
       - "eu.gcr.io/"
       - "us-docker.pkg.dev/"
       - "eu-docker.pkg.dev/"
-
+...
 ---
 # ASM/Istio DestinationRules must enable TLS
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -77,3 +77,4 @@ spec:
     kinds:
       - apiGroups: ["networking.istio.io"]
         kinds: ["DestinationRule"]
+...

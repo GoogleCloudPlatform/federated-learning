@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 # By default, allow nothing (equivalent to deny all).
 # Applies to all pods in the mesh (as in the root namespace, istio-system)
 # Allowed interactions between services must be explicitly defined
@@ -22,7 +22,7 @@ metadata:
   namespace: istio-system
 spec:
   {}
-
+...
 ---
 # Allow requests to this set of (external) hosts.
 # No 'from' condition, so requests can originate from anywhere in the mesh
@@ -33,8 +33,9 @@ metadata:
   namespace: istio-system
 spec:
   rules:
-  - to:
-    - operation:
-        hosts:
-        - 'example.com'
-        - 'httpbin.org'
+    - to:
+      - operation:
+          hosts:
+            - 'example.com'
+            - 'httpbin.org'
+...
