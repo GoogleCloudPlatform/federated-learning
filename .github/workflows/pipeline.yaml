@@ -36,7 +36,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      # Initialize Terraform modules
       - name: Terraform Init
         id: init
         working-directory: terraform
@@ -46,11 +45,4 @@ jobs:
         id: lint
         working-directory: terraform
         run: terraform validate
-
-      # Generate the Terraform plan
-      - name: Terraform Plan
-        id: plan
-        working-directory: terraform
-        run: terraform plan -no-color
-        continue-on-error: true
 ...
