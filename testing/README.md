@@ -27,7 +27,7 @@ This guide provides step-by-step instructions to manually test and verify cluste
 - The tenant namespace is enabled for Istio injection. Verify the pods have an istio-proxy container
 `kubectl -n $TENANT get pods -l app=hello -o jsonpath='{.items..spec.containers[*].name}'`
 
-- Verify that the tenant pods are all hosted on nodes in the dedicated tenant node-pool
+- Verify that the tenant pods are all hosted on nodes in the dedicated tenant node pool
 `kubectl get pods -o wide -n $TENANT`
 
 ## Verify firewall rules
@@ -51,11 +51,11 @@ to display when listing firewall rules
 
 ### Test firewall rules
 
-- Print the nodes in the cluster. The node names include the name of the node-pool. Note that the nodes
+- Print the nodes in the cluster. The node names include the name of the node pool. Note that the nodes
 do not have External IP addresses as this is a private cluster.
 `kubectl get nodes -o wide`
 
-- GKE nodes receieve a label with the node-pool name. Print the nodes in the dedicated tenant node-pool.
+- GKE nodes receieve a label with the node pool name. Print the nodes in the dedicated tenant node pool.
 `kubectl get nodes -l cloud.google.com/gke-nodepool=$TENANT-pool`
 
 - Show the Service Account attached to the cluster nodes. The tenant pool nodes use a dedicated Service Account
@@ -67,7 +67,7 @@ do not have External IP addresses as this is a private cluster.
 - SSH into one of the tenant nodes. You tunnel through IAP as the nodes do not have external IP addresses.
 `gcloud compute ssh --tunnel-through-iap $(kubectl get nodes -l cloud.google.com/gke-nodepool=$TENANT-pool -o jsonpath='{.items[0].metadata.name}')`
 
-- Make a request to a website. The request times out.
+- Make a request to a site. The request times out.
 `curl -i -m 10 example.com`
 
 - Exit the ssh session on the cluster node
@@ -83,7 +83,7 @@ do not have External IP addresses as this is a private cluster.
 - deploy test pod to the default namespace. You use this test pod to perform requests against the service in the tenant namespace.
 `kubectl apply -f ./testing/test-pod.yaml -n default`
 
-- Verify that the pods are hosted on nodes in the main node-pool (not in the tenant node-pool)
+- Verify that the pods are hosted on nodes in the main node pool (not in the tenant node pool)
 `kubectl -n default get pods -o wide`
 
 - wait for the pod to be ready
@@ -120,7 +120,7 @@ Run some tests to verify auth behaviour of your Anthos Service Mesh
 - deploy test pod to the test namespace. You use this test pod to perform requests against the service in the tenant namespace.
 `kubectl apply -f ./testing/test-pod.yaml -n test`
 
-- Verify that the pods are hosted on nodes in the main node-pool (not in the tenant node-pool)
+- Verify that the pods are hosted on nodes in the main node pool (not in the tenant node pool)
 `kubectl -n test get pods -o wide`
 
 - wait for the pod to be ready
@@ -241,7 +241,7 @@ The mesh is configured to only allow requests to known services (via the REGISTR
     -- curl -i example.com
   ```
 
-- You see a successful 200 reponse, and the HTML of the page. There is a ServiceEntry for example.com, so the mesh forwards the request
+- You see a successful 200 response, and the HTML of the page. There is a ServiceEntry for example.com, so the mesh forwards the request
 
 ## Verify interaction with Google APIs
 
@@ -338,8 +338,8 @@ The tenant config is automatically applied to the cluster using Config Sync.
 cd configsync/tenants
 ```
 
-- Instantiate the tenant-config-pkg package into a new tenant2 dir. You reference the package from your local repo
-(NOTE in most cases the package would be defined in a remote repo)
+- Instantiate the tenant-config-pkg package into a new tenant2 dir. You reference the package from your local repository
+(NOTE in most cases the package would be defined in a remote repository)
 
 ```sh
 REPO=$(git rev-parse --show-toplevel)
@@ -355,7 +355,7 @@ kpt pkg get $REPO.git/tenant-config-pkg tenant2
     tenant-developer=someuser@email
   ```
 
-- Commit and push the changes to your git repo
+- Commit and push the changes to your git repository
 
 ```sh
 git commit -m "added tenant2"

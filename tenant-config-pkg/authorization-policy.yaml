@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
@@ -19,7 +19,8 @@ metadata:
   namespace: ns # kpt-set: ${tenant-name}
 spec:
   rules:
-  - from:
-    - source:
-        namespaces: 
-        - "ns" # kpt-set: ${tenant-name}
+    - from:
+        - source:
+            namespaces:
+              - "ns" # kpt-set: ${tenant-name}
+...

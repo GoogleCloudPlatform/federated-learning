@@ -46,17 +46,17 @@ The infrastructure created by the blueprint includes:
   - Harden isolation of tenant workloads using [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
   - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
-- Two GKE [node-pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
+- Two GKE [node pools](<https://cloud.google.com/kubernetes-engine/docs/concepts/node> pools).
   - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads
   are scheduled onto the tenant nodes
   - Other cluster resources are hosted in the default node pool.
 - [VPC Firewall rules](https://cloud.google.com/vpc/docs/firewalls)
   - Baseline rules that apply to all nodes in the cluster.
-  - Additional rules that apply only to the nodes in the tenant node-pool (targeted using the node Service Account below). These firewall rules limit egress from the tenant nodes.
+  - Additional rules that apply only to the nodes in the tenant node pool (targeted using the node Service Account below). These firewall rules limit egress from the tenant nodes.
 - [Cloud NAT](https://cloud.google.com/nat/docs/overview) to allow egress to the internet
 - [Cloud DNS](https://cloud.google.com/dns/docs/overview) rules configured to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet
 - [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts) used by the cluster.
-  - A dedicated Service Account used by the nodes in the tenant node-pool
+  - A dedicated Service Account used by the nodes in the tenant node pool
   - A dedicated Service Account for use by tenant apps (via Workload Identity, discussed later)
 
 ### Applications
@@ -99,7 +99,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   - Allows traffic between pods in the namespace
   - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server
   - Allows egress to Google APIs (via Private Google Access)
-- The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node-pool.
+- The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node pool.
   - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node
   - The toleration and nodeAffinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
 - The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.

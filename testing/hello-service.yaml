@@ -20,11 +20,12 @@ metadata:
     app: hello
 spec:
   ports:
-  - port: 80
-    targetPort: 8080
-    name: http
+    - port: 80
+      targetPort: 8080
+      name: http
   selector:
     app: hello
+...
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,6 +42,7 @@ spec:
         app: hello
     spec:
       containers:
-      - name: hello
-        image: us-docker.pkg.dev/cloudrun/container/hello
-        imagePullPolicy: IfNotPresent
+        - name: hello
+          image: us-docker.pkg.dev/cloudrun/container/hello
+          imagePullPolicy: IfNotPresent
+...

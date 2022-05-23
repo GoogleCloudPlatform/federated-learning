@@ -29,7 +29,8 @@ spec:
         app: test
     spec:
       containers:
-      - name: test
-        image: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
-        command: ["/bin/sleep", "infinity"]
-        imagePullPolicy: IfNotPresent
+        - name: test
+          image: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+          command: ["/bin/sleep", "infinity"]
+          imagePullPolicy: IfNotPresent
+...

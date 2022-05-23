@@ -1,0 +1,48 @@
+---
+name: CI
+
+# Controls when the workflow will run
+on: # yamllint disable-line rule:truthy
+  # Triggers the workflow on pull request events but only for the main branch
+  pull_request:
+    branches: [main]
+  push: null
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch: null
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Super-Linter
+        uses: github/super-linter@v4.9.2
+        env:
+          DISABLE_ERRORS: false
+          ERROR_ON_MISSING_EXEC_BIT: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KUBERNETES_KUBEVAL_OPTIONS: "--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
+          LINTER_RULES_PATH: .
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_JSCPD_ALL_CODEBASE: true
+          VALIDATE_NATURAL_LANGUAGE: false
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        id: init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform validate
+        id: lint
+        working-directory: terraform
+        run: terraform validate
+...
