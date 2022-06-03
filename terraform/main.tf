@@ -12,7 +12,7 @@ module "gke" {
   #  - Dataplane V2 (which automatically enables network policy)
   #  - secrets encryption
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "21.0.0"
+  version = "21.1.0"
 
   project_id        = var.project_id
   name              = var.cluster_name
