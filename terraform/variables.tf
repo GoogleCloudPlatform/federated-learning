@@ -107,3 +107,8 @@ variable "asm_release_channel" {
   description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
   default     = "regular"
 }
+
+variable "asm_enable_mesh_feature" {
+  description = "Anthos Service Mesh feature. It is required to install the different ASM CRDs."
+  default = "true"
+}

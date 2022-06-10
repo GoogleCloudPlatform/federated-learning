@@ -6,4 +6,5 @@ module "asm" {
   cluster_location = module.gke.location
   cluster_name     = module.gke.name
   project_id       = var.project_id
+  enable_mesh_feature = var.asm_enable_mesh_feature
 }
