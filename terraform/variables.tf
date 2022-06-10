@@ -109,6 +109,7 @@ variable "asm_release_channel" {
 }
 
 variable "asm_enable_mesh_feature" {
-  description = "Anthos Service Mesh feature. It is required to install the different ASM CRDs."
-  default = "true"
+  description = "Set to true to enable Anthos Service Mesh feature. It is required to install the ASM CRDs."
+  type = bool
+  default = true
 }
