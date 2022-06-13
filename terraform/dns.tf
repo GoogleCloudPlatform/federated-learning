@@ -9,7 +9,7 @@ resource "google_dns_managed_zone" "private-google-apis" {
   name        = "private-google-apis"
   dns_name    = "googleapis.com."
   description = "Private DNS zone for Google APIs"
-  visibility = "private"
+  visibility  = "private"
 
   private_visibility_config {
     networks {
@@ -40,7 +40,7 @@ resource "google_dns_managed_zone" "private-container-registry" {
   name        = "private-container-registry"
   dns_name    = "gcr.io."
   description = "Private DNS zone for Container Registry"
-  visibility = "private"
+  visibility  = "private"
 
   private_visibility_config {
     networks {
@@ -71,7 +71,7 @@ resource "google_dns_managed_zone" "private-artifact-registry" {
   name        = "private-artifact-registry"
   dns_name    = "pkg.dev."
   description = "Private DNS zone for Artifact Registry"
-  visibility = "private"
+  visibility  = "private"
 
   private_visibility_config {
     networks {

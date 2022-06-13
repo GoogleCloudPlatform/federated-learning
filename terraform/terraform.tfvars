@@ -17,4 +17,4 @@ acm_secret_type   = "none"
 acm_branch        = "main"
 acm_dir           = "configsync"
 
-project_id = "ferrarim-bp-gke-third-party"
+project_id = ""

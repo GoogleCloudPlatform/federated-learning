@@ -10,7 +10,7 @@ variable "region" {
 
 variable "zones" {
   description = "The zones for clusters"
-  type        = list
+  type        = list(any)
 }
 
 variable "cluster_name" {
@@ -20,7 +20,7 @@ variable "cluster_name" {
 
 variable "tenant_names" {
   description = "Set of named tenants to be created in the cluster. Each tenant gets a dedicated nodepool, service accounts etc"
-  type        = list
+  type        = list(any)
 }
 
 variable "master_ipv4_cidr_block" {
@@ -106,4 +106,10 @@ variable "acm_create_ssh_key" {
 variable "asm_release_channel" {
   description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
   default     = "regular"
+}
+
+variable "asm_enable_mesh_feature" {
+  description = "Set to true to enable Anthos Service Mesh feature. It is required to install the ASM CRDs."
+  type        = bool
+  default     = true
 }
