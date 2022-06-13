@@ -9,10 +9,10 @@ resource "google_compute_network" "vpc" {
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name          = "subnet-01"
-  ip_cidr_range = "10.2.0.0/16"
-  region        = var.region
-  network       = google_compute_network.vpc.id
+  name                     = "subnet-01"
+  ip_cidr_range            = "10.2.0.0/16"
+  region                   = var.region
+  network                  = google_compute_network.vpc.id
   private_ip_google_access = true
   secondary_ip_range {
     range_name    = "pods"

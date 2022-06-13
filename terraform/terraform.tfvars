@@ -12,9 +12,11 @@ zones = ["europe-west1-b"]
 # Anthos Config Management
 # Update with your own repo URL, if you created one
 # For simplicity, repo is assumed to be publicly accessible ('none' secret)
-acm_repo_location = "https://github.com/GoogleCloudPlatform/gke-third-party-apps-blueprint"
-acm_secret_type   = "none"
+acm_repo_location = "git@github.com:GoogleCloudPlatform/gke-third-party-apps-blueprint"
+acm_secret_type   = "ssh"
 acm_branch        = "main"
 acm_dir           = "configsync"
 
-project_id = "ferrarim-bp-gke-third-party"
+project_id = "fedlearn-352908"
+
+asm_release_channel = "rapid"
