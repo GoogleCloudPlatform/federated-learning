@@ -113,7 +113,3 @@ variable "asm_enable_mesh_feature" {
   type        = bool
   default     = true
 }
-
-variable "" {
-
-}
