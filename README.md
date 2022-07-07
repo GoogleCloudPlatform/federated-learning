@@ -18,8 +18,6 @@ To deploy this blueprint you need:
 - A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled
 - Owner permissions on the project
 
-It is expected that you deploy the blueprint using Cloud Shell.
-
 You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
 but we recommend to configure a remote backend for anything other than experimentation.
 
