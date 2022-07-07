@@ -1,22 +1,27 @@
 # Blueprint: Preparing a GKE cluster for apps distributed by a third party
 
 This repository contains a blueprint that creates and secures a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) cluster that is ready to host custom apps distributed by a third party.
+For more information about the architecture of this blueprint, refer to [Preparing a GKE cluster for third-party tenants](https://cloud.google.com/architecture/preparing-gke-cluster-apps-distributed-third-party).
 
 This blueprint suggests using a GKE cluster as the compute infrastructure to host containerized apps distributed by a third party.
 These apps are considered as untrusuted or semi-trusted workloads within the cluster. Therefore, the cluster is configured according to security best practices, and additional controls are put
 in place to isolate and constrain the workloads. The blueprint uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise the configuration and security of the cluster.
 
-The initial version of the blueprint creates infrastructure in Google Cloud. It can be extended to Anthos clusters running on premises
+This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
+you can extended the infrastructure to Anthos clusters running on premises
 or on other public clouds.
 
 ## Getting started
 
 To deploy this blueprint you need:
 
-- A Google Cloud project with billing enabled
+- A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled
 - Owner permissions on the project
-- It is expected that you deploy the blueprint using Cloud Shell.
-- You create the infastructure using Terraform. The blueprint uses a local [backend](https://www.terraform.io/docs/language/settings/backends/configuration.html). It is recommended to configure a remote backend for anything other than experimentation
+
+It is expected that you deploy the blueprint using Cloud Shell.
+
+You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
+but we recommend to configure a remote backend for anything other than experimentation.
 
 ## Understanding the repository structure
 
@@ -29,7 +34,8 @@ This repository has the following key directories:
 ## Architecture
 
 The blueprint uses a [multi-tenant](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview) architecture.
-The workloads provided by third parties are treated as a tenant within the cluster. These tenant workloads are grouped in a dedicated namespace, and isolated on dedicated cluster nodes.
+
+The workloads provided by third parties are treated as a tenant within the cluster. These tenant workloads are grouped in dedicated namespaces, and isolated on dedicated cluster nodes.
 This way, you can apply security controls and policies to the nodes and namespace that host the tenant workloads.
 
 ### Infrastructure
@@ -37,7 +43,7 @@ This way, you can apply security controls and policies to the nodes and namespac
 The following diagram describes the infrastructure created by the blueprint
 ![alt_text](./assets/infra.png "Infrastructure overview")
 
-The infrastructure created by the blueprint includes:
+The infrastructure provisioned by this blueprint includes:
 
 - A [VPC network](https://cloud.google.com/vpc/docs/vpc) and subnet.
 - A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept). The blueprint helps you create GKE clusters that implement recommended security settings, such as those described in the [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster). For example, the blueprint helps you:
@@ -49,7 +55,7 @@ The infrastructure created by the blueprint includes:
 - Two GKE [node pools](<https://cloud.google.com/kubernetes-engine/docs/concepts/node> pools).
   - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads
   are scheduled onto the tenant nodes
-  - Other cluster resources are hosted in the default node pool.
+  - Other cluster resources are hosted in the main node pool.
 - [VPC Firewall rules](https://cloud.google.com/vpc/docs/firewalls)
   - Baseline rules that apply to all nodes in the cluster.
   - Additional rules that apply only to the nodes in the tenant node pool (targeted using the node Service Account below). These firewall rules limit egress from the tenant nodes.
@@ -122,7 +128,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   export TF_VAR_project_id
   ```
 
-- Initialise Terraform
+- Initialize Terraform
 
   ```terraform init```
 
