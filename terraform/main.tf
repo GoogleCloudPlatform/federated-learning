@@ -14,6 +14,8 @@ module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
   version = "21.2.0"
 
+  authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
+
   project_id        = var.project_id
   name              = var.cluster_name
   release_channel   = var.cluster_gke_release_channel
