@@ -150,7 +150,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   terraform apply terraform.out
   ```
 
-   Note: this may take ~15 minutes to complete
+  Note: this may take ~15 minutes to complete
 
 ## Test
 
