@@ -52,7 +52,7 @@ The infrastructure provisioned by this blueprint includes:
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
 - Two GKE [node pools](<https://cloud.google.com/kubernetes-engine/docs/concepts/node> pools).
   - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads
-  are scheduled onto the tenant nodes
+  are scheduled onto the tenant nodes.
   - Other cluster resources are hosted in the main node pool.
 - [VPC Firewall rules](https://cloud.google.com/vpc/docs/firewalls)
   - Baseline rules that apply to all nodes in the cluster.
@@ -61,7 +61,8 @@ The infrastructure provisioned by this blueprint includes:
 - [Cloud DNS](https://cloud.google.com/dns/docs/overview) rules configured to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet
 - [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts) used by the cluster.
   - A dedicated Service Account used by the nodes in the tenant node pool
-  - A dedicated Service Account for use by tenant apps (via Workload Identity, discussed later)
+  - A dedicated Service Account for use by tenant apps (via Workload Identity, discussed later).
+- Support for using [Google Groups for Kubernetes RBAC](https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac).
 
 ### Applications
 

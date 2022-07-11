@@ -113,3 +113,9 @@ variable "asm_enable_mesh_feature" {
   type        = bool
   default     = true
 }
+
+variable "gke_rbac_security_group_domain" {
+  default     = null
+  description = "Domain of the Google Group to assign RBAC permissions. For more information, refer to https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac"
+  type        = string
+}
