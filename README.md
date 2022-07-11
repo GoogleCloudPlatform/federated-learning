@@ -131,13 +131,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
   Where `[REPO]` is the path to the directory where you cloned this repository.
 
-- Set a Terraform environment variable for your project ID:
-
-  ```sh
-  TF_VAR_project_id=[YOUR_PROJECT_ID]
-  export TF_VAR_project_id
-  ```
-
+- Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
 - Initialize Terraform:
 
   ```sh
