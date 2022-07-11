@@ -1,25 +1,32 @@
 # Blueprint: Preparing a GKE cluster for apps distributed by a third party
 
-This repository contains a blueprint that creates and secures a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) cluster that is ready to host custom apps distributed by a third party.
-For more information about the architecture of this blueprint, refer to [Preparing a GKE cluster for third-party tenants](https://cloud.google.com/architecture/preparing-gke-cluster-apps-distributed-third-party).
+This repository contains a blueprint that creates and secures a
+[Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
+(GKE) cluster that is ready to host custom apps distributed by a third party.
+For more information about the architecture of this blueprint, refer to
+[Preparing a GKE cluster for third-party tenants](https://cloud.google.com/architecture/preparing-gke-cluster-apps-distributed-third-party).
 
-This blueprint suggests using a GKE cluster as the compute infrastructure to host containerized apps distributed by a third party.
-These apps are considered as untrusuted or semi-trusted workloads within the cluster. Therefore, the cluster is configured according to security best practices, and additional controls are put
-in place to isolate and constrain the workloads. The blueprint uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise the configuration and security of the cluster.
+This blueprint uses a GKE cluster as the compute infrastructure to host
+containerized apps distributed by a third party. These apps are considered as
+untrusuted or semi-trusted workloads within the cluster. Therefore, the cluster
+is configured according to security best practices to isolate and constrain the
+workloads from other workloads and from the cluster control plane. The blueprint
+uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise
+the configuration and security of the cluster.
 
 This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
-you can extended the infrastructure to Anthos clusters running on premises
-or on other public clouds.
+you can extended the infrastructure to [Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
 
 ## Getting started
 
 To deploy this blueprint you need:
 
 - A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled
-- Owner permissions on the project
+- An account with the [Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) on the project
 
 You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
-but we recommend to configure a remote backend for anything other than experimentation.
+but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
+for anything other than experimentation.
 
 ## Understanding the repository structure
 
@@ -116,42 +123,53 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
 - Open [Cloud Shell](https://cloud.google.com/shell)
 - Clone this repository
-- Change into the directory that contains the Terraform code
+- Change into the directory that contains the Terraform code:
 
-  ```cd [REPO]/terraform```
+  ```sh
+  cd [REPO]/terraform
+  ```
 
-- Set a Terraform environment variable for your project ID
+  Where `[REPO]` is the path to the directory where you cloned this repository.
+
+- Set a Terraform environment variable for your project ID:
 
   ```sh
   TF_VAR_project_id=[YOUR_PROJECT_ID]
   export TF_VAR_project_id
   ```
 
-- Initialize Terraform
+- Initialize Terraform:
 
-  ```terraform init```
+  ```sh
+  terraform init
+  ```
 
-- Create the plan; review it so you know what's going on
+- Create the plan and review it:
 
-  ```terraform plan -out terraform.out```
+  ```sh
+  terraform plan -out terraform.out
+  ```
 
-- Apply the plan to create the cluster. Note this may take ~15 minutes to complete
+- Apply the plan to create the cluster:
 
-  ```terraform apply terraform.out```
+  ```sh
+  terraform apply terraform.out
+  ```
+
+   Note: this may take ~15 minutes to complete
 
 ## Test
 
-See [testing](testing) for some manual tests you can perform to verify setup
+For more details about manual tests you can perform to validate this setup,
+refer to the [testing directory](testing).
 
 ## Add another tenant
 
-Out-of-the-box the blueprint is configured with a single tenant called 'fltenant1'.
+This blueprint provisions a runtime environment for a single tenant.
 
-Adding another tenant is a two-stage process:
+To add another tenant, you:
 
-1. Create the project-level infra and resources for the tenant (node pool, service accounts, firewall rules...).
-You do this by updating the Terraform config and re-applying.
-1. Configure cluster-level resources for the tenant (namespace, network policies, service mesh policies...)
-You do this by instantiating and configuring a new version of the tenant kpt package, and then applying to the cluster.
+1. Create the project-level infrastructure and resources for the new tenant by updating the Terraform descriptors.
+1. Configure cluster-level resources for the new tenant by instantiating and configuring a new version of the `tenant` kpt package.
 
-See the relevant section in [testing](testing) for instructions.
+For an example of this process, refer to the [testing directory](testing).
