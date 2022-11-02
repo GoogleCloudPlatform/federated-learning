@@ -12,7 +12,7 @@ module "gke" {
   #  - Dataplane V2 (which automatically enables network policy)
   #  - secrets encryption
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "21.2.0"
+  version = "23.3.0"
 
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
 
