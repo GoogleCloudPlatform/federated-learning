@@ -117,12 +117,6 @@ variable "acm_secret_type" {
   type        = string
 }
 
-variable "acm_create_ssh_key" {
-  description = "Controls whether a key will be generated for Git authentication"
-  default     = false
-  type        = bool
-}
-
 variable "asm_release_channel" {
   description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
   default     = "regular"
