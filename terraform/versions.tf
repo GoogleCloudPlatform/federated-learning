@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/google-beta"
       version = ">= 4.20.0, <5.0.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = ">= 2.2.0, <3.0.0"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 2.0, ~> 2.10"
