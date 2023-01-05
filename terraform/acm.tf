@@ -58,7 +58,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
 # so we call gcloud to update the config directly.
 module "enable_policycontroller_mutations" {
   source        = "terraform-google-modules/gcloud/google"
-  version       = "3.1.1"
+  version       = "3.1.2"
   upgrade       = false
   skip_download = true
 
