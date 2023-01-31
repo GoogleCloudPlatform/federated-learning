@@ -21,21 +21,21 @@ provider "registry.terraform.io/hashicorp/external" {
 }
 
 provider "registry.terraform.io/hashicorp/google" {
-  version     = "4.27.0"
+  version     = "4.51.0"
   constraints = ">= 3.43.0, >= 3.53.0, >= 4.20.0, < 5.0.0"
   hashes = [
-    "h1:bKba6xHbZTkhnOby8HgmlmofNUdvlMq1MTE2yAA4dIQ=",
-    "zh:0ec41ae6810de7e1dbf8c8926523fb2cb6947f62932152c82c2c52ca2d9880be",
-    "zh:28349b499a631e15a02eb9603c659ec894cd50149be6b90c3b35b11980a234a2",
-    "zh:2fcbb1c4d3e6512a18330eb8141b2518acac2358fb7c05c374d32a6dcc435916",
-    "zh:4535e448bd794743fe14e8f9d1e640b28a0689b44341ea8fd5d9b229038693c8",
-    "zh:545ac27a491cb054ca4b7fbd83999a0b48e445036c06cb470c78afb9dcb5fb6f",
-    "zh:60df2a43c3791e1c919cdf9f1388dcf73cd4c9de4e266539b2c489eb8be9ec09",
-    "zh:756ea83635bc607e935cd0b9adaa3fc0f9528038766e1dba1f79d74c42556ffb",
-    "zh:7bf6c65359cc5fef8757787abe5f5f8ca786ce4de3045872226b54a7b51a5e29",
-    "zh:bbb0f05e4f080aae755752e68ca8b03240602d7af254a86af1e392c0dd5776b5",
-    "zh:c663bc5b18bc5015ccf763f6f6baea26319459e1e757af34a250b27cf689b80a",
-    "zh:da23872670199d3ce5448c1a75bf4ac9fbeafb92bad84a3e977de6c0a9dced08",
+    "h1:7JFdiV9bvV6R+AeWzvNbVeoega481sJY3PqtIbrwTsM=",
+    "zh:001bf7478e495d497ffd4054453c97ab4dd3e6a24d46496d51d4c8094e95b2b1",
+    "zh:19db72113552dd295854a99840e85678d421312708e8329a35787fff1baeed8b",
+    "zh:42c3e629ace225a2cb6cf87b8fabeaf1c56ac8eca6a77b9e3fc489f3cc0a9db5",
+    "zh:50b930755c4b1f8a01c430d8f688ea79de0b0198c87511baa3a783e360d7e624",
+    "zh:5acd67f0aafff5ad59e179543cccd1ffd48d69b98af0228506403b8d8193b340",
+    "zh:70128d57b4b4bf07df941172e6af15c4eda8396af5cc2b0128c906983c7b7fad",
+    "zh:7905fac0ba2becf0e97edfcd4224e57466b04f960f36a3ec654a0a3c2ffececb",
+    "zh:79b4cc760305cd77c1ff841f789184f808b8052e8f4faa5cb8d518e4c13beb22",
+    "zh:c7aebd7d7dd2b29de28e382500d36fae8b4d8a192cf05e41ea29c66f1251acfc",
+    "zh:d8b4494b13ef5af65d3afedf05bf7565918f1e31ad68ae0df81f5c3b12baf519",
+    "zh:e6e68ef6881bc3312db50c9fd761f226f34d7834b64f90d96616b7ca6b1daf34",
     "zh:f569b65999264a9416862bca5cd2a6177d94ccb0424f3a4ef424428912b9cb3c",
   ]
 }
