@@ -26,7 +26,7 @@ resource "google_service_account" "tenant_apps_sa" {
 module "project-iam-bindings" {
   for_each = google_service_account.tenant_nodepool_sa
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
-  version  = "7.4.1"
+  version  = "7.5.0"
   projects = [var.project_id]
   mode     = "authoritative"
 
