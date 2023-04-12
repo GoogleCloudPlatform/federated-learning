@@ -22,7 +22,7 @@ jobs:
           DISABLE_ERRORS: false
           ERROR_ON_MISSING_EXEC_BIT: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          KUBERNETES_KUBEVAL_OPTIONS: "--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
+          KUBERNETES_KUBECONFORM_OPTIONS: --strict --ignore-missing-schemas
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_JSCPD_ALL_CODEBASE: true
