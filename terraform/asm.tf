@@ -1,6 +1,6 @@
 module "asm" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/asm"
-  version = "26.0.0"
+  version = "26.1.0"
 
   channel             = var.asm_release_channel
   cluster_location    = module.gke.location
