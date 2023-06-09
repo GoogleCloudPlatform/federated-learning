@@ -57,7 +57,7 @@ The infrastructure provisioned by this blueprint includes:
   - Harden isolation of tenant workloads using [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
   - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
-- Two GKE [node pools](<https://cloud.google.com/kubernetes-engine/docs/concepts/node> pools).
+- Two GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
   - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads
   are scheduled onto the tenant nodes.
   - Other cluster resources are hosted in the main node pool.
@@ -88,7 +88,7 @@ The cluster includes:
       - Prevent creation of external services (Ingress, NodePort/LoadBalancer services)
       - Allow pods to pull container images only from a named set of repositories
   - See the resources in the [configsync/policycontroller](configsync/policycontroller) directory for details of the constraints applied by this blueprint.
-- [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)(ASM) is powered by Istio and enables managed, observable, and secure communication across your services. The blueprint includes service mesh configuration that is applied to the cluster using Config Sync. The following points describe how this blueprint configures the service mesh.
+- [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview) (ASM) is powered by Istio and enables managed, observable, and secure communication across your services. The blueprint includes service mesh configuration that is applied to the cluster using Config Sync. The following points describe how this blueprint configures the service mesh.
   - The root istio namespace (istio-system) is configured with
     - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
     - AuthorizationPolicies that:
