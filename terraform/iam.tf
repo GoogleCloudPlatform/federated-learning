@@ -13,7 +13,7 @@ resource "google_service_account" "tenant_nodepool_sa" {
 # Service Account used by the nodes in the main node pool
 resource "google_service_account" "main_nodepool_sa" {
   project      = data.google_project.project.project_id
-  account_id   = format("%s-%s-nodes-sa", var.cluster_name, local.main_node_pool_name)
+  account_id   = local.main_node_pool_sa_name
   display_name = "Service account for ${local.main_node_pool_name} node pool in cluster ${var.cluster_name}"
 
   depends_on = [

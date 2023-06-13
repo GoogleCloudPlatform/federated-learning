@@ -75,7 +75,7 @@ module "gke" {
       auto_upgrade                = true
       enable_integrity_monitoring = true
       enable_secure_boot          = true
-      service_account             = google_service_account.main_nodepool_sa.email
+      service_account             = format("%s@%s.iam.gserviceaccount.com", local.main_node_pool_sa_name, data.google_project.project.project_id)
     }],
 
     # list of tenant nodepools
@@ -117,7 +117,8 @@ module "gke" {
 }
 
 locals {
-  main_node_pool_name = "main-pool"
+  main_node_pool_name    = "main-pool"
+  main_node_pool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, local.main_node_pool_name)
 
   # for each tenant, define the names of the nodepool, service accounts etc
   tenants = {
