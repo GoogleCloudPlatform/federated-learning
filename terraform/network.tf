@@ -41,13 +41,13 @@ module "fedlearn-vpc" {
 
 resource "google_compute_router" "router" {
   name    = "router"
-  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].subnet_region
+  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].region
   network = module.fedlearn-vpc.network_id
 }
 
 resource "google_compute_address" "nat_ip" {
   name   = "nat-manual-ip"
-  region = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].subnet_region
+  region = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].region
 }
 
 resource "google_compute_router_nat" "nat" {
