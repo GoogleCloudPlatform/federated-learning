@@ -9,7 +9,7 @@ module "fedlearn-vpc" {
   version = "7.0.0"
 
   delete_default_internet_gateway_routes = true
-  project_id                             = var.project_id
+  project_id                             = data.google_project.project.project_id
   network_name                           = "fedlearn-network"
   routing_mode                           = "GLOBAL"
 

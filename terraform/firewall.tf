@@ -9,7 +9,7 @@ locals {
 resource "google_compute_firewall" "tenantpools-deny-egress" {
   name                    = "tenantpools-deny-egress"
   description             = "Default deny egress from tenant nodepools"
-  project                 = var.project_id
+  project                 = data.google_project.project.project_id
   network                 = module.fedlearn-vpc.network_id
   direction               = "EGRESS"
   target_service_accounts = local.list_tenant_nodepool_sa
@@ -22,7 +22,7 @@ resource "google_compute_firewall" "tenantpools-deny-egress" {
 resource "google_compute_firewall" "tenantpools-allow-egress-nodes-pods-services" {
   name                    = "tenantpools-allow-egress-nodes-pods-services"
   description             = "Allow egress from tenant nodepools to cluster nodes, pods and services"
-  project                 = var.project_id
+  project                 = data.google_project.project.project_id
   network                 = module.fedlearn-vpc.network_id
   direction               = "EGRESS"
   target_service_accounts = local.list_tenant_nodepool_sa
@@ -36,7 +36,7 @@ resource "google_compute_firewall" "tenantpools-allow-egress-nodes-pods-services
 resource "google_compute_firewall" "tenantpools-allow-egress-api-server" {
   name                    = "tenantpools-allow-egress-api-server"
   description             = "Allow egress from tenant nodepools to the Kubernetes API server"
-  project                 = var.project_id
+  project                 = data.google_project.project.project_id
   network                 = module.fedlearn-vpc.network_id
   direction               = "EGRESS"
   target_service_accounts = local.list_tenant_nodepool_sa
@@ -51,7 +51,7 @@ resource "google_compute_firewall" "tenantpools-allow-egress-api-server" {
 resource "google_compute_firewall" "tenantpools-allow-egress-google-apis" {
   name                    = "tenantpools-allow-egress-google-apis"
   description             = "Allow egress from tenant nodepools to Google APIs (private Google access)"
-  project                 = var.project_id
+  project                 = data.google_project.project.project_id
   network                 = module.fedlearn-vpc.network_id
   direction               = "EGRESS"
   target_service_accounts = local.list_tenant_nodepool_sa
@@ -67,7 +67,7 @@ resource "google_compute_firewall" "tenantpools-allow-egress-google-apis" {
 # See https://cloud.google.com/iap/docs/using-tcp-forwarding#create-firewall-rule
 resource "google_compute_firewall" "allow-ssh-tunnel-iap" {
   name      = "allow-ssh-tunnel-iap"
-  project   = var.project_id
+  project   = data.google_project.project.project_id
   network   = module.fedlearn-vpc.network_id
   direction = "INGRESS"
   # This range contains all IP addresses that IAP uses for TCP forwarding.

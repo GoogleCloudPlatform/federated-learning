@@ -16,7 +16,7 @@ module "gke" {
 
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
 
-  project_id        = var.project_id
+  project_id        = data.google_project.project.project_id
   name              = var.cluster_name
   release_channel   = var.cluster_gke_release_channel
   regional          = var.cluster_regional
@@ -90,7 +90,7 @@ module "gke" {
       # enable GKE sandbox (gVisor) for tenant nodes
       sandbox_enabled = true
       # dedicated service account per tenant node pool
-      service_account = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, var.project_id)
+      service_account = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
     }]
   )
 
@@ -130,7 +130,11 @@ data "google_project" "project" {
   project_id = var.project_id
 }
 
-data "google_client_config" "default" {}
+data "google_client_config" "default" {
+  depends_on = [
+    module.project-services
+  ]
+}
 
 provider "kubernetes" {
   host                   = "https://${module.gke.endpoint}"

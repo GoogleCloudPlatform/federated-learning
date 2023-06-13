@@ -5,6 +5,6 @@ module "asm" {
   channel             = var.asm_release_channel
   cluster_location    = module.gke.location
   cluster_name        = module.gke.name
-  project_id          = var.project_id
+  project_id          = data.google_project.project.project_id
   enable_mesh_feature = var.asm_enable_mesh_feature
 }
