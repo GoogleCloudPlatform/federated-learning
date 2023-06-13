@@ -1,6 +1,9 @@
 locals {
   fedlearn_subnet_name = "subnet-01"
   fedlearn_subnet_key  = "${var.region}/${local.fedlearn_subnet_name}"
+
+  fedlearn_pods_ip_range = "10.20.0.0/14"
+  fedlearn_services_ip_range = "10.24.0.0/20"
 }
 
 
@@ -25,11 +28,11 @@ module "fedlearn-vpc" {
     subnet-01 = [
       {
         range_name    = "pods"
-        ip_cidr_range = "10.20.0.0/14"
+        ip_cidr_range = local.fedlearn_pods_ip_range
       },
       {
         range_name    = "services"
-        ip_cidr_range = "10.24.0.0/20"
+        ip_cidr_range = local.fedlearn_services_ip_range
       },
     ]
   }

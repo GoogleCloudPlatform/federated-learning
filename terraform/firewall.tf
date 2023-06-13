@@ -26,7 +26,7 @@ resource "google_compute_firewall" "tenantpools-allow-egress-nodes-pods-services
   network                 = module.fedlearn-vpc.network_id
   direction               = "EGRESS"
   target_service_accounts = local.list_tenant_nodepool_sa
-  destination_ranges      = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].subnet_ip, "10.20.0.0/14", "10.24.0.0/20"]
+  destination_ranges      = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].ip_cidr_range, local.fedlearn_pods_ip_range, local.fedlearn_services_ip_range]
   allow {
     protocol = "all"
   }
