@@ -35,25 +35,28 @@ resource "google_service_account" "tenant_apps_sa" {
 
 # default roles for the node SAs
 module "project-iam-bindings" {
-  for_each = google_service_account.tenant_nodepool_sa
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "7.6.0"
   projects = [data.google_project.project.project_id]
   mode     = "authoritative"
 
   bindings = {
-    "roles/logging.logWriter" = [
-      format("serviceAccount:%s", each.value.email)
-    ]
-    "roles/monitoring.metricWriter" = [
-      format("serviceAccount:%s", each.value.email)
-    ]
-    "roles/monitoring.viewer" = [
-      format("serviceAccount:%s", each.value.email)
-    ]
-    "roles/artifactregistry.reader" = [
-      format("serviceAccount:%s", each.value.email)
-    ]
+    "roles/logging.logWriter" = concat(
+      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
+      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
+    )
+    "roles/monitoring.metricWriter" = concat(
+      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
+      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
+    )
+    "roles/monitoring.viewer" = concat(
+      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
+      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
+    )
+    "roles/artifactregistry.reader" = concat(
+      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
+      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
+    )
   }
 
   depends_on = [
