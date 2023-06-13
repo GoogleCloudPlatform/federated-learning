@@ -35,7 +35,7 @@ resource "google_service_account" "tenant_apps_sa" {
 
 # default roles for the node SAs
 module "project-iam-bindings" {
-  for_each = concat(google_service_account.tenant_nodepool_sa, [google_service_account.main_nodepool_sa])
+  for_each = google_service_account.tenant_nodepool_sa
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "7.6.0"
   projects = [data.google_project.project.project_id]
@@ -43,8 +43,7 @@ module "project-iam-bindings" {
 
   bindings = {
     "roles/logging.logWriter" = [
-      format("serviceAccount:%s", each.value.email),
-
+      format("serviceAccount:%s", each.value.email)
     ]
     "roles/monitoring.metricWriter" = [
       format("serviceAccount:%s", each.value.email)
