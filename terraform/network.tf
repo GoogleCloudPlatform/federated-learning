@@ -18,9 +18,10 @@ module "fedlearn-vpc" {
 
   subnets = [
     {
-      subnet_name   = local.fedlearn_subnet_name
-      subnet_ip     = "10.2.0.0/16"
-      subnet_region = var.region
+      subnet_name           = local.fedlearn_subnet_name
+      subnet_ip             = "10.2.0.0/16"
+      subnet_private_access = "true"
+      subnet_region         = var.region
     }
   ]
 
