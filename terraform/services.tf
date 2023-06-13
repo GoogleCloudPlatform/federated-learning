@@ -1,3 +1,15 @@
+module "project-services-cloud-resource-manager" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "14.2.0"
+
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
+  activate_apis = [
+    "cloudresourcemanager.googleapis.com"
+  ]
+}
+
+
 module "project-services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "14.2.0"
@@ -9,7 +21,6 @@ module "project-services" {
     "anthosconfigmanagement.googleapis.com",
     "cloudbilling.googleapis.com",
     "cloudkms.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
     "cloudtrace.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
@@ -24,5 +35,9 @@ module "project-services" {
     "meshtelemetry.googleapis.com",
     "monitoring.googleapis.com",
     "stackdriver.googleapis.com"
+  ]
+
+  depends_on = [
+    module.project-services-cloud-resource-manager
   ]
 }
