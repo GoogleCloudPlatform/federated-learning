@@ -1,5 +1,6 @@
 locals {
-  fedlearn_subnet_key = "${var.region}/subnet-01"
+  fedlearn_subnet_name = "subnet-01"
+  fedlearn_subnet_key  = "${var.region}/${fedlearn_subnet_name}"
 }
 
 
@@ -40,13 +41,13 @@ module "fedlearn-vpc" {
 
 resource "google_compute_router" "router" {
   name    = "router"
-  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_name].subnet_region
+  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].subnet_region
   network = module.fedlearn-vpc.network_id
 }
 
 resource "google_compute_address" "nat_ip" {
   name   = "nat-manual-ip"
-  region = module.fedlearn-vpc.subnets[local.fedlearn_subnet_name].subnet_region
+  region = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].subnet_region
 }
 
 resource "google_compute_router_nat" "nat" {
@@ -59,7 +60,7 @@ resource "google_compute_router_nat" "nat" {
 
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   subnetwork {
-    name                    = module.fedlearn-vpc.subnets[local.fedlearn_subnet_name].self_link
+    name                    = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].self_link
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 }
