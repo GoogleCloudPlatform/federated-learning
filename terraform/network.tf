@@ -1,6 +1,6 @@
 locals {
   fedlearn_subnet_name = "subnet-01"
-  fedlearn_subnet_key  = "${var.region}/${fedlearn_subnet_name}"
+  fedlearn_subnet_key  = "${var.region}/${local.fedlearn_subnet_name}"
 }
 
 
