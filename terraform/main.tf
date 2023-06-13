@@ -128,13 +128,13 @@ locals {
 
 data "google_project" "project" {
   project_id = var.project_id
-}
 
-data "google_client_config" "default" {
   depends_on = [
     module.project-services
   ]
 }
+
+data "google_client_config" "default" {}
 
 provider "kubernetes" {
   host                   = "https://${module.gke.endpoint}"
