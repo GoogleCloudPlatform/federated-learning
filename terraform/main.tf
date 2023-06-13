@@ -67,7 +67,7 @@ module "gke" {
   node_pools = concat(
     # main node pool
     [{
-      name                        = "main-pool"
+      name                        = local.main_node_pool_name
       image_type                  = "COS_CONTAINERD"
       machine_type                = var.cluster_default_pool_machine_type
       min_count                   = var.cluster_default_pool_min_nodes
@@ -75,6 +75,7 @@ module "gke" {
       auto_upgrade                = true
       enable_integrity_monitoring = true
       enable_secure_boot          = true
+      service_account             = google_service_account.main_nodepool_sa.email
     }],
 
     # list of tenant nodepools
@@ -110,11 +111,14 @@ module "gke" {
 
   depends_on = [
     module.project-services,
+    google_service_account.main_nodepool_sa,
     google_service_account.tenant_nodepool_sa
   ]
 }
 
 locals {
+  main_node_pool_name = "main-pool"
+
   # for each tenant, define the names of the nodepool, service accounts etc
   tenants = {
     for name in var.tenant_names : name => {
