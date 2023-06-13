@@ -22,7 +22,7 @@ module "gke" {
   regional          = var.cluster_regional
   region            = var.region
   zones             = var.zones
-  network           = google_compute_network.vpc.name
+  network           = module.fedlearn-vpc.network_id
   subnetwork        = google_compute_subnetwork.subnet.name
   ip_range_pods     = "pods"
   ip_range_services = "services"
