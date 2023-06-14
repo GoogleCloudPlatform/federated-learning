@@ -41,6 +41,7 @@ module "project-iam-bindings" {
   mode     = "authoritative"
 
   bindings = {
+    # Least-privilege roles needed for a node pool service account to function
     "roles/logging.logWriter" = concat(
       [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
       [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
@@ -53,6 +54,11 @@ module "project-iam-bindings" {
       [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
       [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
     )
+    "roles/stackdriver.resourceMetadata.writer" = concat(
+      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
+      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
+    )
+    # Grant node pool service accounts read access to Container Registry and Artifact Registry
     "roles/artifactregistry.reader" = concat(
       [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
       [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
