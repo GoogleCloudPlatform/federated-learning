@@ -11,10 +11,9 @@ module "fedlearn-vpc" {
   source  = "terraform-google-modules/network/google"
   version = "7.0.0"
 
-  delete_default_internet_gateway_routes = true
-  project_id                             = data.google_project.project.project_id
-  network_name                           = "fedlearn-network"
-  routing_mode                           = "GLOBAL"
+  project_id   = data.google_project.project.project_id
+  network_name = "fedlearn-network"
+  routing_mode = "GLOBAL"
 
   subnets = [
     {
