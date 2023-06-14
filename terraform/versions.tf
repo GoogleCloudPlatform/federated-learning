@@ -17,15 +17,15 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.20.0, <5.0.0"
+      version = ">= 4.69.1, <5.0.0"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = ">= 4.20.0, <5.0.0"
+      version = ">= 4.69.1, <5.0.0"
     }
     http = {
       source  = "hashicorp/http"
-      version = ">= 2.2.0, < 4.0.0"
+      version = ">= 3.3.0, < 4.0.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -33,7 +33,7 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = ">= 3.3.1, <4.0.0"
+      version = ">= 3.5.1, <4.0.0"
     }
   }
 }
