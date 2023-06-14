@@ -2,7 +2,7 @@ module "kms" {
   source  = "terraform-google-modules/kms/google"
   version = "2.2.2"
 
-  project_id = var.project_id
+  project_id = data.google_project.project.project_id
   location   = var.region
   keyring    = "keyring-${random_id.keyring_suffix.hex}"
   keys       = [var.cluster_secrets_keyname]

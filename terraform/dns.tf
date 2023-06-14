@@ -13,7 +13,7 @@ resource "google_dns_managed_zone" "private-google-apis" {
 
   private_visibility_config {
     networks {
-      network_url = google_compute_network.vpc.id
+      network_url = module.fedlearn-vpc.network_id
     }
   }
 }
@@ -44,7 +44,7 @@ resource "google_dns_managed_zone" "private-container-registry" {
 
   private_visibility_config {
     networks {
-      network_url = google_compute_network.vpc.id
+      network_url = module.fedlearn-vpc.network_id
     }
   }
 }
@@ -75,7 +75,7 @@ resource "google_dns_managed_zone" "private-artifact-registry" {
 
   private_visibility_config {
     networks {
-      network_url = google_compute_network.vpc.id
+      network_url = module.fedlearn-vpc.network_id
     }
   }
 }

@@ -16,14 +16,14 @@ module "gke" {
 
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
 
-  project_id        = var.project_id
+  project_id        = data.google_project.project.project_id
   name              = var.cluster_name
   release_channel   = var.cluster_gke_release_channel
   regional          = var.cluster_regional
   region            = var.region
   zones             = var.zones
-  network           = google_compute_network.vpc.name
-  subnetwork        = google_compute_subnetwork.subnet.name
+  network           = module.fedlearn-vpc.network_name
+  subnetwork        = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
   ip_range_pods     = "pods"
   ip_range_services = "services"
 
@@ -67,7 +67,7 @@ module "gke" {
   node_pools = concat(
     # main node pool
     [{
-      name                        = "main-pool"
+      name                        = local.main_node_pool_name
       image_type                  = "COS_CONTAINERD"
       machine_type                = var.cluster_default_pool_machine_type
       min_count                   = var.cluster_default_pool_min_nodes
@@ -75,6 +75,7 @@ module "gke" {
       auto_upgrade                = true
       enable_integrity_monitoring = true
       enable_secure_boot          = true
+      service_account             = format("%s@%s.iam.gserviceaccount.com", local.main_node_pool_sa_name, data.google_project.project.project_id)
     }],
 
     # list of tenant nodepools
@@ -90,7 +91,7 @@ module "gke" {
       # enable GKE sandbox (gVisor) for tenant nodes
       sandbox_enabled = true
       # dedicated service account per tenant node pool
-      service_account = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, var.project_id)
+      service_account = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
     }]
   )
 
@@ -109,12 +110,21 @@ module "gke" {
   }
 
   depends_on = [
+    module.project-iam-bindings,
     module.project-services,
-    google_service_account.tenant_nodepool_sa
+    google_compute_firewall.node-pools-deny-egress,
+    google_compute_firewall.node-pools-allow-egress-nodes-pods-services,
+    google_compute_firewall.node-pools-allow-egress-api-server,
+    google_compute_firewall.node-pools-allow-egress-google-apis,
+    google_service_account.main_nodepool_sa,
+    google_service_account.tenant_nodepool_sa,
   ]
 }
 
 locals {
+  main_node_pool_name    = "main-pool"
+  main_node_pool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, local.main_node_pool_name)
+
   # for each tenant, define the names of the nodepool, service accounts etc
   tenants = {
     for name in var.tenant_names : name => {
@@ -128,6 +138,10 @@ locals {
 
 data "google_project" "project" {
   project_id = var.project_id
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 data "google_client_config" "default" {}

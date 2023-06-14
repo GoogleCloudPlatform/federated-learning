@@ -16,7 +16,7 @@ variable "zones" {
 }
 
 variable "cluster_name" {
-  default     = "gke-third-party-workloads"
+  default     = "tp-w"
   description = "The GKE cluster name"
   type        = string
 }
