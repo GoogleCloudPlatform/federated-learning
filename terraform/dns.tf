@@ -21,7 +21,7 @@ module "cloud-dns-private-google-apis" {
 
   recordsets = [
     {
-      name = "*.googleapis.com."
+      name = "*"
       type = "CNAME"
       ttl  = 300
       records = [
@@ -29,7 +29,7 @@ module "cloud-dns-private-google-apis" {
       ]
     },
     {
-      name    = "private.googleapis.com."
+      name    = "private"
       type    = "A"
       ttl     = 300
       records = local.private_google_access_ips
@@ -53,7 +53,7 @@ module "cloud-dns-private-container-registry" {
 
   recordsets = [
     {
-      name = "*.gcr.io."
+      name = "*"
       type = "CNAME"
       ttl  = 300
       records = [
@@ -61,7 +61,7 @@ module "cloud-dns-private-container-registry" {
       ]
     },
     {
-      name    = "gcr.io."
+      name    = ""
       type    = "A"
       ttl     = 300
       records = local.private_google_access_ips
@@ -85,7 +85,7 @@ module "cloud-dns-private-artifact-registry" {
 
   recordsets = [
     {
-      name = "*.pkg.dev."
+      name = "*"
       type = "CNAME"
       ttl  = 300
       records = [
@@ -93,7 +93,7 @@ module "cloud-dns-private-artifact-registry" {
       ]
     },
     {
-      name    = "pkg.dev."
+      name    = ""
       type    = "A"
       ttl     = 300
       records = local.private_google_access_ips
