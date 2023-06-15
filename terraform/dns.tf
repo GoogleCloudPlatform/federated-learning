@@ -5,93 +5,98 @@ locals {
   ]
 }
 
-resource "google_dns_managed_zone" "private-google-apis" {
-  name        = "private-google-apis"
-  dns_name    = "googleapis.com."
+module "cloud-dns-private-google-apis" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "5.0.0"
+
   description = "Private DNS zone for Google APIs"
-  visibility  = "private"
+  domain      = "googleapis.com."
+  name        = "private-google-apis"
+  project_id  = data.google_project.project.project_id
+  type        = "private"
 
-  private_visibility_config {
-    networks {
-      network_url = module.fedlearn-vpc.network_id
-    }
-  }
+  private_visibility_config_networks = [
+    module.fedlearn-vpc.network_id
+  ]
+
+  recordsets = [
+    {
+      name = "*"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "private.googleapis.com.",
+      ]
+    },
+    {
+      name    = "private"
+      type    = "A"
+      ttl     = 300
+      records = local.private_google_access_ips
+    },
+  ]
 }
 
-resource "google_dns_record_set" "private-google-apis-cname" {
-  managed_zone = google_dns_managed_zone.private-google-apis.name
-  name         = "*.googleapis.com."
-  type         = "CNAME"
-  rrdatas      = ["private.googleapis.com."]
-  ttl          = 300
-}
+module "cloud-dns-private-container-registry" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "5.0.0"
 
-resource "google_dns_record_set" "private-google-apis-a" {
-  managed_zone = google_dns_managed_zone.private-google-apis.name
-  name         = "private.googleapis.com."
-  type         = "A"
-  rrdatas      = local.private_google_access_ips
-  ttl          = 300
-}
-
-
-
-resource "google_dns_managed_zone" "private-container-registry" {
-  name        = "private-container-registry"
-  dns_name    = "gcr.io."
   description = "Private DNS zone for Container Registry"
-  visibility  = "private"
+  domain      = "gcr.io."
+  name        = "private-container-registry"
+  project_id  = data.google_project.project.project_id
+  type        = "private"
 
-  private_visibility_config {
-    networks {
-      network_url = module.fedlearn-vpc.network_id
-    }
-  }
+  private_visibility_config_networks = [
+    module.fedlearn-vpc.network_id
+  ]
+
+  recordsets = [
+    {
+      name = "*"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "gcr.io.",
+      ]
+    },
+    {
+      name    = ""
+      type    = "A"
+      ttl     = 300
+      records = local.private_google_access_ips
+    },
+  ]
 }
 
-resource "google_dns_record_set" "private-container-registry-cname" {
-  managed_zone = google_dns_managed_zone.private-container-registry.name
-  name         = "*.gcr.io."
-  type         = "CNAME"
-  rrdatas      = ["gcr.io."]
-  ttl          = 300
-}
+module "cloud-dns-private-artifact-registry" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "5.0.0"
 
-resource "google_dns_record_set" "private-container-registry-a" {
-  managed_zone = google_dns_managed_zone.private-container-registry.name
-  name         = "gcr.io."
-  type         = "A"
-  rrdatas      = local.private_google_access_ips
-  ttl          = 300
-}
-
-
-
-resource "google_dns_managed_zone" "private-artifact-registry" {
-  name        = "private-artifact-registry"
-  dns_name    = "pkg.dev."
   description = "Private DNS zone for Artifact Registry"
-  visibility  = "private"
+  domain      = "pkg.dev."
+  name        = "private-artifact-registry"
+  project_id  = data.google_project.project.project_id
+  type        = "private"
 
-  private_visibility_config {
-    networks {
-      network_url = module.fedlearn-vpc.network_id
-    }
-  }
-}
+  private_visibility_config_networks = [
+    module.fedlearn-vpc.network_id
+  ]
 
-resource "google_dns_record_set" "private-artifact-registry-cname" {
-  managed_zone = google_dns_managed_zone.private-artifact-registry.name
-  name         = "*.pkg.dev."
-  type         = "CNAME"
-  rrdatas      = ["pkg.dev."]
-  ttl          = 300
-}
-
-resource "google_dns_record_set" "private-artifact-registry-a" {
-  managed_zone = google_dns_managed_zone.private-artifact-registry.name
-  name         = "pkg.dev."
-  type         = "A"
-  rrdatas      = local.private_google_access_ips
-  ttl          = 300
+  recordsets = [
+    {
+      name = "*"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "pkg.dev.",
+      ]
+    },
+    {
+      name    = ""
+      type    = "A"
+      ttl     = 300
+      records = local.private_google_access_ips
+    },
+  ]
 }
