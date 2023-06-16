@@ -22,9 +22,11 @@ module "fedlearn-vpc" {
       priority                = 65535
       target_service_accounts = local.list_nodepool_sa
 
-      deny = {
-        protocol = "all"
-      }
+      deny = [
+        {
+          protocol = "all"
+        }
+      ]
     },
     {
       description             = "Allow egress from node pools to cluster nodes, pods and services"
@@ -34,9 +36,11 @@ module "fedlearn-vpc" {
       ranges                  = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].ip_cidr_range, local.fedlearn_pods_ip_range, local.fedlearn_services_ip_range]
       target_service_accounts = local.list_nodepool_sa
 
-      allow = {
-        protocol = "all"
-      }
+      allow = [
+        {
+          protocol = "all"
+        }
+      ]
     },
     {
       description             = "Allow egress from node pools to the Kubernetes API server"
@@ -46,10 +50,12 @@ module "fedlearn-vpc" {
       priority                = 1000
       target_service_accounts = local.list_nodepool_sa
 
-      allow = {
-        protocol = "tcp"
-        ports    = [443, 10250]
-      }
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = [443, 10250]
+        }
+      ]
     },
     {
       description             = "Allow egress from node pools to Google APIs via Private Google Access"
@@ -59,9 +65,11 @@ module "fedlearn-vpc" {
       priority                = 1000
       target_service_accounts = local.list_nodepool_sa
 
-      allow = {
-        protocol = "tcp"
-      }
+      allow = [
+        {
+          protocol = "tcp"
+        }
+      ]
     },
     {
       name        = "allow-ssh-tunnel-iap"
@@ -74,10 +82,12 @@ module "fedlearn-vpc" {
       # See https://cloud.google.com/iap/docs/using-tcp-forwarding#create-firewall-rule
       source_ranges = ["35.235.240.0/20"]
 
-      allow = {
-        protocol = "tcp"
-        ports    = ["22"]
-      }
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["22"]
+        }
+      ]
     }
   ]
 
