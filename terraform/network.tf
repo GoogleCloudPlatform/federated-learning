@@ -6,7 +6,6 @@ locals {
   fedlearn_services_ip_range = "10.24.0.0/20"
 }
 
-
 module "fedlearn-vpc" {
   source  = "terraform-google-modules/network/google"
   version = "7.0.0"
@@ -14,6 +13,83 @@ module "fedlearn-vpc" {
   project_id   = data.google_project.project.project_id
   network_name = "fedlearn-network"
   routing_mode = "GLOBAL"
+
+  firewall_rules = [
+    {
+      description             = "Default deny egress from node pools"
+      direction               = "EGRESS"
+      name                    = "node-pools-deny-egress"
+      priority                = 65535
+      target_service_accounts = local.list_nodepool_sa
+
+      deny = [
+        {
+          protocol = "all"
+        }
+      ]
+    },
+    {
+      description             = "Allow egress from node pools to cluster nodes, pods and services"
+      direction               = "EGRESS"
+      name                    = "node-pools-allow-egress-nodes-pods-services"
+      priority                = 1000
+      ranges                  = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].ip_cidr_range, local.fedlearn_pods_ip_range, local.fedlearn_services_ip_range]
+      target_service_accounts = local.list_nodepool_sa
+
+      allow = [
+        {
+          protocol = "all"
+        }
+      ]
+    },
+    {
+      description             = "Allow egress from node pools to the Kubernetes API server"
+      destination_ranges      = [var.master_ipv4_cidr_block]
+      direction               = "EGRESS"
+      name                    = "node-pools-allow-egress-api-server"
+      priority                = 1000
+      target_service_accounts = local.list_nodepool_sa
+
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = [443, 10250]
+        }
+      ]
+    },
+    {
+      description             = "Allow egress from node pools to Google APIs via Private Google Access"
+      destination_ranges      = ["199.36.153.8/30"]
+      direction               = "EGRESS"
+      name                    = "node-pools-allow-egress-google-apis"
+      priority                = 1000
+      target_service_accounts = local.list_nodepool_sa
+
+      allow = [
+        {
+          protocol = "tcp"
+        }
+      ]
+    },
+    {
+      name        = "allow-ssh-tunnel-iap"
+      description = "Allow ssh tunnel-through-iap to all cluster nodes. Useful during development and testing."
+      direction   = "INGRESS"
+      priority    = 1000
+      target_tags = ["gke-${var.cluster_name}"]
+
+      # This range contains all IP addresses that IAP uses for TCP forwarding.
+      # See https://cloud.google.com/iap/docs/using-tcp-forwarding#create-firewall-rule
+      ranges = ["35.235.240.0/20"]
+
+      allow = [
+        {
+          protocol = "tcp"
+          ports    = ["22"]
+        }
+      ]
+    }
+  ]
 
   subnets = [
     {
