@@ -110,12 +110,9 @@ module "gke" {
   }
 
   depends_on = [
+    module.fedlearn-vpc,
     module.project-iam-bindings,
     module.project-services,
-    google_compute_firewall.node-pools-deny-egress,
-    google_compute_firewall.node-pools-allow-egress-nodes-pods-services,
-    google_compute_firewall.node-pools-allow-egress-api-server,
-    google_compute_firewall.node-pools-allow-egress-google-apis,
     google_service_account.main_nodepool_sa,
     google_service_account.tenant_nodepool_sa,
   ]
