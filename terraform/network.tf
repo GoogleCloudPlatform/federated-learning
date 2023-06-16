@@ -80,7 +80,7 @@ module "fedlearn-vpc" {
 
       # This range contains all IP addresses that IAP uses for TCP forwarding.
       # See https://cloud.google.com/iap/docs/using-tcp-forwarding#create-firewall-rule
-      source_ranges = ["35.235.240.0/20"]
+      ranges = ["35.235.240.0/20"]
 
       allow = [
         {
