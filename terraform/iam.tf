@@ -10,7 +10,6 @@ module "service_accounts" {
   depends_on = [
     module.project-services
   ]
-
 }
 
 # default roles for the node SAs
@@ -21,28 +20,13 @@ module "project-iam-bindings" {
   mode     = "authoritative"
 
   bindings = {
-    # Least-privilege roles needed for a node pool service account to function
-    "roles/logging.logWriter" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/monitoring.metricWriter" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/monitoring.viewer" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/stackdriver.resourceMetadata.writer" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    # Grant node pool service accounts read access to Container Registry and Artifact Registry
-    "roles/artifactregistry.reader" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
+    # Least-privilege roles needed for a node pool service account to function and
+    # to get read-only access to Container Registry and Artifact Registry
+    "roles/logging.logWriter"                   = local.list_nodepool_sa_iam_emails,
+    "roles/monitoring.metricWriter"             = local.list_nodepool_sa_iam_emails,
+    "roles/monitoring.viewer"                   = local.list_nodepool_sa_iam_emails,
+    "roles/stackdriver.resourceMetadata.writer" = local.list_nodepool_sa_iam_emails,
+    "roles/artifactregistry.reader"             = local.list_nodepool_sa_iam_emails,
   }
 
   depends_on = [

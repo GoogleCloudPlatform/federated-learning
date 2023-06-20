@@ -133,9 +133,9 @@ locals {
   gke_robot_sa = "service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 
   # list of service account emails used by the tenant node pools and the main node pool
-  list_nodepool_sa_emails = concat(
-    [for sa in google_service_account.tenant_nodepool_sa : sa.email],
-    [google_service_account.main_nodepool_sa.email]
+  list_nodepool_sa_iam_emails = concat(
+    [for tenant in local.tenants : module.service_accounts.iam_emails[tenant.tenant_nodepool_sa_name]],
+    [module.service_accounts.iam_emails[main_node_pool_sa_name]]
   )
 
   list_sa_names = concat(
