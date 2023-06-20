@@ -145,12 +145,10 @@ locals {
     ["serviceAccount:${module.service_accounts.service_accounts_map[local.main_node_pool_sa_name].email}"],
   )
 
-  list_apps_sa_names = [for tenant in local.tenants : tenant.tenant_apps_sa_name]
-
   list_sa_names = concat(
     [local.main_node_pool_sa_name],
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
-    local.list_apps_sa_names,
+    [for tenant in local.tenants : tenant.tenant_apps_sa_name],
   )
 }
 
