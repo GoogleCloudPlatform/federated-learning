@@ -94,11 +94,11 @@ module "gke" {
 
 locals {
 
-  main_node_pool_name = "main-pool"
+  main_node_pool_name = "${tenant_and_main_pool_names[0]}-pool"
 
   # To reduce duplication, treat the main pool as the first (privileged) tenant
   tenant_and_main_pool_names = concat(
-    [local.main_node_pool_name],
+    ["main"],
     var.tenant_names
   )
 
