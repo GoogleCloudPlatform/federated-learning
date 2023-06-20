@@ -62,11 +62,11 @@ module "gke" {
     enable_integrity_monitoring = true
     enable_secure_boot          = true
     image_type                  = "COS_CONTAINERD"
-    machine_type                = tenant_name == local.main_node_pool_name ? var.cluster_default_pool_machine_type : var.cluster_tenant_pool_machine_type
-    max_count                   = tenant_name == local.main_node_pool_name ? var.cluster_default_pool_max_nodes : var.cluster_tenant_pool_max_nodes
-    min_count                   = tenant_name == local.main_node_pool_name ? var.cluster_default_pool_min_nodes : var.cluster_tenant_pool_min_nodes
+    machine_type                = tenant_name == local.main_tenant_name ? var.cluster_default_pool_machine_type : var.cluster_tenant_pool_machine_type
+    max_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_max_nodes : var.cluster_tenant_pool_max_nodes
+    min_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_min_nodes : var.cluster_tenant_pool_min_nodes
     name                        = config.tenant_nodepool_name
-    sandbox_enabled             = tenant_name == local.main_node_pool_name ? false : true
+    sandbox_enabled             = tenant_name == local.main_tenant_name ? false : true
     service_account             = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
   }]
 
@@ -94,11 +94,11 @@ module "gke" {
 
 locals {
 
-  main_node_pool_name = "${local.tenant_and_main_pool_names[0]}-pool"
+  main_tenant_name = "main"
 
   # To reduce duplication, treat the main pool as the first (privileged) tenant
   tenant_and_main_pool_names = concat(
-    ["main"],
+    [local.main_tenant_name],
     var.tenant_names
   )
 
