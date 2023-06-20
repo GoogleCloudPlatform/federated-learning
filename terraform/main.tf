@@ -14,22 +14,30 @@ module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
   version = "26.1.1"
 
+  add_cluster_firewall_rules   = true
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
+  datapath_provider            = "ADVANCED_DATAPATH"
+  enable_binary_authorization  = true
+  enable_private_endpoint      = false
+  enable_private_nodes         = true
+  enable_shielded_nodes        = true
+  grant_registry_access        = true
+  http_load_balancing          = false
+  ip_range_pods                = "pods"
+  ip_range_services            = "services"
+  master_global_access_enabled = true
+  master_ipv4_cidr_block       = var.master_ipv4_cidr_block
+  name                         = var.cluster_name
+  network                      = module.fedlearn-vpc.network_name
+  network_policy               = false # automatically enabled with Dataplane V2
+  project_id                   = data.google_project.project.project_id
+  region                       = var.region
+  regional                     = var.cluster_regional
+  release_channel              = var.cluster_gke_release_channel
+  remove_default_node_pool     = true
+  subnetwork                   = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
+  zones                        = var.zones
 
-  project_id        = data.google_project.project.project_id
-  name              = var.cluster_name
-  release_channel   = var.cluster_gke_release_channel
-  regional          = var.cluster_regional
-  region            = var.region
-  zones             = var.zones
-  network           = module.fedlearn-vpc.network_name
-  subnetwork        = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
-  ip_range_pods     = "pods"
-  ip_range_services = "services"
-
-  enable_shielded_nodes       = true
-  enable_binary_authorization = true
-  grant_registry_access       = true
 
   # Encrypt cluster secrets at the application layer
   database_encryption = [{
@@ -37,63 +45,30 @@ module "gke" {
     "state" : "ENCRYPTED"
   }]
 
-  # Dataplane V2
-  datapath_provider = "ADVANCED_DATAPATH"
-  # automatically enabled with Dataplane V2
-  network_policy = false
-
-  // Private cluster nodes, public endpoint with authorized networks
-  enable_private_nodes         = true
-  enable_private_endpoint      = false
-  master_global_access_enabled = true
-  master_ipv4_cidr_block       = var.master_ipv4_cidr_block
   master_authorized_networks = [
     {
       display_name : "NAT IP",
       cidr_block : format("%s/32", google_compute_address.nat_ip.address)
     },
-    # NOTE: we add the local IP of the workstation that applies the Terraform to authorized networks
+    # Add the local IP of the workstation that applies the Terraform to authorized networks
     {
       display_name : "Local IP",
       cidr_block : "${chomp(data.http.installation_workstation_ip.body)}/32"
     }
   ]
-  # open ports for ASM
-  add_cluster_firewall_rules = true
-  # we don't want ingress into the cluster by default
-  http_load_balancing = false
 
-  remove_default_node_pool = true
-  node_pools = concat(
-    # main node pool
-    [{
-      name                        = local.main_node_pool_name
-      image_type                  = "COS_CONTAINERD"
-      machine_type                = var.cluster_default_pool_machine_type
-      min_count                   = var.cluster_default_pool_min_nodes
-      max_count                   = var.cluster_default_pool_max_nodes
-      auto_upgrade                = true
-      enable_integrity_monitoring = true
-      enable_secure_boot          = true
-      service_account             = format("%s@%s.iam.gserviceaccount.com", local.main_node_pool_sa_name, data.google_project.project.project_id)
-    }],
-
-    # list of tenant nodepools
-    [for tenant_name, config in local.tenants : {
-      name                        = config.tenant_nodepool_name
-      image_type                  = "COS_CONTAINERD"
-      machine_type                = var.cluster_tenant_pool_machine_type
-      min_count                   = var.cluster_tenant_pool_min_nodes
-      max_count                   = var.cluster_tenant_pool_max_nodes
-      auto_upgrade                = true
-      enable_integrity_monitoring = true
-      enable_secure_boot          = true
-      # enable GKE sandbox (gVisor) for tenant nodes
-      sandbox_enabled = true
-      # dedicated service account per tenant node pool
-      service_account = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
-    }]
-  )
+  node_pools = [for tenant_name, config in local.tenants : {
+    auto_upgrade                = true
+    enable_integrity_monitoring = true
+    enable_secure_boot          = true
+    image_type                  = "COS_CONTAINERD"
+    machine_type                = tenant_name == local.main_tenant_name ? var.cluster_default_pool_machine_type : var.cluster_tenant_pool_machine_type
+    max_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_max_nodes : var.cluster_tenant_pool_max_nodes
+    min_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_min_nodes : var.cluster_tenant_pool_min_nodes
+    name                        = config.tenant_nodepool_name
+    sandbox_enabled             = tenant_name == local.main_tenant_name ? false : true
+    service_account             = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
+  }]
 
   # Add a label with tenant name to each tenant nodepool
   node_pools_labels = {
@@ -118,12 +93,17 @@ module "gke" {
 }
 
 locals {
-  main_node_pool_name    = "main-pool"
-  main_node_pool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, local.main_node_pool_name)
 
-  # for each tenant, define the names of the nodepool, service accounts etc
+  main_tenant_name = "main"
+
+  # To reduce duplication, treat the main pool as the first (privileged) tenant
+  tenant_and_main_pool_names = concat(
+    [local.main_tenant_name],
+    var.tenant_names
+  )
+
   tenants = {
-    for name in var.tenant_names : name => {
+    for name in local.tenant_and_main_pool_names : name => {
       tenant_nodepool_name    = format("%s-pool", name)
       tenant_nodepool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, name)
       tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
@@ -133,20 +113,13 @@ locals {
 
   # We can't use module.service_accounts.emails because of
   # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
-  list_nodepool_sa_emails = concat(
-    [for tenant in local.tenants : module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email],
-    [module.service_accounts.service_accounts_map[local.main_node_pool_sa_name].email]
-  )
+  list_nodepool_sa_emails = [for tenant in local.tenants : module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email]
 
   # We can't use module.service_accounts.iam_emails because of
   # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
-  list_nodepool_sa_iam_emails = concat(
-    [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"],
-    ["serviceAccount:${module.service_accounts.service_accounts_map[local.main_node_pool_sa_name].email}"],
-  )
+  list_nodepool_sa_iam_emails = [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"]
 
   list_sa_names = concat(
-    [local.main_node_pool_sa_name],
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
     [for tenant in local.tenants : tenant.tenant_apps_sa_name],
   )
