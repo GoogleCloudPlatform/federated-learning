@@ -113,8 +113,7 @@ module "gke" {
     module.fedlearn-vpc,
     module.project-iam-bindings,
     module.project-services,
-    google_service_account.main_nodepool_sa,
-    google_service_account.tenant_nodepool_sa,
+    module.service_accounts,
   ]
 }
 
