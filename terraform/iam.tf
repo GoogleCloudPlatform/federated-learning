@@ -1,32 +1,11 @@
-# Service Account used by the nodes in a tenant node pool
-resource "google_service_account" "tenant_nodepool_sa" {
-  for_each     = local.tenants
-  project      = data.google_project.project.project_id
-  account_id   = each.value.tenant_nodepool_sa_name
-  display_name = "Service account for ${each.key} node pool in cluster ${var.cluster_name}"
+module "service_accounts" {
+  source     = "terraform-google-modules/service-accounts/google"
+  version    = "4.2.1"
+  project_id = data.google_project.project.project_id
 
-  depends_on = [
-    module.project-services
-  ]
-}
-
-# Service Account used by the nodes in the main node pool
-resource "google_service_account" "main_nodepool_sa" {
-  project      = data.google_project.project.project_id
-  account_id   = local.main_node_pool_sa_name
-  display_name = "Service account for ${local.main_node_pool_name} node pool in cluster ${var.cluster_name}"
-
-  depends_on = [
-    module.project-services
-  ]
-}
-
-# Service Account used by apps in a tenant namespace
-resource "google_service_account" "tenant_apps_sa" {
-  for_each     = local.tenants
-  project      = data.google_project.project.project_id
-  account_id   = each.value.tenant_apps_sa_name
-  display_name = "Service account for ${each.key} apps in cluster ${var.cluster_name}"
+  grant_billing_role = false
+  grant_xpn_roles    = false
+  names              = local.list_sa_names
 
   depends_on = [
     module.project-services
@@ -41,28 +20,13 @@ module "project-iam-bindings" {
   mode     = "authoritative"
 
   bindings = {
-    # Least-privilege roles needed for a node pool service account to function
-    "roles/logging.logWriter" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/monitoring.metricWriter" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/monitoring.viewer" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    "roles/stackdriver.resourceMetadata.writer" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
-    # Grant node pool service accounts read access to Container Registry and Artifact Registry
-    "roles/artifactregistry.reader" = concat(
-      [for service_account in google_service_account.tenant_nodepool_sa : format("serviceAccount:%s", service_account.email)],
-      [format("serviceAccount:%s", google_service_account.main_nodepool_sa.email)]
-    )
+    # Least-privilege roles needed for a node pool service account to function and
+    # to get read-only access to Container Registry and Artifact Registry
+    "roles/logging.logWriter"                   = local.list_nodepool_sa_iam_emails,
+    "roles/monitoring.metricWriter"             = local.list_nodepool_sa_iam_emails,
+    "roles/monitoring.viewer"                   = local.list_nodepool_sa_iam_emails,
+    "roles/stackdriver.resourceMetadata.writer" = local.list_nodepool_sa_iam_emails,
+    "roles/artifactregistry.reader"             = local.list_nodepool_sa_iam_emails,
   }
 
   depends_on = [
@@ -72,8 +36,8 @@ module "project-iam-bindings" {
 
 # enable the tenant apps service accounts for Workload Identity
 resource "google_service_account_iam_binding" "workload_identity" {
-  for_each           = google_service_account.tenant_apps_sa
-  service_account_id = each.value.name
+  for_each           = local.tenants
+  service_account_id = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].name
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
