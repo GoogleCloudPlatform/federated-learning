@@ -103,7 +103,7 @@ locals {
   )
 
   tenants = {
-    for name in var.tenant_names : name => {
+    for name in local.tenant_and_main_pool_names : name => {
       tenant_nodepool_name    = format("%s-pool", name)
       tenant_nodepool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, name)
       tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
