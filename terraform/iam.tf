@@ -36,7 +36,7 @@ module "project-iam-bindings" {
 
 # enable the tenant apps service accounts for Workload Identity
 resource "google_service_account_iam_binding" "workload_identity" {
-  for_each           = google_service_account.tenant_apps_sa
+  for_each           = module.service_accounts.service_accounts_map
   service_account_id = each.value.name
   role               = "roles/iam.workloadIdentityUser"
 

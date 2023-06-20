@@ -142,10 +142,12 @@ locals {
     [module.service_accounts.iam_emails[local.main_node_pool_sa_name]]
   )
 
+  list_apps_sa_names = [for tenant in local.tenants : tenant.tenant_apps_sa_name]
+
   list_sa_names = concat(
     [local.main_node_pool_sa_name],
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
-    [for tenant in local.tenants : tenant.tenant_apps_sa_name],
+    local.list_apps_sa_names,
   )
 }
 
