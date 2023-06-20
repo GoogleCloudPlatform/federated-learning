@@ -1,36 +1,16 @@
-# Service Account used by the nodes in a tenant node pool
-resource "google_service_account" "tenant_nodepool_sa" {
-  for_each     = local.tenants
-  project      = data.google_project.project.project_id
-  account_id   = each.value.tenant_nodepool_sa_name
-  display_name = "Service account for ${each.key} node pool in cluster ${var.cluster_name}"
+module "service_accounts" {
+  source     = "terraform-google-modules/service-accounts/google"
+  version    = "4.2.1"
+  project_id = data.google_project.project.project_id
+
+  grant_billing_role = false
+  grant_xpn_roles    = false
+  names              = local.list_sa_names
 
   depends_on = [
     module.project-services
   ]
-}
 
-# Service Account used by the nodes in the main node pool
-resource "google_service_account" "main_nodepool_sa" {
-  project      = data.google_project.project.project_id
-  account_id   = local.main_node_pool_sa_name
-  display_name = "Service account for ${local.main_node_pool_name} node pool in cluster ${var.cluster_name}"
-
-  depends_on = [
-    module.project-services
-  ]
-}
-
-# Service Account used by apps in a tenant namespace
-resource "google_service_account" "tenant_apps_sa" {
-  for_each     = local.tenants
-  project      = data.google_project.project.project_id
-  account_id   = each.value.tenant_apps_sa_name
-  display_name = "Service account for ${each.key} apps in cluster ${var.cluster_name}"
-
-  depends_on = [
-    module.project-services
-  ]
 }
 
 # default roles for the node SAs

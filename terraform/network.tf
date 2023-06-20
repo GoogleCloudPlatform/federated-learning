@@ -20,7 +20,7 @@ module "fedlearn-vpc" {
       direction               = "EGRESS"
       name                    = "node-pools-deny-egress"
       priority                = 65535
-      target_service_accounts = local.list_nodepool_sa
+      target_service_accounts = local.list_nodepool_sa_emails
 
       deny = [
         {
@@ -34,7 +34,7 @@ module "fedlearn-vpc" {
       name                    = "node-pools-allow-egress-nodes-pods-services"
       priority                = 1000
       ranges                  = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].ip_cidr_range, local.fedlearn_pods_ip_range, local.fedlearn_services_ip_range]
-      target_service_accounts = local.list_nodepool_sa
+      target_service_accounts = local.list_nodepool_sa_emails
 
       allow = [
         {
@@ -48,7 +48,7 @@ module "fedlearn-vpc" {
       direction               = "EGRESS"
       name                    = "node-pools-allow-egress-api-server"
       priority                = 1000
-      target_service_accounts = local.list_nodepool_sa
+      target_service_accounts = local.list_nodepool_sa_emails
 
       allow = [
         {
@@ -63,7 +63,7 @@ module "fedlearn-vpc" {
       direction               = "EGRESS"
       name                    = "node-pools-allow-egress-google-apis"
       priority                = 1000
-      target_service_accounts = local.list_nodepool_sa
+      target_service_accounts = local.list_nodepool_sa_emails
 
       allow = [
         {
