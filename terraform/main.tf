@@ -131,15 +131,18 @@ locals {
   }
   gke_robot_sa = "service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 
-
+  # We can't use module.service_accounts.emails because of
+  # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
   list_nodepool_sa_emails = concat(
-    [for tenant in local.tenants : module.service_accounts.emails[tenant.tenant_nodepool_sa_name]],
-    [module.service_accounts.emails[local.main_node_pool_sa_name]]
+    [for tenant in local.tenants : module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email],
+    [module.service_accounts.service_accounts_map[local.main_node_pool_sa_name].email]
   )
 
+  # We can't use module.service_accounts.iam_emails because of
+  # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
   list_nodepool_sa_iam_emails = concat(
-    [for tenant in local.tenants : module.service_accounts.iam_emails[tenant.tenant_nodepool_sa_name]],
-    [module.service_accounts.iam_emails[local.main_node_pool_sa_name]]
+    [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"],
+    "serviceAccount:${module.service_accounts.service_accounts_map[local.main_node_pool_sa_name].email}",
   )
 
   list_apps_sa_names = [for tenant in local.tenants : tenant.tenant_apps_sa_name]
