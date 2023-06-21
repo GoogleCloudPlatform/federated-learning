@@ -81,7 +81,7 @@ module "gke" {
       key    = "tenant"
       value  = tenant_name
       effect = "NO_EXECUTE"
-    }]
+    }] if tenant_name != local.main_tenant_name
   }
 
   depends_on = [
