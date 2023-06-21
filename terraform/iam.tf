@@ -34,21 +34,6 @@ module "project-iam-bindings" {
   ]
 }
 
-# enable the tenant apps service accounts for Workload Identity
-resource "google_service_account_iam_binding" "workload_identity" {
-  for_each           = local.tenants
-  service_account_id = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].name
-  role               = "roles/iam.workloadIdentityUser"
-
-  members = [
-    format("serviceAccount:%s.svc.id.goog[%s/ksa]", data.google_project.project.project_id, each.key),
-  ]
-  # workload identity pool must exist before binding
-  depends_on = [
-    module.gke
-  ]
-}
-
 module "fl-workload-identity" {
   for_each   = local.tenants
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
