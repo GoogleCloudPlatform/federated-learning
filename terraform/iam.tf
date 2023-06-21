@@ -41,9 +41,9 @@ module "fl-workload-identity" {
   project_id = data.google_project.project.project_id
 
   annotate_k8s_sa     = false
-  gcp_sa_name         = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].name
   k8s_sa_name         = "ksa"
   location            = module.gke.location
+  name                = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].name
   namespace           = each.key
   use_existing_gcp_sa = true
   use_existing_k8s_sa = true
