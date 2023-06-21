@@ -118,30 +118,36 @@ module "fedlearn-vpc" {
   ]
 }
 
-resource "google_compute_router" "router" {
-  name    = "router"
-  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].region
-  network = module.fedlearn-vpc.network_id
-}
-
 resource "google_compute_address" "nat_ip" {
   name   = "nat-manual-ip"
   region = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].region
 }
 
-resource "google_compute_router_nat" "nat" {
-  name   = "fl-nat-gateway"
-  router = google_compute_router.router.name
-  region = google_compute_router.router.region
+module "cloud_router" {
+  source  = "terraform-google-modules/cloud-router/google"
+  version = "5.0.1"
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips                = [google_compute_address.nat_ip.self_link]
+  name    = "fl-router"
+  network = module.fedlearn-vpc.network_id
+  project = data.google_project.project.project_id
+  region  = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].region
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+  nats = [
+    {
+      name                               = "fl-nat-gateway"
+      nat_ip_allocate_option             = "MANUAL_ONLY"
+      source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+
+      nat_ips = [google_compute_address.nat_ip.self_link]
+
+      subnetworks = [
+        {
+          name                    = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].self_link
+          source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+        }
+      ]
+    }
+  ]
 }
 
 # IP address of the machine that this Terraform operation is running on.
