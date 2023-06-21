@@ -43,7 +43,7 @@ module "fl-workload-identity" {
   annotate_k8s_sa     = false
   k8s_sa_name         = "ksa"
   location            = module.gke.location
-  name                = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].name
+  name                = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id
   namespace           = each.key
   use_existing_gcp_sa = true
   use_existing_k8s_sa = true
