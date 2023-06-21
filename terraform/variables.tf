@@ -108,7 +108,7 @@ variable "acm_version" {
 }
 
 variable "acm_repo_location" {
-  default     = "https://github.com/GoogleCloudPlatform/gke-third-party-apps-blueprint"
+  default     = "https://github.com/GoogleCloudPlatform/gke-securing-third-party-apps-blueprint"
   description = "The location of the Git repo Anthos Config Management will sync to"
   type        = string
 }
