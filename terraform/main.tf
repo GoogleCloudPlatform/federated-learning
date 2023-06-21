@@ -82,6 +82,17 @@ module "gke" {
       key    = "tenant"
       value  = tenant_name
       effect = "NO_EXECUTE"
+      },
+      {
+        # When GKE Sandbox is enabled, it adds the following taint automatically.
+        # Ref: https://cloud.google.com/kubernetes-engine/docs/how-to/sandbox-pods#regular-pod
+        # We add it using Terraform because Terraform reports it missing after the
+        # node pool is created, and it would cause the recreation of the node pool
+        # because Terraform would try to remove the taint because it's not aware
+        # of it.
+        key    = "sandbox.gke.io/runtime"
+        value  = "gvisor"
+        effect = "NO_SCHEDULE"
     }] if tenant_name != local.main_tenant_name
   }
 
