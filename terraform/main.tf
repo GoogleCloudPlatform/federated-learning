@@ -16,6 +16,7 @@ module "gke" {
 
   add_cluster_firewall_rules   = true
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
+  create_service_account       = false
   datapath_provider            = "ADVANCED_DATAPATH"
   enable_binary_authorization  = true
   enable_private_endpoint      = false
