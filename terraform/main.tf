@@ -74,8 +74,7 @@ module "gke" {
   # Add a label with tenant name to each tenant nodepool
   node_pools_labels = {
     for tenant_name, config in local.tenants : config.tenant_nodepool_name => {
-      "tenant"                 = tenant_name,
-      "sandbox.gke.io/runtime" = "gvisor"
+      "tenant" = tenant_name
     } if tenant_name != local.main_tenant_name
   }
 
