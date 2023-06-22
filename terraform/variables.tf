@@ -103,7 +103,7 @@ variable "cluster_secrets_keyname" {
 
 variable "acm_version" {
   description = "Anthos Config Management version"
-  default     = "1.9.0"
+  default     = ""
   type        = string
 }
 
