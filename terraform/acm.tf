@@ -33,6 +33,7 @@ module "acm" {
 
 
   depends_on = [
+    module.gke,
     module.project-services
   ]
 }
