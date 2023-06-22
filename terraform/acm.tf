@@ -57,6 +57,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
     # Note that we enable PolicyController mutations separately below
     policy_controller {
       enabled                    = true
+      mutation_enabled           = true
       template_library_installed = true
     }
   }
@@ -65,17 +66,4 @@ resource "google_gke_hub_feature_membership" "feature_member" {
   depends_on = [
     module.asm.asm_wait,
   ]
-}
-
-# Execute script to enable the PoliycController Mutations (beta) feature.
-# The Terraform google_gke_hub_feature_membership module above does not yet support enabling mutations,
-# so we call gcloud to update the config directly.
-module "enable_policycontroller_mutations" {
-  source        = "terraform-google-modules/gcloud/google"
-  version       = "3.1.2"
-  upgrade       = false
-  skip_download = true
-
-  create_cmd_entrypoint = "./scripts/enablePolicyControllerMutations.sh"
-  create_cmd_body       = google_gke_hub_feature_membership.feature_member.membership
 }
