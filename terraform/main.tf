@@ -45,8 +45,8 @@ locals {
     [local.source_repository_service_account_name]
   )
 
-  source_repository_service_account_name = "fl-source-repository"
-  source_repository_service_account_email = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
+  source_repository_service_account_name      = "fl-source-repository"
+  source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 }
 
