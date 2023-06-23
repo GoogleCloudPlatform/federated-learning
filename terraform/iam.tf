@@ -26,7 +26,6 @@ module "service_accounts" {
   ]
 }
 
-# default roles for the node SAs
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "7.6.0"
@@ -45,6 +44,19 @@ module "project-iam-bindings" {
 
   depends_on = [
     module.project-services
+  ]
+}
+
+# There's no Terraform module for Cloud Source Repositories bindings, so we
+# configure it directly
+resource "google_sourcerepo_repository_iam_binding" "binding" {
+  project    = google_sourcerepo_repository.my-repo.project
+  repository = google_sourcerepo_repository.configsync-repository.name
+
+  role = "roles/viewer"
+
+  members = [
+    local.source_repository_service_account_iam_email,
   ]
 }
 

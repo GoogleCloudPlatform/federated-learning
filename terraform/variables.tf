@@ -107,12 +107,6 @@ variable "acm_version" {
   type        = string
 }
 
-variable "acm_repo_location" {
-  default     = "https://github.com/GoogleCloudPlatform/gke-securing-third-party-apps-blueprint"
-  description = "The location of the Git repo Anthos Config Management will sync to"
-  type        = string
-}
-
 variable "acm_branch" {
   default     = "main"
   description = "The Git branch Anthos Config Management will sync to"
@@ -122,12 +116,6 @@ variable "acm_branch" {
 variable "acm_dir" {
   default     = "configsync"
   description = "The directory in the repository that Anthos Config Management will sync to"
-  type        = string
-}
-
-variable "acm_secret_type" {
-  default     = "none"
-  description = "Git authentication secret type. The default value assumes that the repository is publicly accessible."
   type        = string
 }
 

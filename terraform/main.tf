@@ -42,7 +42,12 @@ locals {
   list_sa_names = concat(
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
     [for tenant in local.tenants : tenant.tenant_apps_sa_name],
+    [local.source_repository_service_account_name]
   )
+
+  source_repository_service_account_name = "fl-source-repository"
+  source_repository_service_account_email = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
+  source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 }
 
 data "google_project" "project" {

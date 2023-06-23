@@ -22,15 +22,15 @@ module "acm" {
   cluster_name = module.gke.name
   location     = module.gke.location
 
-  configmanagement_version = var.acm_version
-  create_metrics_gcp_sa    = true
-  enable_mutation          = true
-  policy_dir               = var.acm_dir
-  secret_type              = var.acm_secret_type
-  source_format            = "unstructured"
-  sync_repo                = var.acm_repo_location
-  sync_branch              = var.acm_branch
-
+  configmanagement_version  = var.acm_version
+  create_metrics_gcp_sa     = true
+  enable_mutation           = true
+  gcp_service_account_email = local.source_repository_service_account_email
+  policy_dir                = var.acm_dir
+  secret_type               = "gcpServiceAccount"
+  source_format             = "unstructured"
+  sync_repo                 = google_sourcerepo_repository.configsync-repository.url
+  sync_branch               = var.acm_branch
 
   depends_on = [
     module.asm.asm_wait,
