@@ -27,8 +27,9 @@ echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY_PATH}/common.sh"
 
-CONFIG_SYNC_REPOSITORY_URL="${1}"
-echo "Source repository URL: ${CONFIG_SYNC_REPOSITORY_URL}"
+CONFIG_SYNC_REPOSITORY_URL="${1:-}"
+
+check_argument "${CONFIG_SYNC_REPOSITORY_URL}" "Config Sync repository URL"
 
 CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH="$(mktemp -d)"
 echo "Source repository path: ${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}"

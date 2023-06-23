@@ -17,6 +17,23 @@
 set -o errexit
 set -o nounset
 
+check_argument() {
+  ARGUMENT_VALUE="${1}"
+  ARGUMENT_DESCRIPTION="${2}"
+
+  if [ -z "${ARGUMENT_VALUE}" ]; then
+    echo "[ERROR]: ${ARGUMENT_DESCRIPTION} is not defined. Run this command with the -h option to get help. Terminating..."
+    # Ignoring because those are defined in common.sh, and don't need quotes
+    # shellcheck disable=SC2086
+    exit ${ERR_VARIABLE_NOT_DEFINED}
+  else
+    echo "[OK]: ${ARGUMENT_DESCRIPTION} value is defined: ${ARGUMENT_VALUE}"
+  fi
+
+  unset ARGUMENT_NAME
+  unset ARGUMENT_VALUE
+}
+
 clone_git_repository_if_not_cloned_already() {
   destination_dir="$1"
   git_repository_url="$2"
