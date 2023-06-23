@@ -27,7 +27,9 @@ echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY_PATH}/common.sh"
 
-CONFIG_SYNC_REPOSITORY_URL="${1:-}"
+TERRAFORM_CONFIGURATION_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/../terraform"
+
+CONFIG_SYNC_REPOSITORY_URL="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw configsync_repository_url)"
 
 check_argument "${CONFIG_SYNC_REPOSITORY_URL}" "Config Sync repository URL"
 
@@ -43,4 +45,16 @@ echo "Blueprint repository path: ${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}"
 
 cp -rv "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/configsync" "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}/"
 
-git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" push -u origin main
+CONFIG_SYNC_DIRECTORY_PATH="${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}/configsync"
+TENANTS_CONFIGURATION_DIRECTORY_PATH="${CONFIG_SYNC_DIRECTORY_PATH}/tenants"
+
+mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
+
+TENANT_NAMES="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw tenant_names)"
+echo "Tenant names: ${TENANT_NAMES}"
+
+# kpt pkg get "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/tenant-config-pkg" "${TENANTS_CONFIGURATION_DIRECTORY_PATH}/fltenant1"
+
+# git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" commit -m "Initial commit"
+
+# git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" push -u origin main

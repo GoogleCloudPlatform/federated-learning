@@ -13,6 +13,11 @@
 # limitations under the License.
 
 output "configsync_repository_url" {
-  description = "URL of the Config Sync source repository"
+  description = "URL of the Config Sync source repository."
   value       = google_sourcerepo_repository.configsync-repository.url
+}
+
+output "tenant_names" {
+  description = "Set of named tenants created in the cluster."
+  value       = var.tenant_names
 }
