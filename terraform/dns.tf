@@ -131,6 +131,14 @@ module "source-repositories-private-artifact-registry" {
 
   recordsets = [
     {
+      name = "*"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "source.developers.google.com.",
+      ]
+    },
+    {
       name    = ""
       type    = "A"
       ttl     = 300
