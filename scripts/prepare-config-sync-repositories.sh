@@ -34,6 +34,7 @@ CONFIG_SYNC_REPOSITORY_URL="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECT
 GKE_CLUSTER_NAME="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw gke_cluster_name)"
 GOOGLE_CLOUD_PROJECT="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw google_cloud_project)"
 
+check_argument "${CONFIG_SYNC_REPOSITORY_BRANCH}" "Config Sync repository branch"
 check_argument "${CONFIG_SYNC_REPOSITORY_URL}" "Config Sync repository URL"
 check_argument "${GKE_CLUSTER_NAME}" "GKE cluster name"
 check_argument "${GOOGLE_CLOUD_PROJECT}" "Google Cloud project ID"
