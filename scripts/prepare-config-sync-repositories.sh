@@ -30,8 +30,12 @@ echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 TERRAFORM_CONFIGURATION_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/../terraform"
 
 CONFIG_SYNC_REPOSITORY_URL="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw configsync_repository_url)"
+GKE_CLUSTER_NAME="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw gke_cluster_name)"
+GOOGLE_CLOUD_PROJECT="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw google_cloud_project)"
 
 check_argument "${CONFIG_SYNC_REPOSITORY_URL}" "Config Sync repository URL"
+check_argument "${GKE_CLUSTER_NAME}" "GKE cluster name"
+check_argument "${GOOGLE_CLOUD_PROJECT}" "Google Cloud project ID"
 
 CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH="$(mktemp -d)"
 echo "Source repository path: ${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}"
@@ -50,10 +54,19 @@ TENANTS_CONFIGURATION_DIRECTORY_PATH="${CONFIG_SYNC_DIRECTORY_PATH}/tenants"
 
 mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
 
-TENANT_NAMES="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw tenant_names)"
-echo "Tenant names: ${TENANT_NAMES}"
+IFS="$(printf '\n')"
 
-# kpt pkg get "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/tenant-config-pkg" "${TENANTS_CONFIGURATION_DIRECTORY_PATH}/fltenant1"
+for TENANT in $(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -json tenant_names | jq -c '.[]' | jq --raw-output @sh); do
+  echo "Configuring package for tenant: ${TENANT}"
+  kpt pkg get "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/tenant-config-pkg" "${TENANTS_CONFIGURATION_DIRECTORY_PATH}/${TENANT}"
+
+  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 -- \
+    tenant-name="${TENANT}" \
+    gcp-service-account="${GKE_CLUSTER_NAME}-${TENANT}-apps-sa@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com" \
+    tenant-developer=someuser@email.tld
+done
+
+unset IFS # Return IFS to its original value
 
 # git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" commit -m "Initial commit"
 

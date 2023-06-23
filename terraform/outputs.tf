@@ -17,6 +17,16 @@ output "configsync_repository_url" {
   value       = google_sourcerepo_repository.configsync-repository.url
 }
 
+output "google_cloud_project" {
+  description = "Google Cloud project ID."
+  value       = data.google_project.project.project_id
+}
+
+output "gke_cluster_name" {
+  description = "GKE cluster name."
+  value       = module.gke.name
+}
+
 output "tenant_names" {
   description = "Set of named tenants created in the cluster."
   value       = var.tenant_names
