@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+output "acm_repository_branch" {
+  description = "The Git branch Config Sync will sync to."
+  value       = var.acm_branch
+}
+
 output "configsync_repository_url" {
   description = "URL of the Config Sync source repository."
   value       = google_sourcerepo_repository.configsync-repository.url
