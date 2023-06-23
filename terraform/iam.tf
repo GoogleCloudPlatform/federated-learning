@@ -50,7 +50,7 @@ module "project-iam-bindings" {
 # There's no Terraform module for Cloud Source Repositories bindings, so we
 # configure it directly
 resource "google_sourcerepo_repository_iam_binding" "binding" {
-  project    = google_sourcerepo_repository.my-repo.project
+  project    = google_sourcerepo_repository.configsync-repository.project
   repository = google_sourcerepo_repository.configsync-repository.name
 
   role = "roles/viewer"
