@@ -43,10 +43,9 @@ clone_git_repository_if_not_cloned_already() {
     exit 1
   fi
 
-  if [ -d "${destination_dir}" ]; then
+  if [ -d "${destination_dir}/.git" ]; then
     echo "${destination_dir} already exists. Skipping..."
   else
-    mkdir -p "$destination_dir"
     echo "Cloning $git_repository_url in $destination_dir"
     git clone "$git_repository_url" "$destination_dir"
   fi
