@@ -34,7 +34,7 @@ Used to bind to a ClusterRole with limited permissions.
   kpt pkg get $PKG-REPO.git/tenant-config-pkg tenant2
   ```
 
-1. Confgure the package, updating default values with tenant-specific values. This updates the namespace to be 'tenant2' etc.
+1. Configure the package, updating default values with tenant-specific values. This updates the namespace to be 'tenant2' etc.
 
   ```sh
   kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 -- \

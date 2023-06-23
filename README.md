@@ -121,9 +121,9 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
 ## Deploy the blueprint
 
-- Open [Cloud Shell](https://cloud.google.com/shell)
-- Clone this repository
-- Change into the directory that contains the Terraform code:
+1. Open [Cloud Shell](https://cloud.google.com/shell)
+1. Clone this repository
+1. Change into the directory that contains the Terraform code:
 
   ```sh
   cd [REPO]/terraform
@@ -131,39 +131,29 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
   Where `[REPO]` is the path to the directory where you cloned this repository.
 
-- Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
-- Initialize Terraform:
+1. Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
+1. Initialize Terraform:
 
   ```sh
   terraform init
   ```
 
-- Create the plan and review it:
+1. Review the proposed changes, and apply them:
 
   ```sh
-  terraform plan -out terraform.out
+  terraform apply
   ```
 
-- Apply the plan to create the cluster:
+  This may take about 15 minutes to complete
 
-  ```sh
-  terraform apply terraform.out
-  ```
+### Add another tenant
 
-  Note: this may take ~15 minutes to complete
+This blueprint dynamically provisions a runtime environment for each tenant you configure.
+
+To add another tenant, add its name to the list of tenants to configure using
+the `tenant_names` variable.
 
 ## Test
 
 For more details about manual tests you can perform to validate this setup,
 refer to the [testing directory](testing).
-
-## Add another tenant
-
-This blueprint provisions a runtime environment for a single tenant.
-
-To add another tenant, you:
-
-1. Create the project-level infrastructure and resources for the new tenant by updating the Terraform descriptors.
-1. Configure cluster-level resources for the new tenant by instantiating and configuring a new version of the `tenant` kpt package.
-
-For an example of this process, refer to the [testing directory](testing).

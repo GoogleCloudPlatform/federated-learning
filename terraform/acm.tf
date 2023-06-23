@@ -33,6 +33,7 @@ module "acm" {
 
 
   depends_on = [
+    module.asm.asm_wait,
     module.gke,
     module.project-services
   ]
