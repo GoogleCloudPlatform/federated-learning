@@ -29,6 +29,7 @@ echo "This script directory path is: ${SCRIPT_DIRECTORY_PATH}"
 
 TERRAFORM_CONFIGURATION_DIRECTORY_PATH="${SCRIPT_DIRECTORY_PATH}/../terraform"
 
+CONFIG_SYNC_REPOSITORY_BRANCH="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw acm_repository_branch)"
 CONFIG_SYNC_REPOSITORY_URL="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw configsync_repository_url)"
 GKE_CLUSTER_NAME="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw gke_cluster_name)"
 GOOGLE_CLOUD_PROJECT="$(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -raw google_cloud_project)"
@@ -51,23 +52,30 @@ cp -rv "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/configsync" "${CONFIG_SYNC_REPOSI
 
 CONFIG_SYNC_DIRECTORY_PATH="${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}/configsync"
 TENANTS_CONFIGURATION_DIRECTORY_PATH="${CONFIG_SYNC_DIRECTORY_PATH}/tenants"
+TENANT_CONFIGURATION_PACKAGE_PATH="${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/tenant-config-pkg"
 
 mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
 
 IFS="$(printf '\n')"
 
-for TENANT in $(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -json tenant_names | jq -c '.[]' | jq --raw-output @sh); do
+for TENANT in $(terraform -chdir="${TERRAFORM_CONFIGURATION_DIRECTORY_PATH}" output -json tenant_names | jq -c '.[]' | jq --raw-output @sh | tr -d "'"); do
   echo "Configuring package for tenant: ${TENANT}"
-  kpt pkg get "${BLUEPRINT_REPOSITORY_DIRECTORY_PATH}/tenant-config-pkg" "${TENANTS_CONFIGURATION_DIRECTORY_PATH}/${TENANT}"
 
-  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 -- \
+  TENANT_CONFIGURATION_DIRECTORY_PATH="${TENANTS_CONFIGURATION_DIRECTORY_PATH}/${TENANT}"
+  echo "Saving ${TENANT} tenant configuration package in: ${TENANT_CONFIGURATION_DIRECTORY_PATH}"
+  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 "${TENANT_CONFIGURATION_PACKAGE_PATH}" --output="${TENANT_CONFIGURATION_DIRECTORY_PATH}" -- \
     tenant-name="${TENANT}" \
     gcp-service-account="${GKE_CLUSTER_NAME}-${TENANT}-apps-sa@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com" \
-    tenant-developer=someuser@email.tld
+    tenant-developer=someuser@example.com
 done
 
 unset IFS # Return IFS to its original value
 
-# git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" commit -m "Initial commit"
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" config user.email "commit-bot@example.com"
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" config user.name "Commit bot"
 
-# git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" push -u origin main
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" checkout -b "${CONFIG_SYNC_REPOSITORY_BRANCH}"
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" add .
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" commit -m "Initial commit"
+
+git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" push -u origin "${CONFIG_SYNC_REPOSITORY_BRANCH}"
