@@ -14,8 +14,9 @@
 
 resource "null_resource" "init_acm_repository" {
   triggers = {
-    md5       = md5(google_sourcerepo_repository.configsync-repository.url)
-    arguments = md5(var.acm_repository_path)
+    md5                 = md5(google_sourcerepo_repository.configsync-repository.url)
+    arguments           = md5(var.acm_repository_path)
+    acm_repository_path = var.acm_repository_path
   }
 
   provisioner "local-exec" {
@@ -29,7 +30,7 @@ resource "null_resource" "init_acm_repository" {
   provisioner "local-exec" {
     when    = destroy
     command = <<-EOT
-      rm -rf "${var.acm_repository_path}"
+      rm -rf "${self.triggers.acm_repository_path}"
     EOT
   }
 }
