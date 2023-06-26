@@ -115,7 +115,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node
   - The toleration and nodeAffinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
 - The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.
-- The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](configsync/tenants/fltenant1/rbac.yaml) that grants the role to an example user.
+- The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](tenant-config-pkg/rbac.yaml) that grants the role to an example user.
   - For example, different teams might be responsible for managing apps within each tenant namespace
   - Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
 
@@ -126,10 +126,10 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 1. Change into the directory that contains the Terraform code:
 
   ```sh
-  cd [REPO]/terraform
+  cd [REPOSITORY]/terraform
   ```
 
-  Where `[REPO]` is the path to the directory where you cloned this repository.
+  Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
 
 1. Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
 1. Initialize Terraform:
@@ -148,12 +148,15 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
 ### Add another tenant
 
-This blueprint dynamically provisions a runtime environment for each tenant you configure.
+This blueprint dynamically provisions a runtime environment for each tenant you
+configure.
 
-To add another tenant, add its name to the list of tenants to configure using
-the `tenant_names` variable.
+To add another tenant:
+
+1. Add its name to the list of tenants to configure using the `tenant_names` variable.
+1. Follow the steps to [Deploy the blueprint](#deploy-the-blueprint) again.
 
 ## Test
 
 For more details about manual tests you can perform to validate this setup,
-refer to the [testing directory](testing).
+see the [testing directory](testing).
