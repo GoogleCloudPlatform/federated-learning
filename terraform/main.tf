@@ -62,7 +62,7 @@ locals {
       "${var.acm_branch}"
   EOT
 
-  copy_acm_common_content_script_path = "${path.module}/scripts/copy-acm-common-content.sh"
+  copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
   copy_acm_common_content_command     = <<-EOT
     "${local.copy_acm_common_content_script_path}" \
       "${local.acm_config_sync_common_content_source_path}" \
