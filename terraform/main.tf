@@ -52,19 +52,26 @@ locals {
 
   acm_config_sync_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
+  acm_config_sync_common_content_source_path           = abspath("${path.module}/../configsync")
 
-  init_local_acm_repository_script_path = "${path.module}/scripts/init-acm-repository.sh"
-
-  init_local_acm_repository_command = <<-EOT
-    ${local.init_local_acm_repository_script_path} \
+  init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
+  init_local_acm_repository_command     = <<-EOT
+    "${local.init_local_acm_repository_script_path}" \
       "${var.acm_repository_path}" \
       "${google_sourcerepo_repository.configsync-repository.url}" \
       "${var.acm_branch}"
   EOT
 
-  kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync")
+  copy_acm_common_content_script_path = "${path.module}/scripts/copy-acm-common-content.sh"
+  copy_acm_common_content_command     = <<-EOT
+    "${local.copy_acm_common_content_script_path}" \
+      "${local.acm_config_sync_common_content_source_path}" \
+      "${local.acm_config_sync_directory_path}"
+  EOT
 
-  kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
+  kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync/tenants")
+
+  # kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"

@@ -33,6 +33,26 @@ resource "null_resource" "init_acm_repository" {
   }
 }
 
+resource "null_resource" "copy_common_acm_content" {
+  triggers = {
+    md5                             = md5(local.copy_acm_common_content_command)
+    source_contents_hash            = sha512(join("", [for f in fileset(local.acm_config_sync_directory_path, "*") : filesha512(f)]))
+    copy_acm_common_content_command = local.copy_acm_common_content_command
+    script_md5                      = md5(file(local.copy_acm_common_content_script_path))
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = self.triggers.copy_acm_common_content_command
+  }
+
+  # TODO: delete common content on destroy
+
+  depends_on = [
+    null_resource.init_acm_repository
+  ]
+}
+
 # TODO: copy configsync directory
 
 # resource "null_resource" "tenant_configuration" {
