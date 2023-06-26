@@ -17,6 +17,7 @@ resource "null_resource" "init_acm_repository" {
     md5                               = md5(local.init_local_acm_repository_command)
     acm_repository_path               = var.acm_repository_path
     init_local_acm_repository_command = local.init_local_acm_repository_command
+    script_md5                        = md5(file(local.init_local_acm_repository_script_path))
   }
 
   provisioner "local-exec" {
