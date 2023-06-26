@@ -50,9 +50,8 @@ locals {
   source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
-  acm_config_sync_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
-  acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
-  acm_config_sync_common_content_source_path           = abspath("${path.module}/../configsync")
+  acm_config_sync_directory_path             = "${var.acm_repository_path}/${var.acm_dir}"
+  acm_config_sync_common_content_source_path = abspath("${path.module}/../configsync")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
   init_local_acm_repository_command     = <<-EOT
@@ -66,11 +65,11 @@ locals {
   copy_acm_common_content_command     = <<-EOT
     "${local.copy_acm_common_content_script_path}" \
       "${local.acm_config_sync_common_content_source_path}" \
-      "${local.acm_config_sync_directory_path}"
+      "${var.acm_repository_path}"
   EOT
 
-  kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync/tenants")
-
+  acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
+  # kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync/tenants")
   # kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
 
   # Temporary placeholder
