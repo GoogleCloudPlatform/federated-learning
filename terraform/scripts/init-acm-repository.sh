@@ -21,7 +21,7 @@ ACM_REPOSITORY_PATH="${1}"
 ACM_REPOSITORY_URL="${2}"
 ACM_BRANCH="${3}"
 
-mkdir -p "${ACM_REPOSITORY_PATH}"
+mkdir -vp "${ACM_REPOSITORY_PATH}"
 git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
 git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
 git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
