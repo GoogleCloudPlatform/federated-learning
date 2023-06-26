@@ -15,7 +15,7 @@
 resource "null_resource" "init_acm_repository" {
   triggers = {
     md5                 = md5(google_sourcerepo_repository.configsync-repository.url)
-    arguments           = md5(var.acm_repository_path)
+    acm_branch          = var.acm_branch
     acm_repository_path = var.acm_repository_path
   }
 
@@ -23,7 +23,11 @@ resource "null_resource" "init_acm_repository" {
     when    = create
     command = <<-EOT
       mkdir -p "${var.acm_repository_path}"
-      git clone "${google_sourcerepo_repository.configsync-repository.url}" "${var.acm_repository_path}"
+      git clone "${google_sourcerepo_repository.configsync-repository.url}" "${self.triggers.acm_repository_path}"
+      git -C "${self.triggers.acm_repository_path}" config pull.ff only
+      git -C "${self.triggers.acm_repository_path}" config user.email "committer@example.com"
+      git -C "${self.triggers.acm_repository_path}" config user.name "Config Sync committer"
+      git -C "${self.triggers.acm_repository_path}" checkout -b "${self.triggers.acm_branch}"
     EOT
   }
 
