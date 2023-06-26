@@ -13,8 +13,6 @@
 # limitations under the License.
 
 resource "null_resource" "init_acm_repository" {
-  for_each = local.tenants
-
   triggers = {
     md5       = md5(google_sourcerepo_repository.configsync-repository.url)
     arguments = md5(var.acm_repository_path)
