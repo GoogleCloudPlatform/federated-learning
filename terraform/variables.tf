@@ -119,6 +119,14 @@ variable "acm_dir" {
   type        = string
 }
 
+# We can't validate if this directory exists because the fileexists function
+# doesn't support directories (yet?)
+# Ref: https://github.com/hashicorp/terraform/issues/33394
+variable "acm_repository_path" {
+  description = "Path to the Config Management repository on the local machine"
+  type        = string
+}
+
 variable "asm_release_channel" {
   description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
   default     = "regular"

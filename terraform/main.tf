@@ -49,6 +49,16 @@ locals {
   source_repository_service_account_name      = "fl-source-repository"
   source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
+
+  acm_config_sync_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
+  acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
+
+  kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync")
+
+  kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
+
+  # Temporary placeholder
+  tenant_developer_example_account = "someuser@example.com"
 }
 
 data "google_project" "project" {
