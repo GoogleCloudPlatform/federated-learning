@@ -53,6 +53,15 @@ locals {
   acm_config_sync_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
 
+  init_local_acm_repository_command = <<-EOT
+    mkdir -p "${var.acm_repository_path}"
+    git clone "${google_sourcerepo_repository.configsync-repository.url}" "${var.acm_repository_path}"
+    git -C "${var.acm_repository_path}" config pull.ff only
+    git -C "${var.acm_repository_path}" config user.email "committer@example.com"
+    git -C "${var.acm_repository_path}" config user.name "Config Sync committer"
+    git -C "${var.acm_repository_path}" switch "${var.acm_branch}"
+  EOT
+
   kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync")
 
   kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
