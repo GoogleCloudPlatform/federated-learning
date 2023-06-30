@@ -14,7 +14,7 @@
 
 module "project-services-cloud-resource-manager" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "14.2.0"
+  version = "14.2.1"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -26,7 +26,7 @@ module "project-services-cloud-resource-manager" {
 
 module "project-services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "14.2.0"
+  version = "14.2.1"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
