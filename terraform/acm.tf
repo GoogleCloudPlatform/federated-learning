@@ -24,7 +24,7 @@ module "acm" {
 
   configmanagement_version = var.acm_version
   create_metrics_gcp_sa    = true
-  enable_mutations         = true
+  enable_mutation          = true
   policy_dir               = var.acm_dir
   secret_type              = var.acm_secret_type
   source_format            = "unstructured"
