@@ -50,8 +50,11 @@ locals {
   source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
-  acm_config_sync_directory_path             = "${var.acm_repository_path}/${var.acm_dir}"
-  acm_config_sync_common_content_source_path = abspath("${path.module}/../configsync")
+  acm_config_sync_directory_path = "${var.acm_repository_path}/${var.acm_dir}"
+
+  acm_config_sync_common_content_destination_fileset = [for f in local.acm_config_sync_common_content_fileset : replace(f, local.acm_config_sync_common_content_source_path, var.acm_repository_path)]
+  acm_config_sync_common_content_source_fileset      = fileset(local.acm_config_sync_common_content_source_path, "*")
+  acm_config_sync_common_content_source_path         = abspath("${path.module}/../configsync")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
   init_local_acm_repository_command     = <<-EOT
