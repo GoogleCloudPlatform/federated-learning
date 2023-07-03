@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# See the series of blog posts for details on enabling Anthos Config Management using Terraform
-# https://cloud.google.com/blog/topics/anthos/using-terraform-to-enable-config-sync-on-a-gke-cluster
 module "acm" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
   version = "27.0.0"
