@@ -35,12 +35,13 @@ resource "null_resource" "init_acm_repository" {
 
 resource "null_resource" "copy_common_acm_content" {
   triggers = {
-    md5                             = md5(local.copy_acm_common_content_command)
-    source_contents_hash            = sha512(join("", [for f in local.acm_config_sync_common_content_fileset : filesha512("${local.acm_config_sync_common_content_source_path}/${f}")]))
-    copy_acm_common_content_command = local.copy_acm_common_content_command
-    script_md5                      = md5(file(local.copy_acm_common_content_script_path))
-
-    # TODO: add trigger if destination directory contents are different from source directory contents
+    md5                               = md5(local.copy_acm_common_content_command)
+    source_contents_hash              = local.acm_config_sync_common_content_source_content_hash
+    destination_contents_hash         = local.acm_config_sync_common_content_destination_content_hash
+    source_destination_diff           = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : true
+    copy_acm_common_content_command   = local.copy_acm_common_content_command
+    delete_acm_common_content_command = local.delete_acm_common_content_command
+    script_md5                        = md5(file(local.copy_acm_common_content_script_path))
   }
 
   provisioner "local-exec" {
@@ -48,7 +49,10 @@ resource "null_resource" "copy_common_acm_content" {
     command = self.triggers.copy_acm_common_content_command
   }
 
-  # TODO: delete common content on destroy
+  provisioner "local-exec" {
+    when    = destroy
+    command = self.triggers.delete_acm_common_content_command
+  }
 
   depends_on = [
     null_resource.init_acm_repository

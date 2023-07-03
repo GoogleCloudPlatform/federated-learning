@@ -52,9 +52,11 @@ locals {
 
   acm_config_sync_directory_path = "${var.acm_repository_path}/${var.acm_dir}"
 
-  acm_config_sync_common_content_destination_fileset = [for f in local.acm_config_sync_common_content_fileset : replace(f, local.acm_config_sync_common_content_source_path, var.acm_repository_path)]
-  acm_config_sync_common_content_source_fileset      = fileset(local.acm_config_sync_common_content_source_path, "*")
-  acm_config_sync_common_content_source_path         = abspath("${path.module}/../configsync")
+  acm_config_sync_common_content_destination_content_hash = sha512(join("", [for f in local.acm_config_sync_common_content_destination_fileset : filesha512("${var.acm_repository_path}/${f}")]))
+  acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_fileset : replace(f, local.acm_config_sync_common_content_source_path, var.acm_repository_path)]
+  acm_config_sync_common_content_source_content_hash      = sha512(join("", [for f in local.acm_config_sync_common_content_fileset : filesha512("${local.acm_config_sync_common_content_source_path}/${f}")]))
+  acm_config_sync_common_content_source_fileset           = fileset(local.acm_config_sync_common_content_source_path, "*")
+  acm_config_sync_common_content_source_path              = abspath("${path.module}/../configsync")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
   init_local_acm_repository_command     = <<-EOT
@@ -69,6 +71,12 @@ locals {
     "${local.copy_acm_common_content_script_path}" \
       "${local.acm_config_sync_common_content_source_path}" \
       "${var.acm_repository_path}"
+  EOT
+
+  delete_acm_common_content_script_path = abspath("${path.module}/scripts/delete-acm-common-content.sh")
+  delete_acm_common_content_command     = <<-EOT
+    "${local.delete_acm_common_content_script_path}" \
+      "${local.acm_config_sync_common_content_destination_fileset}"
   EOT
 
   acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
