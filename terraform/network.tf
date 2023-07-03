@@ -34,6 +34,7 @@ module "fedlearn-vpc" {
       direction               = "EGRESS"
       name                    = "node-pools-deny-egress"
       priority                = 65535
+      ranges                  = ["0.0.0.0/0"]
       target_service_accounts = local.list_nodepool_sa_emails
 
       deny = [
