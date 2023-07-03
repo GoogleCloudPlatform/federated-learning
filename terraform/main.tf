@@ -77,7 +77,7 @@ locals {
   delete_acm_common_content_script_path = abspath("${path.module}/scripts/delete-acm-common-content.sh")
   delete_acm_common_content_command     = <<-EOT
     "${local.delete_acm_common_content_script_path}" \
-      "${local.acm_config_sync_common_content_destination_fileset}"
+      "${join(" ", [for f in local.acm_config_sync_common_content_destination_fileset : f])}"
   EOT
 
   acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
