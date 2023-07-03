@@ -12,30 +12,83 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "acm" {
-  # source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
-  # version = "27.0.0"
-  # TODO: switch back to the official module once we have a release that includes
-  # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1685
-  source = "git::https://github.com/ferrarimarco/terraform-google-kubernetes-engine//modules/acm?ref=acm-gcp-account-email"
+# TODO: switch back to the official module once we have a release that includes
+# https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1685
+# module "acm" {
+#   source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
+#   version = "27.0.0"
 
-  project_id   = data.google_project.project.project_id
-  cluster_name = module.gke.name
-  location     = module.gke.location
+#   project_id   = data.google_project.project.project_id
+#   cluster_name = module.gke.name
+#   location     = module.gke.location
 
-  configmanagement_version  = var.acm_version
-  create_metrics_gcp_sa     = true
-  enable_mutation           = true
-  gcp_service_account_email = local.source_repository_service_account_email
-  policy_dir                = var.acm_dir
-  secret_type               = "gcpServiceAccount"
-  source_format             = "unstructured"
-  sync_repo                 = google_sourcerepo_repository.configsync-repository.url
-  sync_branch               = var.acm_branch
+#   configmanagement_version  = var.acm_version
+#   create_metrics_gcp_sa     = true
+#   enable_mutation           = true
+#   gcp_service_account_email = local.source_repository_service_account_email
+#   policy_dir                = var.acm_dir
+#   secret_type               = "gcpServiceAccount"
+#   source_format             = "unstructured"
+#   sync_repo                 = google_sourcerepo_repository.configsync-repository.url
+#   sync_branch               = var.acm_branch
+
+#   depends_on = [
+#     module.asm.asm_wait,
+#     module.gke,
+#     module.project-services
+#   ]
+# }
+
+resource "google_gke_hub_membership" "membership" {
+  membership_id = module.gke.name
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${module.gke.cluster_id}"
+    }
+  }
+  provider = google-beta
+
+  depends_on = [
+    module.project-services
+  ]
+}
+
+resource "google_gke_hub_feature" "feature" {
+  name     = "configmanagement"
+  location = "global"
+  provider = google-beta
+
+  depends_on = [
+    module.project-services
+  ]
+}
+
+resource "google_gke_hub_feature_membership" "feature_member" {
+  location   = "global"
+  feature    = google_gke_hub_feature.feature.name
+  membership = google_gke_hub_membership.membership.membership_id
+  configmanagement {
+    version = var.acm_version
+    config_sync {
+      git {
+        gcp_service_account_email = local.source_repository_service_account_email
+        sync_repo                 = google_sourcerepo_repository.configsync-repository.url
+        sync_branch               = var.acm_branch
+        policy_dir                = var.acm_dir
+        secret_type               = "gcpserviceaccount"
+      }
+      source_format = "unstructured"
+    }
+
+    policy_controller {
+      enabled                    = true
+      mutation_enabled           = true
+      template_library_installed = true
+    }
+  }
+  provider = google-beta
 
   depends_on = [
     module.asm.asm_wait,
-    module.gke,
-    module.project-services
   ]
 }
