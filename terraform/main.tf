@@ -54,7 +54,7 @@ locals {
 
   acm_config_sync_common_content_destination_path         = "${var.acm_repository_path}/configsync"
   acm_config_sync_common_content_destination_content_hash = sha512(join("", [for f in local.acm_config_sync_common_content_destination_fileset : filesha512(f)]))
-  acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_source_fileset : "${local.acm_config_sync_common_content_destination_path}/${f}"]
+  acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_source_fileset : replace(f, local.acm_config_sync_common_content_source_path, local.acm_config_sync_common_content_destination_path)]
   acm_config_sync_common_content_source_content_hash      = sha512(join("", [for f in local.acm_config_sync_common_content_source_fileset : filesha512(f)]))
   acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_path, "**") : "${local.acm_config_sync_common_content_source_path}/${f}"]
   acm_config_sync_common_content_source_path              = abspath("${path.module}/../configsync")
