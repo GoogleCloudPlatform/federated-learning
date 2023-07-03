@@ -13,8 +13,11 @@
 # limitations under the License.
 
 module "acm" {
-  source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
-  version = "27.0.0"
+  # source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
+  # version = "27.0.0"
+  # TODO: switch back to the official module once we have a release that includes
+  # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1685
+  source = "git::https://github.com/ferrarimarco/terraform-google-kubernetes-engine/google//modules/acm?ref=acm-gcp-account-email"
 
   project_id   = data.google_project.project.project_id
   cluster_name = module.gke.name
