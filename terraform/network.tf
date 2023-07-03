@@ -58,10 +58,10 @@ module "fedlearn-vpc" {
     },
     {
       description             = "Allow egress from node pools to the Kubernetes API server"
-      destination_ranges      = [var.master_ipv4_cidr_block]
       direction               = "EGRESS"
       name                    = "node-pools-allow-egress-api-server"
       priority                = 1000
+      ranges                  = [var.master_ipv4_cidr_block]
       target_service_accounts = local.list_nodepool_sa_emails
 
       allow = [
@@ -73,10 +73,10 @@ module "fedlearn-vpc" {
     },
     {
       description             = "Allow egress from node pools to Google APIs via Private Google Access"
-      destination_ranges      = ["199.36.153.8/30"]
       direction               = "EGRESS"
       name                    = "node-pools-allow-egress-google-apis"
       priority                = 1000
+      ranges                  = ["199.36.153.8/30"]
       target_service_accounts = local.list_nodepool_sa_emails
 
       allow = [
