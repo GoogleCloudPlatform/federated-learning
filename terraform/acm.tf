@@ -16,7 +16,7 @@
 # https://cloud.google.com/blog/topics/anthos/using-terraform-to-enable-config-sync-on-a-gke-cluster
 module "acm" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
-  version = "26.1.1"
+  version = "27.0.0"
 
   project_id   = data.google_project.project.project_id
   cluster_name = module.gke.name
