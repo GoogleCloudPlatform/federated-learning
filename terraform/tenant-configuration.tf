@@ -98,21 +98,23 @@ resource "null_resource" "tenant_configuration" {
 
 resource "null_resource" "commit_acm_config_sync_configuration" {
   triggers = {
-    create_command     = <<-EOT
+    command     = <<-EOT
       "${local.acm_config_sync_commit_configuration_script_path}" \
         "${var.acm_repository_path}" \
         "${var.acm_branch}"
     EOT
-    create_script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
+    script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
+    # Always run
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
-    when    = create
-    command = self.triggers.create_command
+    command = self.triggers.command
   }
 
   depends_on = [
     null_resource.copy_common_acm_content,
-    null_resource.tenant_configuration
+    null_resource.tenant_configuration,
+    null_resource.repository_changes_to_commit
   ]
 }

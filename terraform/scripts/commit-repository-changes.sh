@@ -22,7 +22,7 @@ REPOSITORY_BRANCH="${2}"
 
 git -C "${REPOSITORY_DIRECTORY_PATH}" switch "${REPOSITORY_BRANCH}"
 
-if [ -z "$(git status --porcelain=v1)" ]; then
+if [ -z "$(git -C "${REPOSITORY_DIRECTORY_PATH}" status --porcelain=v1)" ]; then
   git -C "${REPOSITORY_DIRECTORY_PATH}" add .
   git -C "${REPOSITORY_DIRECTORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
