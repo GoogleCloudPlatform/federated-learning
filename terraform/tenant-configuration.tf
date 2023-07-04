@@ -73,8 +73,7 @@ resource "null_resource" "tenant_configuration" {
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
-       "${local.delete_acm_tenant_content_script_path}" \
-        "${each.value.tenant_name}" \
+      "${local.delete_acm_tenant_content_script_path}" \
         "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${each.value.tenant_name}"
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
