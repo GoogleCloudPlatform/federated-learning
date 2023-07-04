@@ -61,7 +61,7 @@ locals {
   acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_directory_path, "**") : "${local.acm_config_sync_common_content_source_directory_path}/${f}"]
   acm_config_sync_common_content_source_directory_path    = abspath("${path.module}/../configsync")
 
-  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${acm_config_sync_tenants_configuration_destination_directory_path}/${tenant}"]
+  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${tenant}"]
 
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
