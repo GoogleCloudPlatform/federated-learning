@@ -87,7 +87,7 @@ resource "null_resource" "tenant_configuration" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = self.triggers.delete_tenant_content_command
+    command = self.triggers.destroy_command
   }
 
   depends_on = [
