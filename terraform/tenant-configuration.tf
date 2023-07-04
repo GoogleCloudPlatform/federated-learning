@@ -77,6 +77,8 @@ resource "null_resource" "tenant_configuration" {
         "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${each.value.tenant_name}"
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
+
+    source_contents_hash = local.acm_config_sync_tenant_configuration_package_source_content_hash
   }
 
   provisioner "local-exec" {
