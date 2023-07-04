@@ -17,8 +17,16 @@
 set -o nounset
 set -o errexit
 
-git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" checkout -b "${CONFIG_SYNC_REPOSITORY_BRANCH}"
-git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" add .
-git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" commit -m "Initial commit"
+REPOSITORY_DIRECTORY_PATH="${1}"
+REPOSITORY_BRANCH="${2}"
 
-git -C "${CONFIG_SYNC_REPOSITORY_DIRECTORY_PATH}" push -u origin "${CONFIG_SYNC_REPOSITORY_BRANCH}"
+git -C "${REPOSITORY_DIRECTORY_PATH}" checkout -b "${REPOSITORY_BRANCH}"
+
+if [ -z "$(git status --porcelain=v1)" ]; then
+  git -C "${REPOSITORY_DIRECTORY_PATH}" add .
+  git -C "${REPOSITORY_DIRECTORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+  git -C "${REPOSITORY_DIRECTORY_PATH}" push -u origin "${REPOSITORY_BRANCH}"
+else
+  echo "There are no changes to commit."
+fi

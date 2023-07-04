@@ -94,7 +94,25 @@ resource "null_resource" "tenant_configuration" {
   depends_on = [
     null_resource.copy_common_acm_content
   ]
-
 }
 
-# TODO: commit changes (even on deletions)
+resource "null_resource" "commit_acm_config_sync_configuration" {
+  triggers = {
+    create_command     = <<-EOT
+      "${local.acm_config_sync_commit_configuration_script_path}" \
+        "${var.acm_repository_path}" \
+        "${var.acm_branch}"
+    EOT
+    create_script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = self.triggers.create_command
+  }
+
+  depends_on = [
+    null_resource.copy_common_acm_content,
+    null_resource.tenant_configuration
+  ]
+}
