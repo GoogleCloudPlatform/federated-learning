@@ -51,7 +51,7 @@ locals {
   source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
-  acm_config_sync_tenant_configuration_package_source_directory_path = "${local.acm_config_sync_common_content_source_directory_path}/tenant-config-pkg"
+  acm_config_sync_tenant_configuration_package_source_directory_path = abspath("${path.module}/../tenant-config-pkg")
 
   acm_config_sync_destination_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/tenants"
