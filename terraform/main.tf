@@ -24,6 +24,7 @@ locals {
 
   tenants = {
     for name in local.tenant_and_main_pool_names : name => {
+      tenant_name             = name
       tenant_nodepool_name    = format("%s-pool", name)
       tenant_nodepool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, name)
       tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
@@ -61,7 +62,7 @@ locals {
   acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_directory_path, "**") : "${local.acm_config_sync_common_content_source_directory_path}/${f}"]
   acm_config_sync_common_content_source_directory_path    = abspath("${path.module}/../configsync")
 
-  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${tenant}"]
+  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${tenant.tenant_name}"]
 
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
