@@ -20,7 +20,7 @@ set -o errexit
 REPOSITORY_DIRECTORY_PATH="${1}"
 REPOSITORY_BRANCH="${2}"
 
-git -C "${REPOSITORY_DIRECTORY_PATH}" checkout -b "${REPOSITORY_BRANCH}"
+git -C "${REPOSITORY_DIRECTORY_PATH}" switch "${REPOSITORY_BRANCH}"
 
 if [ -z "$(git status --porcelain=v1)" ]; then
   git -C "${REPOSITORY_DIRECTORY_PATH}" add .
