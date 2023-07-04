@@ -1,4 +1,6 @@
-# Copyright 2021 Google LLC
+#!/usr/bin/env sh
+
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,13 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: v1
-kind: ServiceAccount
-metadata: # kpt-merge: ns/ksa
-  name: ksa
-  namespace: fltenant1 # kpt-set: ${tenant-name}
-  annotations:
-    # Workload Identity
-    iam.gke.io/gcp-service-account: fedlearn-fltenant1-apps-sa@jtg-flsilo.iam.gserviceaccount.com # kpt-set: ${gcp-service-account}
-...
+
+set -o nounset
+set -o errexit
+
+FILE_SET="${1}"
+
+rm -rfv "${FILE_SET}"

@@ -1,4 +1,6 @@
-# Copyright 2021 Google LLC
+#!/usr/bin/env sh
+
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,13 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: v1
-kind: Namespace
-metadata: # kpt-merge: /ns
-  name: fltenant1 # kpt-set: ${tenant-name}
-  labels:
-    tenant-ns: "true"
-    # version must match the ASM control plane revision
-    istio.io/rev: asm-110 # kpt-set: ${istio-revision}
-...
+
+set -o nounset
+set -o errexit
+
+ACM_REPOSITORY_PATH="${1}"
+ACM_REPOSITORY_URL="${2}"
+ACM_BRANCH="${3}"
+
+mkdir -vp "${ACM_REPOSITORY_PATH}"
+git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
+git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
+git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
+git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
+git -C "${ACM_REPOSITORY_PATH}" switch "${ACM_BRANCH}"

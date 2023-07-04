@@ -1,4 +1,6 @@
-# Copyright 2021 Google LLC
+#!/usr/bin/env sh
+
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,14 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: networking.istio.io/v1beta1
-kind: Sidecar
-metadata: # kpt-merge: ns/default
-  name: default
-  namespace: fltenant1 # kpt-set: ${tenant-name}
-spec:
-  outboundTrafficPolicy:
-    # allow egress only to known destinations
-    mode: REGISTRY_ONLY
-...
+
+set -o nounset
+set -o errexit
+
+ACM_COMMON_CONTENT_SOURCE_DIRECTORY_PATH="${1}"
+ACM_COMMON_CONTENT_DESTINATION_DIRECTORY_PATH="${2}"
+
+cp -rv "${ACM_COMMON_CONTENT_SOURCE_DIRECTORY_PATH}" "${ACM_COMMON_CONTENT_DESTINATION_DIRECTORY_PATH}"

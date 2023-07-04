@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata: # kpt-merge: ns/allow-within-namespace
-  name: allow-within-namespace
-  namespace: fltenant1 # kpt-set: ${tenant-name}
-spec:
-  rules:
-    - from:
-        - source:
-            namespaces:
-              - "fltenant1" # kpt-set: ${tenant-name}
-...

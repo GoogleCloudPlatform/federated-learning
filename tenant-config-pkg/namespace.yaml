@@ -18,6 +18,7 @@ metadata:
   name: ns # kpt-set: ${tenant-name}
   labels:
     tenant-ns: "true"
-    # version must match the ASM control plane revision
-    istio.io/rev: asm-110 # kpt-set: ${istio-revision}
+    # Allow Anthos Service Mesh to manage the workloads in the namespace
+    # Ref: https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel#injection_labels
+    istio.io/rev: asm-managed
 ...

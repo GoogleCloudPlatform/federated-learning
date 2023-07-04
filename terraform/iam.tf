@@ -26,7 +26,6 @@ module "service_accounts" {
   ]
 }
 
-# default roles for the node SAs
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "7.6.0"
@@ -48,6 +47,19 @@ module "project-iam-bindings" {
   ]
 }
 
+# There's no Terraform module for Cloud Source Repositories bindings, so we
+# configure it directly
+resource "google_sourcerepo_repository_iam_binding" "binding" {
+  project    = google_sourcerepo_repository.configsync-repository.project
+  repository = google_sourcerepo_repository.configsync-repository.name
+
+  role = "roles/viewer"
+
+  members = [
+    local.source_repository_service_account_iam_email,
+  ]
+}
+
 module "fl-workload-identity" {
   for_each   = local.tenants
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
@@ -66,5 +78,23 @@ module "fl-workload-identity" {
   module_depends_on = [
     module.gke
   ]
+}
 
+module "cloud-source-repositories-workload-identity" {
+  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  version    = "26.1.1"
+  project_id = data.google_project.project.project_id
+
+  annotate_k8s_sa     = false
+  k8s_sa_name         = "root-reconciler"
+  location            = module.gke.location
+  name                = local.source_repository_service_account_id
+  namespace           = "config-management-system"
+  use_existing_gcp_sa = true
+  use_existing_k8s_sa = true
+
+  # The workload identity pool must exist before binding
+  module_depends_on = [
+    module.gke
+  ]
 }

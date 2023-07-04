@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,18 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata: # kpt-merge: ns/developer-core-binding
-  name: developer-core-binding
-  namespace: fltenant1 # kpt-set: ${tenant-name}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: developer-core
-subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: User
-    name: someuser@example.com # kpt-set: ${tenant-developer}
-...
+
+resource "google_sourcerepo_repository" "configsync-repository" {
+  name    = "fl-configsync"
+  project = data.google_project.project.project_id
+}

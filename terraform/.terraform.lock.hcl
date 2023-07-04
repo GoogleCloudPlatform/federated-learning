@@ -22,7 +22,7 @@ provider "registry.terraform.io/hashicorp/external" {
 
 provider "registry.terraform.io/hashicorp/google" {
   version     = "4.71.0"
-  constraints = ">= 3.33.0, >= 3.39.0, >= 3.43.0, >= 3.45.0, >= 3.53.0, >= 3.83.0, >= 4.20.0, >= 4.25.0, >= 4.40.0, >= 4.47.0, != 4.49.0, != 4.50.0, >= 4.51.0, != 4.65.0, != 4.65.1, < 5.0.0"
+  constraints = ">= 3.33.0, >= 3.39.0, >= 3.43.0, >= 3.45.0, >= 3.53.0, >= 3.83.0, >= 4.25.0, >= 4.32.0, >= 4.40.0, >= 4.47.0, != 4.49.0, != 4.50.0, >= 4.51.0, != 4.65.0, != 4.65.1, >= 4.69.1, < 5.0.0"
   hashes = [
     "h1:Myph2jAN3l+kgij3roOXDxdD6e2ngZNca3xbywY+KS8=",
     "zh:09229ea26db8ea7a76f9dc6fd01afeb238079c2305ec9b0f44259121038f8d7d",
@@ -42,7 +42,7 @@ provider "registry.terraform.io/hashicorp/google" {
 
 provider "registry.terraform.io/hashicorp/google-beta" {
   version     = "4.71.0"
-  constraints = ">= 3.43.0, >= 3.45.0, >= 4.20.0, >= 4.40.0, >= 4.47.0, != 4.49.0, != 4.50.0, >= 4.51.0, != 4.65.0, != 4.65.1, < 5.0.0"
+  constraints = ">= 3.33.0, >= 3.39.0, >= 3.43.0, >= 3.45.0, >= 3.53.0, >= 3.83.0, >= 4.25.0, >= 4.32.0, >= 4.40.0, >= 4.47.0, != 4.49.0, != 4.50.0, >= 4.51.0, != 4.65.0, != 4.65.1, >= 4.69.1, < 5.0.0"
   hashes = [
     "h1:HWUY22oWVRKAt8W1LmAEBSegKW13E/wFHPwf1IplJRo=",
     "zh:03f2ef38d47d9bfdfc05b682694519af267c258bf48d4af44bee2eaf531d9165",

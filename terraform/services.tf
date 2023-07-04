@@ -48,6 +48,7 @@ module "project-services" {
     "meshconfig.googleapis.com",
     "meshtelemetry.googleapis.com",
     "monitoring.googleapis.com",
+    "sourcerepo.googleapis.com",
     "stackdriver.googleapis.com"
   ]
 

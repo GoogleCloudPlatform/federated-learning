@@ -114,3 +114,35 @@ module "cloud-dns-private-artifact-registry" {
     },
   ]
 }
+
+module "source-repositories-private-artifact-registry" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "5.0.0"
+
+  description = "Private DNS zone for Cloud Source Repositories"
+  domain      = "source.developers.google.com."
+  name        = "private-cloud-source-repositories"
+  project_id  = data.google_project.project.project_id
+  type        = "private"
+
+  private_visibility_config_networks = [
+    module.fedlearn-vpc.network_id
+  ]
+
+  recordsets = [
+    {
+      name = "*"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "source.developers.google.com.",
+      ]
+    },
+    {
+      name    = ""
+      type    = "A"
+      ttl     = 300
+      records = local.private_google_access_ips
+    },
+  ]
+}
