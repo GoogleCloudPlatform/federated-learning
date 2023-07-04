@@ -64,14 +64,14 @@ resource "null_resource" "tenant_configuration" {
 
   triggers = {
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
-    create_command      = local.generate_and_copy_acm_tenant_content_command
-    destroy_command     = local.delete_acm_tenant_content_command
+    create_command      = "${local.generate_and_copy_acm_tenant_content_command} ${each.value.tenant_name} ${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id} ${local.tenant_developer_example_account}"
+    destroy_command     = "${local.delete_acm_tenant_content_command} ${local.acm_config_sync_tenants_configuration_destination_directory_path}/${each.value.tenant_name}"
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "${self.triggers.create_command} ${each.key} ${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id} ${local.tenant_developer_example_account}"
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {

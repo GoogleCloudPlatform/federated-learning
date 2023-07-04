@@ -89,15 +89,14 @@ locals {
 
   generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
   generate_and_copy_acm_tenant_content_command     = <<-EOT
-    "${local.delete_acm_common_content_script_path}" \
+    "${local.generate_and_copy_acm_tenant_content_script_path}" \
       "${local.acm_config_sync_tenants_configuration_destination_directory_path}" \
       "${local.acm_config_sync_tenant_configuration_package_source_directory_path}"
   EOT
 
   delete_acm_tenant_content_script_path = local.delete_acm_common_content_script_path
   delete_acm_tenant_content_command     = <<-EOT
-    "${local.delete_acm_tenant_content_script_path}" \
-      "${join(" ", [for f in local.acm_config_sync_tenants_destination_directories_dirset : f])}"
+    "${local.delete_acm_tenant_content_script_path}"
   EOT
 
   # Temporary placeholder
