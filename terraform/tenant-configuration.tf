@@ -68,7 +68,7 @@ resource "null_resource" "tenant_configuration" {
         "${local.acm_config_sync_tenants_configuration_destination_directory_path}" \
         "${local.acm_config_sync_tenant_configuration_package_source_directory_path}" \
         "${each.value.tenant_name}" \
-        "${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id}"
+        "${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id}" \
         "${local.tenant_developer_example_account}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
