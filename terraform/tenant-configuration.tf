@@ -104,7 +104,7 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
         "${var.acm_branch}"
     EOT
     script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
-    # Always run
+    # Always run this. We check if there are changes to commit in the script to run
     timestamp = timestamp()
   }
 
@@ -114,7 +114,6 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
 
   depends_on = [
     null_resource.copy_common_acm_content,
-    null_resource.tenant_configuration,
-    null_resource.repository_changes_to_commit
+    null_resource.tenant_configuration
   ]
 }
