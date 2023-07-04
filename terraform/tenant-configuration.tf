@@ -14,10 +14,10 @@
 
 resource "null_resource" "init_acm_repository" {
   triggers = {
-    md5                               = md5(local.init_local_acm_repository_command)
+    create_command_hash               = md5(local.init_local_acm_repository_command)
     acm_repository_path               = var.acm_repository_path
     init_local_acm_repository_command = local.init_local_acm_repository_command
-    script_md5                        = md5(file(local.init_local_acm_repository_script_path))
+    create_script_md5                 = md5(file(local.init_local_acm_repository_script_path))
   }
 
   provisioner "local-exec" {
@@ -35,14 +35,13 @@ resource "null_resource" "init_acm_repository" {
 
 resource "null_resource" "copy_common_acm_content" {
   triggers = {
-    md5                               = md5(local.copy_acm_common_content_command)
     source_contents_hash              = local.acm_config_sync_common_content_source_content_hash
     destination_contents_hash         = local.acm_config_sync_common_content_destination_content_hash
     source_destination_diff           = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : true
     copy_acm_common_content_command   = local.copy_acm_common_content_command
     delete_acm_common_content_command = local.delete_acm_common_content_command
-    copy_script_hash                  = md5(file(local.copy_acm_common_content_script_path))
-    delete_script_hash                = md5(file(local.delete_acm_common_content_script_path))
+    create_script_hash                = md5(file(local.copy_acm_common_content_script_path))
+    destroy_script_hash               = md5(file(local.delete_acm_common_content_script_path))
   }
 
   provisioner "local-exec" {
@@ -64,7 +63,6 @@ resource "null_resource" "tenant_configuration" {
   for_each = local.tenants
 
   triggers = {
-    md5                 = md5(local.generate_and_copy_tenant_configuration_command)
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     create_command      = local.generate_and_copy_acm_tenant_content_command
     destroy_command     = local.delete_acm_tenant_content_command
