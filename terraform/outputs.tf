@@ -11,28 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-output "acm_repository_branch" {
-  description = "The Git branch Config Sync will sync to."
-  value       = var.acm_branch
-}
-
-output "configsync_repository_url" {
-  description = "URL of the Config Sync source repository."
-  value       = google_sourcerepo_repository.configsync-repository.url
-}
-
-output "google_cloud_project" {
-  description = "Google Cloud project ID."
-  value       = data.google_project.project.project_id
-}
-
-output "gke_cluster_name" {
-  description = "GKE cluster name."
-  value       = module.gke.name
-}
-
-output "tenant_names" {
-  description = "Set of named tenants created in the cluster."
-  value       = var.tenant_names
-}
