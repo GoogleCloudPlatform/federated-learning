@@ -30,6 +30,9 @@ locals {
       tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
     }
   }
+
+  tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }
+
   gke_robot_sa = "service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 
   # We can't use module.service_accounts.emails because of
