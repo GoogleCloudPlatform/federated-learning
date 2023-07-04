@@ -62,8 +62,6 @@ locals {
   acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_directory_path, "**") : "${local.acm_config_sync_common_content_source_directory_path}/${f}"]
   acm_config_sync_common_content_source_directory_path    = abspath("${path.module}/../configsync")
 
-  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${local.acm_config_sync_tenants_configuration_destination_directory_path}/${tenant.tenant_name}"]
-
   acm_config_sync_tenant_configuration_source_fileset              = [for f in fileset(local.acm_config_sync_tenant_configuration_package_source_directory_path, "**") : "${local.acm_config_sync_tenant_configuration_package_source_directory_path}/${f}"]
   acm_config_sync_tenant_configuration_package_source_content_hash = sha512(join("", [for f in local.acm_config_sync_tenant_configuration_source_fileset : filesha512(f)]))
 

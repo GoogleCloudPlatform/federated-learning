@@ -60,7 +60,7 @@ resource "null_resource" "copy_common_acm_content" {
 }
 
 resource "null_resource" "tenant_configuration" {
-  for_each = local.tenants
+  for_each = [for tenant in local.tenants : tenant if tenant.tenant_name != local.main_tenant_name]
 
   triggers = {
     create_command      = <<-EOT
