@@ -50,14 +50,20 @@ locals {
   source_repository_service_account_email     = module.service_accounts.service_accounts_map[local.source_repository_service_account_name].email
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
-  acm_config_sync_directory_path = "${var.acm_repository_path}/${var.acm_dir}"
+  acm_config_sync_tenant_configuration_package_source_directory_path = "${local.acm_config_sync_common_content_source_directory_path}/tenant-config-pkg"
 
-  acm_config_sync_common_content_destination_path         = "${var.acm_repository_path}/configsync"
+  acm_config_sync_destination_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
+  acm_config_sync_tenants_configuration_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/tenants"
+
   acm_config_sync_common_content_destination_content_hash = sha512(join("", [for f in local.acm_config_sync_common_content_destination_fileset : filesha512(f)]))
-  acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_source_fileset : replace(f, local.acm_config_sync_common_content_source_path, local.acm_config_sync_common_content_destination_path)]
+  acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_source_fileset : replace(f, local.acm_config_sync_common_content_source_directory_path, local.acm_config_sync_destination_directory_path)]
   acm_config_sync_common_content_source_content_hash      = sha512(join("", [for f in local.acm_config_sync_common_content_source_fileset : filesha512(f)]))
-  acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_path, "**") : "${local.acm_config_sync_common_content_source_path}/${f}"]
-  acm_config_sync_common_content_source_path              = abspath("${path.module}/../configsync")
+  acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_directory_path, "**") : "${local.acm_config_sync_common_content_source_directory_path}/${f}"]
+  acm_config_sync_common_content_source_directory_path    = abspath("${path.module}/../configsync")
+
+  acm_config_sync_tenants_destination_directories_dirset = [for tenant in local.tenants : "${acm_config_sync_tenants_configuration_destination_directory_path}/${tenant}"]
+
+  delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
   init_local_acm_repository_command     = <<-EOT
@@ -70,19 +76,28 @@ locals {
   copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
   copy_acm_common_content_command     = <<-EOT
     "${local.copy_acm_common_content_script_path}" \
-      "${local.acm_config_sync_common_content_source_path}" \
+      "${local.acm_config_sync_common_content_source_directory_path}" \
       "${var.acm_repository_path}"
   EOT
 
-  delete_acm_common_content_script_path = abspath("${path.module}/scripts/delete-acm-common-content.sh")
+  delete_acm_common_content_script_path = local.delete_fileset_script_path
   delete_acm_common_content_command     = <<-EOT
     "${local.delete_acm_common_content_script_path}" \
       "${join(" ", [for f in local.acm_config_sync_common_content_destination_fileset : f])}"
   EOT
 
-  acm_config_sync_tenants_configuration_directory_path = "${local.acm_config_sync_directory_path}/tenants"
-  # kpt_tenant_configuration_package_directory_path = abspath("${path.module}/../configsync/tenants")
-  # kpt_evaluate_package_command = "${path.module}/scripts/kpt-evaluate-package.sh ${local.acm_config_sync_tenants_configuration_directory_path} ${local.kpt_tenant_configuration_package_directory_path}"
+  generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
+  generate_and_copy_acm_tenant_content_command     = <<-EOT
+    "${local.delete_acm_common_content_script_path}" \
+      "${local.acm_config_sync_tenants_configuration_destination_directory_path}" \
+      "${local.acm_config_sync_tenant_configuration_package_source_directory_path}"
+  EOT
+
+  delete_acm_tenant_content_script_path = local.delete_acm_common_content_script_path
+  delete_acm_tenant_content_command     = <<-EOT
+    "${local.delete_acm_tenant_content_script_path}" \
+      "${join(" ", [for f in local.acm_config_sync_tenants_destination_directories_dirset : f])}"
+  EOT
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"

@@ -41,7 +41,8 @@ resource "null_resource" "copy_common_acm_content" {
     source_destination_diff           = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : true
     copy_acm_common_content_command   = local.copy_acm_common_content_command
     delete_acm_common_content_command = local.delete_acm_common_content_command
-    script_md5                        = md5(file(local.copy_acm_common_content_script_path))
+    copy_script_hash                  = md5(file(local.copy_acm_common_content_script_path))
+    delete_script_hash                = md5(file(local.delete_acm_common_content_script_path))
   }
 
   provisioner "local-exec" {
@@ -59,32 +60,31 @@ resource "null_resource" "copy_common_acm_content" {
   ]
 }
 
-# resource "null_resource" "tenant_configuration" {
-#   for_each = local.tenants
+resource "null_resource" "tenant_configuration" {
+  for_each = local.tenants
 
-#   triggers = merge({
-#     md5                          = md5(var.create_cmd_entrypoint)
-#     arguments                    = md5(var.create_cmd_body)
-#     create_cmd_entrypoint        = var.create_cmd_entrypoint
-#     create_cmd_body              = var.create_cmd_body
-#     kpt_evaluate_package_command = local.kpt_evaluate_package_command
-#   }, var.create_cmd_triggers)
+  triggers = {
+    md5                 = md5(local.generate_and_copy_tenant_configuration_command)
+    create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
+    create_command      = local.generate_and_copy_acm_tenant_content_command
+    destroy_command     = local.delete_acm_tenant_content_command
+    destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
+  }
 
-#   provisioner "local-exec" {
-#     when    = create
-#     command = "${self.triggers.kpt_evaluate_package_command} ${each.key} ${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id} ${local.tenant_developer_example_account}"
-#   }
+  provisioner "local-exec" {
+    when    = create
+    command = "${self.triggers.create_command} ${each.key} ${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id} ${local.tenant_developer_example_account}"
+  }
 
-#   # TODO: destroy command deletes the tenant directory
+  provisioner "local-exec" {
+    when    = destroy
+    command = self.triggers.delete_tenant_content_command
+  }
 
-#   depends_on = [
-#     null_resource.module_depends_on,
-#     null_resource.decompress,
-#     null_resource.additional_components,
-#     null_resource.gcloud_auth_google_credentials,
-#     null_resource.gcloud_auth_service_account_key_file
-#   ]
+  depends_on = [
+    null_resource.copy_common_acm_content
+  ]
 
-# }
+}
 
 # TODO: commit changes (even on deletions)
