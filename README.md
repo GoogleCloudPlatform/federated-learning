@@ -32,9 +32,9 @@ for anything other than experimentation.
 
 This repository has the following key directories:
 
-- [terraform](terraform): contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
-- [configsync](configsync): contains the cluster-level resources and configurations that are applied to your GKE cluster.
-- [tenant-config-pkg](tenant-config-pkg): a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
+- `terraform`: contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
+- `configsync`: contains the cluster-level resources and configurations that are applied to your GKE cluster.
+- `tenant-config-pkg`: a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
 
 ## Architecture
 
