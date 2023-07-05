@@ -82,7 +82,7 @@ module "fl-workload-identity" {
 
 module "cloud-source-repositories-workload-identity" {
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version    = "26.1.1"
+  version    = "27.0.0"
   project_id = data.google_project.project.project_id
 
   annotate_k8s_sa     = false
