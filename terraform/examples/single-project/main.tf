@@ -12,18 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "acm_repository_path" {
-  description = "Path to the directory that will contain the Config Management repositories on the local machine"
-  type        = string
-}
+module "emulated-organizations" {
+  for_each = var.organizations_count
 
-variable "organizations_count" {
-  default     = 3
-  description = "Number of simulated organizations to provision"
-  type        = number
-}
+  source = "../../terraform"
 
-variable "project_id" {
-  description = "The Google Cloud project ID"
-  type        = string
+  acm_repository_path = "${var.acm_repository_path}-${each.value}"
+  project_id          = var.project_id
 }
