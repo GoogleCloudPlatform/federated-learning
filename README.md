@@ -32,9 +32,9 @@ for anything other than experimentation.
 
 This repository has the following key directories:
 
-- [terraform](terraform): contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
-- [configsync](configsync): contains the cluster-level resources and configurations that are applied to your GKE cluster.
-- [tenant-config-pkg](tenant-config-pkg): a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
+- `terraform`: contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
+- `configsync`: contains the cluster-level resources and configurations that are applied to your GKE cluster.
+- `tenant-config-pkg`: a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
 
 ## Architecture
 
@@ -131,7 +131,6 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
   Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
 
-1. Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
 1. Initialize Terraform:
 
   ```sh
@@ -144,7 +143,13 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   terraform apply
   ```
 
-  This may take about 15 minutes to complete
+  The first time you run `terraform apply` will fail because you need to provide
+  the necessary inputs. Terraform will provide information about the
+  missing inputs. For example, you can create a `terraform.tfvars` file and set
+  inputs there. For more information about providing these variable values, see
+  [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+
+  The provisioning process may take about 15 minutes to complete.
 
 ### Add another tenant
 
