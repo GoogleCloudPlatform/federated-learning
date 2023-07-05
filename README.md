@@ -131,7 +131,6 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
   Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
 
-1. Set a Terraform environment variable for your project ID in the `terraform.tfvars` file by setting the value of the `project_id` variable.
 1. Initialize Terraform:
 
   ```sh
@@ -144,7 +143,13 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   terraform apply
   ```
 
-  This may take about 15 minutes to complete
+  The first time you run `terraform apply` will fail because you need to provide
+  the necessary variable values. For example, you can create a
+  `terraform.tfvars` file and set variable values there. For more information
+  about providing these variable values, see
+  [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+
+  This may take about 15 minutes to complete.
 
 ### Add another tenant
 
