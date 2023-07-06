@@ -171,3 +171,22 @@ gcloud compute ssh --tunnel-through-iap node_name
 ```
 
 Where `node_name` is the Compute Engine instance name to connect to.
+
+## Troubleshooting
+
+This section describes common issues and troubleshooting steps.
+
+### I/O timeouts during Terraform plan or apply
+
+If Terraform reports errors when running `plan` or `apply` because it can't get
+the status of a resource inside a GKE cluster, and it also reports that it needs
+to update the `cidr_block` of the `master_authorized_networks` block of that
+cluster, it might be that the instance that runs Terraform is not part of any
+CIDR that is authorized to connect to that GKE cluster control plane.
+
+To solve this issue, you can try updating the `cidr_block` by targeting the GKE
+cluster specifically when applying changes:
+
+```sh
+terraform apply -target module.gke
+```
