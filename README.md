@@ -146,7 +146,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   The first time you run `terraform apply` will fail because you need to provide
   the necessary inputs. Terraform will provide information about the
   missing inputs. For example, you can create a `terraform.tfvars` file and set
-  inputs there. For more information about providing these variable values, see
+  inputs there. For more information about providing these inputs, see
   [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
 
   The provisioning process may take about 15 minutes to complete.
@@ -161,7 +161,32 @@ To add another tenant:
 1. Add its name to the list of tenants to configure using the `tenant_names` variable.
 1. Follow the steps to [Deploy the blueprint](#deploy-the-blueprint) again.
 
-## Test
+## Connect to cluster nodes
 
-For more details about manual tests you can perform to validate this setup,
-see the [testing directory](testing).
+To open an SSH session against a node of the cluster, you use an IAP tunnel
+because cluster nodes don't have external IP addresses:
+
+```sh
+gcloud compute ssh --tunnel-through-iap node_name
+```
+
+Where `node_name` is the Compute Engine instance name to connect to.
+
+## Troubleshooting
+
+This section describes common issues and troubleshooting steps.
+
+### I/O timeouts during Terraform plan or apply
+
+If Terraform reports errors when running `plan` or `apply` because it can't get
+the status of a resource inside a GKE cluster, and it also reports that it needs
+to update the `cidr_block` of the `master_authorized_networks` block of that
+cluster, it might be that the instance that runs Terraform is not part of any
+CIDR that is authorized to connect to that GKE cluster control plane.
+
+To solve this issue, you can try updating the `cidr_block` by targeting the GKE
+cluster specifically when applying changes:
+
+```sh
+terraform apply -target module.gke
+```
