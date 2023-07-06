@@ -24,7 +24,7 @@ variable "region" {
 }
 
 variable "zones" {
-  default     = ["europe-west1-b"]
+  default     = []
   description = "Cluster nodes will be created in each of the following zones. These zones need to be in the region specified by the 'region' variable."
   type        = list(string)
 }
