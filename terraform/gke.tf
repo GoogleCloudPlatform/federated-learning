@@ -13,18 +13,6 @@
 # limitations under the License.
 
 module "gke" {
-  # The beta-private-cluster module enables beta GKE features and set opinionated defaults.
-  # See the module docs https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/beta-private-cluster
-  #
-  # The following configuration creates a cluster that implements many of the recommendations in the GKE hardening guide
-  # https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster:
-  #  - private GKE cluster with authorized networks
-  #  - at least 2 node pools (one default pool, plus one per tenant)
-  #  - workload identity
-  #  - shielded nodes
-  #  - GKE sandbox (gVisor) for the tenant nodes
-  #  - Dataplane V2 (which automatically enables network policy)
-  #  - secrets encryption
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
   version = "27.0.0"
 
@@ -52,7 +40,6 @@ module "gke" {
   remove_default_node_pool     = true
   subnetwork                   = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
   zones                        = var.zones
-
 
   # Encrypt cluster secrets at the application layer
   database_encryption = [{

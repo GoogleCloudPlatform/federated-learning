@@ -146,7 +146,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   The first time you run `terraform apply` will fail because you need to provide
   the necessary inputs. Terraform will provide information about the
   missing inputs. For example, you can create a `terraform.tfvars` file and set
-  inputs there. For more information about providing these variable values, see
+  inputs there. For more information about providing these inputs, see
   [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
 
   The provisioning process may take about 15 minutes to complete.
