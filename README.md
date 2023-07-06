@@ -161,7 +161,13 @@ To add another tenant:
 1. Add its name to the list of tenants to configure using the `tenant_names` variable.
 1. Follow the steps to [Deploy the blueprint](#deploy-the-blueprint) again.
 
-## Test
+## Connect to cluster nodes
 
-For more details about manual tests you can perform to validate this setup,
-see the [testing directory](testing).
+To open an SSH session against a node of the cluster, you use an IAP tunnel
+because cluster nodes don't have external IP addresses:
+
+```sh
+gcloud compute ssh --tunnel-through-iap node_name
+```
+
+Where `node_name` is the Compute Engine instance name to connect to.
