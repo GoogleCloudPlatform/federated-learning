@@ -43,8 +43,8 @@ class _EMNISTPartitionDataBackend(tff.framework.DataBackend):
     def __init__(self):
         element_spec = collections.OrderedDict(
             [
-                ('label', tf.TensorSpec(shape=(), dtype=tf.int32, name=None)),
-                ('pixels', tf.TensorSpec(shape=(28, 28), dtype=tf.float32, name=None)),
+                ("label", tf.TensorSpec(shape=(), dtype=tf.int32, name=None)),
+                ("pixels", tf.TensorSpec(shape=(28, 28), dtype=tf.float32, name=None)),
             ]
         )
 
@@ -53,7 +53,6 @@ class _EMNISTPartitionDataBackend(tff.framework.DataBackend):
         )
 
     def preprocess(self, dataset: tf.data.Dataset):
-
         def map_fn(element: Mapping[str, tf.Tensor]) -> Mapping[str, tf.Tensor]:
             return collections.OrderedDict(
                 x=tf.reshape(element["pixels"], [-1, 784]),
