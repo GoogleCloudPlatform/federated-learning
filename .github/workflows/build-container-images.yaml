@@ -54,7 +54,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: ${{ matrix.container-images.context-directory }}
-          file: ${{ matrix.container-images.file }}
           labels: ${{ steps.meta.outputs.labels }}
           load: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -63,5 +62,4 @@ jobs:
         container-images:
           - name: tff-worker
             context-directory: examples/federated-learning/tff/worker
-            file: Dockerfile
 ...
