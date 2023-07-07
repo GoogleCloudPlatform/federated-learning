@@ -1,0 +1,1 @@
+tensorflow-federated==0.60.0
