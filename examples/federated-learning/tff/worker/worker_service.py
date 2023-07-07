@@ -28,7 +28,7 @@ _EMNIST_PARTITION_PATH = "/root/worker/data/emnist_partition.sqlite"
 _PORT = 8000
 _GRPC_OPTIONS = [
     ("grpc.max_message_length", 20 * 1024 * 1024),
-    ("grpc.max_receive_message_length", 20 * 1024 * 1024)
+    ("grpc.max_receive_message_length", 20 * 1024 * 1024),
 ]
 # Number of worker threads in thread pool.
 _THREADS = 10
@@ -44,7 +44,7 @@ class _EMNISTPartitionDataBackend(tff.framework.DataBackend):
         element_spec = collections.OrderedDict(
             [
                 ('label', tf.TensorSpec(shape=(), dtype=tf.int32, name=None)),
-                ('pixels', tf.TensorSpec(shape=(28, 28), dtype=tf.float32, name=None))
+                ('pixels', tf.TensorSpec(shape=(28, 28), dtype=tf.float32, name=None)),
             ]
         )
 
@@ -56,8 +56,8 @@ class _EMNISTPartitionDataBackend(tff.framework.DataBackend):
 
         def map_fn(element: Mapping[str, tf.Tensor]) -> Mapping[str, tf.Tensor]:
             return collections.OrderedDict(
-                x=tf.reshape(element['pixels'], [-1, 784]),
-                y=tf.reshape(element['label'], [-1, 1]),
+                x=tf.reshape(element["pixels"], [-1, 784]),
+                y=tf.reshape(element["label"], [-1, 1]),
             )
 
         return dataset.repeat(_NUM_EPOCHS).shuffle(_SHUFFLE_BUFFER, seed=1).map(map_fn)
@@ -75,7 +75,8 @@ def main(argv: Sequence[str]) -> None:
     def ex_fn(device: tf.config.LogicalDevice) -> tff.framework.DataExecutor:
         return tff.framework.DataExecutor(
             tff.framework.EagerTFExecutor(device),
-            data_backend=_EMNISTPartitionDataBackend())
+            data_backend=_EMNISTPartitionDataBackend(),
+        )
 
     executor_factory = tff.framework.local_executor_factory(
         default_num_clients=1,
