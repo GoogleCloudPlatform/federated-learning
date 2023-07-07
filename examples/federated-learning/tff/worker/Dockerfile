@@ -17,9 +17,10 @@ FROM python:3.10-bookworm
 WORKDIR "/"
 COPY requirements.txt requirements.txt
 
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
 RUN pip install \
+    --no-cache-dir \
     --requirement requirements.txt \
     && rm requirements.txt
 
