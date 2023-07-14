@@ -25,15 +25,7 @@ RUN pip install \
     && rm requirements.txt
 
 ENV RUN_DIR="/root/worker"
-
-# File path to the sqlite database storing a partition of the EMNIST dataset.
-ENV EMNIST_PARTITION_PATH="$RUN_DIR/data/emnist_partition.sqlite"
-
 WORKDIR "${RUN_DIR}"
+COPY ./worker_service.py "${RUN_DIR}/"
 
-ARG WORKER_SRC_PATH="./worker_service.py"
-COPY $WORKER_SRC_PATH $RUN_DIR
-
-EXPOSE 8000
-
-ENTRYPOINT [ "python3", "${WORKER_SRC_PATH}" ]
+ENTRYPOINT [ "python3", "./worker_service.py" ]
