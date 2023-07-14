@@ -12,20 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-bookworm
+import logging
 
-WORKDIR "/"
-COPY requirements.txt requirements.txt
+import numpy as np
+import tensorflow_federated as tff
 
-RUN pip install --no-cache-dir --upgrade pip
+# import tensorflow as tf
+# import collections
 
-RUN pip install \
-    --no-cache-dir \
-    --requirement requirements.txt \
-    && rm requirements.txt
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-ENV RUN_DIR="/root/worker"
-WORKDIR "${RUN_DIR}"
-COPY ./worker_service.py "${RUN_DIR}/"
+np.random.seed(0)
 
-ENTRYPOINT [ "python3", "./worker_service.py" ]
+tff.federated_computation(lambda: "Hello, World!")()
