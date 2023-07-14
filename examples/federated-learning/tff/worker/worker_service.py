@@ -11,12 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import collections
+
 import logging
 
 import numpy as np
-import tensorflow as tf
 import tensorflow_federated as tff
+
+# import tensorflow as tf
+# import collections
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -24,4 +26,4 @@ logger.setLevel(logging.INFO)
 
 np.random.seed(0)
 
-tff.federated_computation(lambda: 'Hello, World!')()
+tff.federated_computation(lambda: "Hello, World!")()
