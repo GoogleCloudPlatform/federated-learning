@@ -1,0 +1,31 @@
+{
+  "name": "Python 3",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "INSTALL_MAVEN": "false",
+      "INSTALL_GRADLE": "true",
+      "NODE_VERSION": "none"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "DavidAnson.vscode-markdownlint",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--rm"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": ""
+    }
+  }
+}

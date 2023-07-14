@@ -60,6 +60,8 @@ jobs:
     strategy:
       matrix:
         container-images:
+          - name: devcontainer
+            context-directory: "."
           - name: tff-worker
             context-directory: examples/federated-learning/tff/worker
 ...
