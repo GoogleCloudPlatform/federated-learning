@@ -66,5 +66,5 @@ jobs:
             dockerfile-path: .devcontainer/Dockerfile
           - name: tff-worker
             context-directory: examples/federated-learning/tff/worker
-            dockerfile-path: Dockerfile
+            dockerfile-path: examples/federated-learning/tff/worker/Dockerfile
 ...
