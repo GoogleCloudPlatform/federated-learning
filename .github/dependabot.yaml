@@ -4,6 +4,22 @@ updates:
     package-ecosystem: "github-actions"
     schedule:
       interval: "daily"
+  - directory: "/.devcontainer"
+    package-ecosystem: "docker"
+    schedule:
+      interval: "daily"
+  - directory: "/.devcontainer"
+    package-ecosystem: "pip"
+    schedule:
+      interval: "daily"
+  - directory: "/examples/federated-learning/tff/worker"
+    package-ecosystem: "docker"
+    schedule:
+      interval: "daily"
+  - directory: "/examples/federated-learning/tff/worker"
+    package-ecosystem: "pip"
+    schedule:
+      interval: "daily"
   - directory: "/terraform"
     package-ecosystem: "terraform"
     schedule:

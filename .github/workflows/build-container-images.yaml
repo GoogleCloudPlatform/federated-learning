@@ -54,12 +54,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: ${{ matrix.container-images.context-directory }}
+          file: ${{ matrix.container-images.dockerfile-path }}
           labels: ${{ steps.meta.outputs.labels }}
           load: true
           tags: ${{ steps.meta.outputs.tags }}
     strategy:
       matrix:
         container-images:
+          - name: devcontainer
+            context-directory: "."
+            dockerfile-path: .devcontainer/Dockerfile
           - name: tff-worker
             context-directory: examples/federated-learning/tff/worker
+            dockerfile-path: examples/federated-learning/tff/worker/Dockerfile
 ...

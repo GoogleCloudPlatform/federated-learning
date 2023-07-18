@@ -1,0 +1,24 @@
+{
+  "name": "Python 3",
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "DavidAnson.vscode-markdownlint",
+        "HashiCorp.terraform",
+        "ms-azuretools.vscode-docker",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--rm"
+  ]
+}
