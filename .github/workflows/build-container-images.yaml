@@ -64,7 +64,10 @@ jobs:
           - name: devcontainer
             context-directory: "."
             dockerfile-path: .devcontainer/Dockerfile
-          - name: tff-worker
-            context-directory: examples/federated-learning/tff/worker
-            dockerfile-path: examples/federated-learning/tff/worker/Dockerfile
+          - name: distributed-fl-simulation-k8s
+            context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
+            dockerfile-path: examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile
+          - name: image-classification
+            context-directory: examples/federated-learning/tff/image-classification
+            dockerfile-path: examples/federated-learning/tff/image-classification/Dockerfile
 ...

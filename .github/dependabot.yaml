@@ -12,11 +12,19 @@ updates:
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
-  - directory: "/examples/federated-learning/tff/worker"
+  - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
-  - directory: "/examples/federated-learning/tff/worker"
+  - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
+    package-ecosystem: "pip"
+    schedule:
+      interval: "daily"
+  - directory: "/examples/federated-learning/tff/image-classification"
+    package-ecosystem: "docker"
+    schedule:
+      interval: "daily"
+  - directory: "/examples/federated-learning/tff/image-classification"
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
