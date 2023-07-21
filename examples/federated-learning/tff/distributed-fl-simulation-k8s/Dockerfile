@@ -34,3 +34,5 @@ COPY ./worker_service.py "${RUN_DIR}/"
 ENV EMNIST_PARTITION_PATH="${RUN_DIR}/data/emnist_partition.sqlite"
 
 ENTRYPOINT [ "python3", "./worker_service.py" ]
+
+EXPOSE 8000

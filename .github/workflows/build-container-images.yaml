@@ -71,6 +71,7 @@ jobs:
             run: true
           - name: distributed-fl-simulation-k8s
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
+            # Don't run an instance of this because it needs instrumentation
             run: false
           - name: image-classification
             context-directory: examples/federated-learning/tff/image-classification

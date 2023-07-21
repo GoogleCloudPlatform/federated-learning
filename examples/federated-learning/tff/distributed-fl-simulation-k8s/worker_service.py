@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import collections
+import os
 import random
 from collections.abc import Mapping, Sequence
 
@@ -20,9 +21,8 @@ import tensorflow as tf
 import tensorflow_federated as tff
 from absl import app
 
-# TODO: load this from the EMNIST_PARTITION_PATH environment variable
 # Path to sqlite database containing EMNIST partition.
-_EMNIST_PARTITION_PATH = "/root/worker/data/emnist_partition.sqlite"
+_EMNIST_PARTITION_PATH = os.environ["EMNIST_PARTITION_PATH"]
 
 _PORT = 8000
 _GRPC_OPTIONS = [
