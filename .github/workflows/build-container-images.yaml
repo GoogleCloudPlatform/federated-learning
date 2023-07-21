@@ -54,7 +54,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: ${{ matrix.container-images.context-directory }}
-          file: ${{ matrix.container-images.dockerfile-path }}
           labels: ${{ steps.meta.outputs.labels }}
           load: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -62,12 +61,9 @@ jobs:
       matrix:
         container-images:
           - name: devcontainer
-            context-directory: "."
-            dockerfile-path: .devcontainer/Dockerfile
+            context-directory: .devcontainer
           - name: distributed-fl-simulation-k8s
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
-            dockerfile-path: examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile
           - name: image-classification
             context-directory: examples/federated-learning/tff/image-classification
-            dockerfile-path: examples/federated-learning/tff/image-classification/Dockerfile
 ...
