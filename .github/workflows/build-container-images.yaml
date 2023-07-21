@@ -25,7 +25,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   build-container-images:
     env:
-      CONTAINER_IMAGE_ID: "${{ github.repository }}-${{ matrix.container-images.name }}"
+      CONTAINER_IMAGE_ID: "ghcr.io/${{ github.repository }}-${{ matrix.container-images.name }}"
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         uses: docker/metadata-action@v4.6.0
         with:
           images: |
-            ${{ env.CONTAINER_IMAGE_REGISTRY }}/${{ env.CONTAINER_IMAGE_ID }}
+            ${{ env.CONTAINER_IMAGE_ID }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -59,7 +59,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
       - name: Run an instance of the ${{ matrix.container-images.name }} container image
         run: |
-          docker run --rm ${{ env.CONTAINER_IMAGE_REGISTRY }}/${{ env.CONTAINER_IMAGE_ID }}
+          CONTAINER_IMAGE_NAME=${{ fromJSON(steps.docker-build.outputs.metadata)['image.name'] }}
+          docker run --rm "${CONTAINER_IMAGE_NAME}"
     strategy:
       matrix:
         container-images:
