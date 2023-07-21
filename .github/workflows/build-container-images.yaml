@@ -59,6 +59,7 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.tags }}
       - name: Run an instance of the ${{ matrix.container-images.name }} container image
+        if: matrix.container-images.run
         run: |
           CONTAINER_IMAGE_NAME=${{ fromJSON(steps.docker-build.outputs.metadata)['image.name'] }}
           docker run --rm "${CONTAINER_IMAGE_NAME}"
@@ -67,8 +68,11 @@ jobs:
         container-images:
           - name: devcontainer
             context-directory: .devcontainer
+            run: true
           - name: distributed-fl-simulation-k8s
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
+            run: false
           - name: image-classification
             context-directory: examples/federated-learning/tff/image-classification
+            run: true
 ...
