@@ -59,7 +59,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
       - name: Run an instance of the ${{ matrix.container-images.name }} container image
         run: |
-          docker run --rm -it ${{ env.CONTAINER_IMAGE_REGISTRY }}/${{ env.CONTAINER_IMAGE_ID }}
+          docker run --rm ${{ env.CONTAINER_IMAGE_REGISTRY }}/${{ env.CONTAINER_IMAGE_ID }}
     strategy:
       matrix:
         container-images:
