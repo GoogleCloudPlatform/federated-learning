@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-bookworm
+FROM python:3.11-bookworm
 
 WORKDIR "/"
 COPY requirements.txt requirements.txt
