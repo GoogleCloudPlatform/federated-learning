@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM hashicorp/terraform:1.5.3 as terraform
+FROM hashicorp/terraform:1.5.4 as terraform
 
 FROM mcr.microsoft.com/devcontainers/python:3.9
 
