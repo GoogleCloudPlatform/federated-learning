@@ -15,14 +15,25 @@
 import collections
 import os
 import random
+import sys
 from collections.abc import Mapping, Sequence
 
 import tensorflow as tf
 import tensorflow_federated as tff
 from absl import app
 
-# Path to sqlite database containing EMNIST partition.
-_EMNIST_PARTITION_PATH = os.environ["EMNIST_PARTITION_PATH"]
+# Path to the directory containing EMNIST partition.
+_EMNIST_PARTITION_DIRECTORY_PATH = os.environ["EMNIST_PARTITION_DIRECTORY_PATH"]
+
+if "EMNIST_PARTITION_FILE_NAME" not in os.environ:
+    sys.exit(
+        "Initialize a EMNIST_PARTITION_FILE_NAME environment variable with the name of the EMNIST partition file to use."
+    )
+else:
+    # Path to the sqlite database containing EMNIST partition.
+    _EMNIST_PARTITION_PATH = os.path.join(
+        _EMNIST_PARTITION_DIRECTORY_PATH, os.environ["EMNIST_PARTITION_FILE_NAME"]
+    )
 
 _PORT = 8000
 _GRPC_OPTIONS = [

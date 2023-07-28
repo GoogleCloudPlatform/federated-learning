@@ -12,7 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: download file from bucket
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:439.0.0 as gcloud
+
+ENV DATASET_DESTINATION_DIRECTORY_PATH="/tmp/dataset/emnist-partitions/2-partition"
+
+RUN gsutil -m cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_1.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_1.sqlite" \
+    && gsutil -m cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_2.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_2.sqlite"
 
 FROM python:3.9-buster
 
@@ -28,10 +33,14 @@ RUN pip install \
 
 ENV RUN_DIR="/root/worker"
 WORKDIR "${RUN_DIR}"
-COPY ./worker_service.py "${RUN_DIR}/"
 
-# File path to the sqlite database storing a partition of the EMNIST dataset.
-ENV EMNIST_PARTITION_PATH="${RUN_DIR}/data/emnist_partition.sqlite"
+ENV EMNIST_PARTITION_DIRECTORY_PATH="${RUN_DIR}/data/"
+
+# For simplicity, we copy all the partitions, even if this makes the container image
+# bigger. This is fine for demo purposes.
+COPY --from=gcloud "/tmp/dataset/emnist-partitions/2-partition" "${EMNIST_PARTITION_PATH}"
+
+COPY ./worker_service.py "${RUN_DIR}/"
 
 ENTRYPOINT [ "python3", "./worker_service.py" ]
 
