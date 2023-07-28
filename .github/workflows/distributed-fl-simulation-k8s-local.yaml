@@ -34,6 +34,9 @@ jobs:
         run: |
           docker compose \
           --file compose.yaml \
-          up --build
+          up \
+          --abort-on-container-exit \
+          --build \
+          --exit-code-from tff-client
         working-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
 ...

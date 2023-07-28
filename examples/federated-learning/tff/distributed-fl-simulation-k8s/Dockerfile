@@ -38,7 +38,7 @@ ENV EMNIST_PARTITION_DIRECTORY_PATH="${RUN_DIR}/data/"
 
 # For simplicity, we copy all the partitions and executables.
 # This makes the container image bigger, but it's fine for demo purposes.
-COPY --from=gcloud "/tmp/dataset/emnist-partitions/2-partition" "${EMNIST_PARTITION_PATH}"
+COPY --from=gcloud "/tmp/dataset/emnist-partitions/2-partition" "${EMNIST_PARTITION_DIRECTORY_PATH}"
 COPY ./worker_service.py "${RUN_DIR}/"
 COPY ./training_procedure.py "${RUN_DIR}/"
 
