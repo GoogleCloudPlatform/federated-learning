@@ -35,5 +35,5 @@ jobs:
           docker compose \
           --file compose.yaml \
           up --build
-        working-directory: examples/federated-learning/tff/image-classification
+        working-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
 ...
