@@ -27,7 +27,7 @@ _EMNIST_PARTITION_DIRECTORY_PATH = os.environ["EMNIST_PARTITION_DIRECTORY_PATH"]
 
 if "EMNIST_PARTITION_FILE_NAME" not in os.environ:
     sys.exit(
-        "Initialize a EMNIST_PARTITION_FILE_NAME environment variable with the name of the EMNIST partition file to use."
+        "Initialize a EMNIST_PARTITION_FILE_NAME environment variable with the name of the partition file to use."
     )
 else:
     # Path to the sqlite database containing EMNIST partition.
