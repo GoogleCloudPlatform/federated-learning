@@ -32,6 +32,8 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Run the distributed FL simulation example locally
         run: |
-          docker compose up --build --file compose.yaml
+          docker compose \
+          --file compose.yaml \
+          up --build
         working-directory: examples/federated-learning/tff/image-classification
 ...
