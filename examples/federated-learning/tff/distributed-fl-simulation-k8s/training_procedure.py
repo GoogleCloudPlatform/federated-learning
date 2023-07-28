@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import collections
+import sys
 from typing import Any, List, Optional
 
 import grpc
@@ -44,7 +45,7 @@ class FederatedData(
         return self
 
     def select(self, num_clients: Optional[int] = None) -> Any:
-        data_uris = [f"uri://{i}" for i in range(num_clients)]
+        data_uris = [f"uri://{i}" for i in range(num_clients)]  # type: ignore
         return tff.framework.CreateDataDescriptor(
             arg_uris=data_uris, arg_type=self._type_spec
         )
