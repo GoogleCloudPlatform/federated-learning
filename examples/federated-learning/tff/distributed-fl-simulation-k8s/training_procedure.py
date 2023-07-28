@@ -98,10 +98,12 @@ def train_loop(num_rounds=10, num_clients=10):
         print("round {:2d}, metrics={}".format(round, train_metrics))
 
 
-# TODO: get these IPs from environment variables
+# TODO: get these IPs from environment variables or arguments
 ip_address_1 = "0.0.0.0"
 ip_address_2 = "0.0.0.0"
-port = 80
+port = 8000
+
+print("\n".join(sys.argv[1:]))
 
 channels = [
     grpc.insecure_channel(f"{ip_address_1}:{port}"),
