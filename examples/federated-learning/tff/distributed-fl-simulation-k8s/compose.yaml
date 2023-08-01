@@ -1,0 +1,31 @@
+---
+services:
+  tff-worker-1:
+    image: tff-runtime:latest
+    build:
+      context: .
+    container_name: tff-worker-1
+    environment:
+      - EMNIST_PARTITION_FILE_NAME=emnist_part_1.sqlite
+  tff-worker-2:
+    image: tff-runtime:latest
+    build:
+      context: .
+    container_name: tff-worker-2
+    environment:
+      - EMNIST_PARTITION_FILE_NAME=emnist_part_2.sqlite
+  tff-client:
+    image: tff-runtime:latest
+    build:
+      context: .
+    command:
+      [
+        "./training_procedure.py",
+        "tff-worker-1",
+        "tff-worker-2"
+      ]
+    depends_on:
+      - tff-worker-1
+      - tff-worker-2
+    container_name: tff-client
+...

@@ -11,27 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-extends: default
 
-locale: "en_US.UTF-8"
-
-rules:
-  colons:
-    max-spaces-after: 1
-  comments:
-    min-spaces-from-content: 1
-  comments-indentation:
-    level: error
-  document-end:
-    level: error
-  document-start:
-    level: error
-  empty-values: enable
-  line-length:
-    allow-non-breakable-inline-mappings: true
-    max: 250
-  octal-values: enable
-  truthy:
-    level: error
-...
+nest-asyncio==1.5.6
+tensorflow-federated==0.48.0

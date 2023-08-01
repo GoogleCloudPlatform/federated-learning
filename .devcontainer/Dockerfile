@@ -14,16 +14,14 @@
 
 FROM hashicorp/terraform:1.5.4 as terraform
 
-FROM mcr.microsoft.com/devcontainers/python:3.9
+FROM mcr.microsoft.com/devcontainers/python:3.10
 
 SHELL ["/bin/bash", "-o", "pipefail", "-o", "errexit", "-c"]
 
 COPY --from=terraform /bin/terraform /usr/bin/
 
-COPY .devcontainer/requirements.txt /tmp/pip-tmp/devcontainer-requirements.txt
-COPY examples/federated-learning/tff/worker/requirements.txt /tmp/pip-tmp/requirements.txt
+COPY ./requirements.txt /tmp/pip-tmp/devcontainer-requirements.txt
 
 RUN pip3 install --no-cache-dir --upgrade pip \
     && pip3 --no-cache-dir install -r /tmp/pip-tmp/devcontainer-requirements.txt \
-    && pip3 --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
     && rm -rf /tmp/pip-tmp
