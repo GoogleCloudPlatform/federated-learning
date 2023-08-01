@@ -23,24 +23,3 @@ the tenant.
 service account using Workload Identity
 - tenant-developer: email address of user/group that operates the tenant apps within the tenant namespace.
 Used to bind to a ClusterRole with limited permissions.
-
-## Usage
-
-### Add a new cluster tenant
-
-1. Instantiate the tenant-config-pkg package into a new directory (e.g. a 'tenant2' dir).
-
-  ```sh
-  kpt pkg get $PKG-REPO.git/tenant-config-pkg tenant2
-  ```
-
-1. Configure the package, updating default values with tenant-specific values. This updates the namespace to be 'tenant2' etc.
-
-  ```sh
-  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 -- \
-    tenant-name=tenant2 \
-    gcp-service-account=$CLUSTER-tenant2-apps-sa@$PROJECT.iam.gserviceaccount.com \
-    tenant-developer=someuser@email
-  ```
-
-1. Add the tenant2 dir to your configsync directory, and commit the changes to your repository.
