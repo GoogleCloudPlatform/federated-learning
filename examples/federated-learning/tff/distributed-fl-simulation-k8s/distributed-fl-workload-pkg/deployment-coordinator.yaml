@@ -34,4 +34,5 @@ spec:
             - "./training_procedure.py"
             - "tff-worker-1"
             - "tff-worker-2"
+      serviceAccountName: tff-coordinator-service-account
 ...

@@ -37,4 +37,5 @@ spec:
               value: emnist_part_1.sqlite
           ports:
             - containerPort: 8000
+      serviceAccountName: tff-worker-service-account
 ...
