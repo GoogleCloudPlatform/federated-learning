@@ -34,3 +34,7 @@ docker compose \
 ### Containers running in different GKE clusters
 
 TODO
+
+1. Clone the Config Sync repository.
+1. Render the Kpt package.
+1. Commit changes to the Config Sync repository.
