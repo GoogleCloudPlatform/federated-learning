@@ -22,7 +22,7 @@ locals {
 
 module "fedlearn-vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "7.1.0"
+  version = "7.2.0"
 
   project_id   = data.google_project.project.project_id
   network_name = "fedlearn-network"
