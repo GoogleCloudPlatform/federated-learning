@@ -25,8 +25,14 @@ pipeline:
   mutators:
     - image: gcr.io/kpt-fn/set-labels:v0.2.0
       configMap:
-        app: tff-worker
+        app: tff-example-app
     - image: gcr.io/kpt-fn/set-namespace:v0.4.1
       configMap:
-        namespace: tff-example-workload
+        namespace: tff-example-workload-namespace
+    - image: gcr.io/kpt-fn/create-setters:v0.1.0
+      configMap:
+        namespace: tff-example-workload-namespace
+        tff-workload-emnist-partition-file-name: emnist_part_1.sqlite
+        tff-worker-1-address: "tff-worker-1"
+        tff-worker-2-address: "tff-worker-2"
 ...

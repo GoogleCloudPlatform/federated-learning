@@ -29,7 +29,12 @@ spec:
     spec:
       containers:
         - name: tff-worker
-          image: gcr.io/tensorflow-federated/worker-service-test:latest
+          image: gcr.io/tensorflow-federated/tff-runtime:latest
+          args:
+            - "./worker_service.py"
+          env:
+            - name: EMNIST_PARTITION_FILE_NAME
+              value: emnist_part_1.sqlite
           ports:
             - containerPort: 8000
 ...

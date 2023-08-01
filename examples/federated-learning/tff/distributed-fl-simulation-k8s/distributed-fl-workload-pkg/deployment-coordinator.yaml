@@ -13,15 +13,25 @@
 # limitations under the License.
 
 ---
-kind: Service
-apiVersion: v1
+kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: tff-worker-service
+  name: tff-coordinator
 spec:
-  type: LoadBalancer
+  replicas: 1
   selector:
-    app: tff-worker
-  ports:
-    - port: 8000
-      targetPort: 8000
+    matchLabels:
+      app: tff-coordinator
+  template:
+    metadata:
+      labels:
+        app: tff-coordinator
+    spec:
+      containers:
+        - name: tff-coordinator
+          image: gcr.io/tensorflow-federated/tff-runtime:latest
+          args:
+            - "./training_procedure.py"
+            - "tff-worker-1"
+            - "tff-worker-2"
 ...
