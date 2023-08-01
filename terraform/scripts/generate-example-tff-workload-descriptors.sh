@@ -20,7 +20,7 @@ set -o errexit
 TENANTS_CONFIGURATION_DIRECTORY_PATH="${1}"
 TENANT_CONFIGURATION_PACKAGE_PATH="${2}"
 TENANT="${3}"
-TFF_WORKER_EMNIST_PARTITION_NAME="${4}"
+TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${4}"
 TFF_WORKER_1_ADDRESS="${5}"
 TFF_WORKER_2_ADDRESS="${6}"
 
@@ -31,10 +31,10 @@ mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
 echo "Configuring ${TENANT_CONFIGURATION_PACKAGE_PATH} package for ${TENANT} tenant. Output directory: ${TENANT_CONFIGURATION_DIRECTORY_PATH}"
 
 kpt fn render "${TENANT_CONFIGURATION_PACKAGE_PATH}" --output="unwrap" \
-  | kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 "${TENANT_CONFIGURATION_PACKAGE_PATH}" --output="${TENANT_CONFIGURATION_DIRECTORY_PATH}" -- \
+  | kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${TENANT_CONFIGURATION_DIRECTORY_PATH}" - -- \
   namespace="${TENANT}" \
   tff-coordinator-service-account-name="${TENANT}" \
-  tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_NAME}" \
+  tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
   tff-worker-service-account-name="${TENANT}" \
   tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
   tff-worker-2-address="${TFF_WORKER_2_ADDRESS}"
