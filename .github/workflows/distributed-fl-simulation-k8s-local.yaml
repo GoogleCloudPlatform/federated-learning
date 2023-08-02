@@ -46,7 +46,10 @@ jobs:
     steps:
       - name: Generate the distributed-fl-workload-pkg Kpt package
         run: |
-          ./examples/federated-learning/tff/distributed-fl-simulation-k8s/generate-example-tff-workload-descriptors.sh \
+          ls -alh
+          pwd
+          ls -alh examples/federated-learning/tff/distributed-fl-simulation-k8s
+          examples/federated-learning/tff/distributed-fl-simulation-k8s/generate-example-tff-workload-descriptors.sh \
             . \
             examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
             "main" \
