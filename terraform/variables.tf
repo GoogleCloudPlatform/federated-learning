@@ -101,6 +101,12 @@ variable "cluster_secrets_keyname" {
   type        = string
 }
 
+variable "enable_tff_workload_external_ip_address" {
+  default     = false
+  description = "Set to true to provision an external IP address for the example TensorFlow Federated workload"
+  type        = bool
+}
+
 variable "acm_version" {
   description = "Anthos Config Management version"
   default     = ""

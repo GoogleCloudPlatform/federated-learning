@@ -19,7 +19,7 @@ output "config_sync_repository_path" {
 
 output "example_tff_workload_external_ip" {
   description = "Example TensorFlow Federated workload external IP address"
-  value       = module.example_tff_workload_external_ip.addresses[0]
+  value       = module.example_tff_workload_external_ip[0].addresses[0]
 }
 
 output "kubernetes_apps_service_account_name" {
