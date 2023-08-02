@@ -14,17 +14,17 @@
 
 output "artifact_registry_container_image_repository_location" {
   description = "Location of the Artifact Registry repository to store container images."
-  value       = google_artifact_registry_repository.mqtt_cloud_pubsub_container_image_repository.location
+  value       = google_artifact_registry_repository.container_image_repository.location
 }
 
 output "artifact_registry_container_image_repository_name" {
   description = "Last part of the name of the Artifact Registry container image repository."
-  value       = google_artifact_registry_repository.mqtt_cloud_pubsub_container_image_repository.repository_id
+  value       = google_artifact_registry_repository.container_image_repository.repository_id
 }
 
 output "artifact_registry_container_image_repository_project_id" {
   description = "ID of the Artifact Registry container image repository Google Cloud project."
-  value       = google_artifact_registry_repository.mqtt_cloud_pubsub_container_image_repository.project
+  value       = google_artifact_registry_repository.container_image_repository.project
 }
 
 output "config_sync_repository_path" {
