@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:440.0.0 as gcloud
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:441.0.0 as gcloud
 
 ENV DATASET_DESTINATION_DIRECTORY_PATH="/tmp/dataset/emnist-partitions/2-partition"
 
