@@ -41,13 +41,11 @@ docker compose \
 
     ```sh
     examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
-        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw kubernetes_apps_service_account_name)" \
-        "emnist_partition_1.sqlite" \
-        "not-needed" \
-        "not-needed"
+        "<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" \
+        "false" \
+        "emnist_partition_1.sqlite"
     ```
 
     Where `<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>` is the path to the Terraform
@@ -59,13 +57,11 @@ docker compose \
 
     ```sh
     examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
-        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw kubernetes_apps_service_account_name)" \
-        "emnist_partition_2.sqlite" \
-        "not-needed" \
-        "not-needed"
+        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" \
+        "false" \
+        "emnist_partition_2.sqlite"
     ```
 
     Where `<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>` is the path to the Terraform
@@ -77,20 +73,19 @@ docker compose \
 
     ```sh
     examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/main" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "main" \
-        "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw kubernetes_apps_service_account_name)" \
+        "<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" \
+        "true" \
         "not-needed" \
-        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw tff_example_worker_external_ip_address)" \
-        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw tff_example_worker_external_ip_address)" \
-        "true"
+        "<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" \
+        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>"
     ```
 
     Where:
         - `<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>` is the path to the
             Terraform directory where you stored the Terraform descriptors to
-            provision the cloud environment for the second worker.
+            provision the cloud environment for the coordinator.
         - `<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>` is the path to the Terraform
             directory where you stored the Terraform descriptors to provision
             the cloud environment for the first worker.

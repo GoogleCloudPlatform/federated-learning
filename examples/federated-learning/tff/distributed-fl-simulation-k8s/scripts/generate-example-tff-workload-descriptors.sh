@@ -17,27 +17,44 @@
 set -o nounset
 set -o errexit
 
-OUTPUT_DIRECTORY_PATH="${1}"
-KPT_PACKAGE_PATH="${2}"
-NAMESPACE="${3}"
-TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${4}"
-TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${5}"
-TFF_WORKER_POD_SERVICE_ACCOUNT_NAME="${6}"
-TFF_WORKER_1_ADDRESS="${7}"
-TFF_WORKER_2_ADDRESS="${8}"
+KPT_PACKAGE_PATH="${1}"
+NAMESPACE="${2}"
+TERRAFORM_ENVIRONMENT_DIRECTORY_PATH="${3}"
+IS_TFF_COORDINATOR="${4:-"false"}"
+TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${5:-"not-needed"}"
 
-IS_TFF_COORDINATOR="${9:-"false"}"
+TFF_WORKER_1_TERRAFORM_DIRECTORY_PATH="${6:-"not-needed"}"
+TFF_WORKER_2_TERRAFORM_DIRECTORY_PATH="${7:-"not-needed"}"
+
+echo "Loading data from Terraform"
+OUTPUT_DIRECTORY_PATH="$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/${NAMESPACE}"
+TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="$(terraform -chdir="${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw kubernetes_apps_service_account_name)"
+
+_CONTAINER_IMAGE_REPOSITORY_LOCATION="$(terraform -chdir "${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw artifact_registry_container_image_repository_location)"
+_CONTAINER_IMAGE_REPOSITORY_PROJECT_ID="$(terraform -chdir "${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw artifact_registry_container_image_repository_project_id)"
+_CONTAINER_IMAGE_REPOSITORY_NAME="$(terraform -chdir "${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw artifact_registry_container_image_repository_name)"
+_CONTAINER_IMAGE_REPOSITORY_HOSTNAME="${_CONTAINER_IMAGE_REPOSITORY_LOCATION}-docker.pkg.dev"
+_CONTAINER_IMAGE_REPOSITORY_ID="${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}/${_CONTAINER_IMAGE_REPOSITORY_PROJECT_ID}/${_CONTAINER_IMAGE_REPOSITORY_NAME}"
+_CONTAINER_IMAGE_LOCALIZED_ID="${_CONTAINER_IMAGE_REPOSITORY_ID}/tff-runtime:latest"
+
+TFF_WORKER_1_ADDRESS="not-needed"
+TFF_WORKER_2_ADDRESS="not-needed"
+
+if [ "${IS_TFF_COORDINATOR}" = "true" ]; then
+  echo "Loading worker IP addresses from Terraform"
+  TFF_WORKER_1_ADDRESS="$(terraform -chdir="${TFF_WORKER_1_TERRAFORM_DIRECTORY_PATH}" output -raw tff_example_worker_external_ip_address)"
+  TFF_WORKER_2_ADDRESS="$(terraform -chdir="${TFF_WORKER_2_TERRAFORM_DIRECTORY_PATH}" output -raw tff_example_worker_external_ip_address)"
+fi
 
 echo "Configuring ${KPT_PACKAGE_PATH} package for ${NAMESPACE} namespace. Output directory: ${OUTPUT_DIRECTORY_PATH}"
 
-kpt fn render "${KPT_PACKAGE_PATH}" --output="unwrap" |
-  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${OUTPUT_DIRECTORY_PATH}" - -- \
-    namespace="${NAMESPACE}" \
-    tff-coordinator-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
-    tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
-    tff-worker-service-account-name="${TFF_WORKER_POD_SERVICE_ACCOUNT_NAME}" \
-    tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
-    tff-worker-2-address="${TFF_WORKER_2_ADDRESS}"
+kpt fn eval "${KPT_PACKAGE_PATH}" --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${OUTPUT_DIRECTORY_PATH}" - -- \
+  namespace="${NAMESPACE}" \
+  tff-pod-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
+  tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
+  tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
+  tff-worker-2-address="${TFF_WORKER_2_ADDRESS}" \
+  tff-runtime-container-image-id="${_CONTAINER_IMAGE_LOCALIZED_ID}"
 
 if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
   echo "This configuration is for a worker. Deleting worker-specific configuration."

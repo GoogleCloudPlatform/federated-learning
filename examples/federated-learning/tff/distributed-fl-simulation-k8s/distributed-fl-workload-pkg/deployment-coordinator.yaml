@@ -37,5 +37,5 @@ spec:
             - "./training_procedure.py"
             - "tff-worker-1"  # kpt-set: ${tff-worker-1-address}
             - "tff-worker-2"  # kpt-set: ${tff-worker-2-address}
-      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-coordinator-service-account-name}
+      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
 ...
