@@ -30,14 +30,14 @@ IS_TFF_COORDINATOR="${9:-"false"}"
 
 echo "Configuring ${KPT_PACKAGE_PATH} package for ${NAMESPACE} namespace. Output directory: ${OUTPUT_DIRECTORY_PATH}"
 
-kpt fn render "${KPT_PACKAGE_PATH}" --output="unwrap" \
-  | kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${OUTPUT_DIRECTORY_PATH}" - -- \
-  namespace="${NAMESPACE}" \
-  tff-coordinator-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
-  tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
-  tff-worker-service-account-name="${TFF_WORKER_POD_SERVICE_ACCOUNT_NAME}" \
-  tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
-  tff-worker-2-address="${TFF_WORKER_2_ADDRESS}"
+kpt fn render "${KPT_PACKAGE_PATH}" --output="unwrap" |
+  kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${OUTPUT_DIRECTORY_PATH}" - -- \
+    namespace="${NAMESPACE}" \
+    tff-coordinator-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
+    tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
+    tff-worker-service-account-name="${TFF_WORKER_POD_SERVICE_ACCOUNT_NAME}" \
+    tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
+    tff-worker-2-address="${TFF_WORKER_2_ADDRESS}"
 
 if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
   echo "This configuration is for a worker. Deleting worker-specific configuration."
