@@ -16,7 +16,10 @@
 kind: Service
 apiVersion: v1
 metadata:
+  labels:
+    app: tff-example-app
   name: tff-worker-service
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   type: LoadBalancer
   selector:

@@ -21,20 +21,14 @@ info:
   description: |
     This package provides the necessary to deploy an example distributed
     TensorFlow Federated workload.
-pipeline:
-  mutators:
-    - image: gcr.io/kpt-fn/set-labels:v0.2.0
-      configMap:
-        app: tff-example-app
-    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
-      configMap:
-        namespace: tff-example-workload-namespace
-    - image: gcr.io/kpt-fn/create-setters:v0.1.0
-      configMap:
-        namespace: tff-example-workload-namespace
-        tff-coordinator-service-account-name: tff-coordinator-service-account
-        tff-workload-emnist-partition-file-name: emnist_part_1.sqlite
-        tff-worker-service-account-name: tff-worker-service-account
-        tff-worker-1-address: "tff-worker-1"
-        tff-worker-2-address: "tff-worker-2"
+# pipeline:
+#   mutators:
+#     - image: gcr.io/kpt-fn/apply-setters:v0.2
+#       configMap:
+#         namespace: tff-example-workload-namespace
+#         tff-coordinator-service-account-name: tff-coordinator-service-account
+#         tff-workload-emnist-partition-file-name: emnist_part_1.sqlite
+#         tff-worker-service-account-name: tff-worker-service-account
+#         tff-worker-1-address: "tff-worker-1"
+#         tff-worker-2-address: "tff-worker-2"
 ...

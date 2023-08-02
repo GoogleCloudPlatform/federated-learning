@@ -16,7 +16,10 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
+  labels:
+    app: tff-example-app
   name: tff-coordinator
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   replicas: 1
   selector:
@@ -29,10 +32,10 @@ spec:
     spec:
       containers:
         - name: tff-coordinator
-          image: gcr.io/tensorflow-federated/tff-runtime:latest
+          image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
           args:
             - "./training_procedure.py"
-            - "tff-worker-1"
-            - "tff-worker-2"
-      serviceAccountName: tff-coordinator-service-account
+            - "tff-worker-1"  # kpt-set: ${tff-worker-1-address}
+            - "tff-worker-2"  # kpt-set: ${tff-worker-2-address}
+      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-coordinator-service-account-name}
 ...
