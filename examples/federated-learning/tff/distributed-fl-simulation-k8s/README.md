@@ -41,7 +41,7 @@ docker compose \
 
     ```sh
     terraform/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)" \
+        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
         "emnist_partition_1.sqlite" \
@@ -58,7 +58,7 @@ docker compose \
 
     ```sh
     terraform/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)" \
+        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
         "emnist_partition_2.sqlite" \
@@ -75,7 +75,7 @@ docker compose \
 
     ```sh
     terraform/scripts/generate-example-tff-workload-descriptors.sh \
-        "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)" \
+        "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/main" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "main" \
         "not-needed" \
