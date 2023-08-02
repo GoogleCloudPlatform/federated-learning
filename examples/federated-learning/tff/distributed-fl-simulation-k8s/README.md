@@ -44,6 +44,7 @@ docker compose \
         "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
+        "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw tff_example_kubernetes_service_account_name)" \
         "emnist_partition_1.sqlite" \
         "not-needed" \
         "not-needed"
@@ -61,6 +62,7 @@ docker compose \
         "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/fltenant1" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "fltenant1" \
+        "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw tff_example_kubernetes_service_account_name)" \
         "emnist_partition_2.sqlite" \
         "not-needed" \
         "not-needed"
@@ -78,6 +80,7 @@ docker compose \
         "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/main" \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
         "main" \
+        "$(terraform -chdir="<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" output -raw tff_example_kubernetes_service_account_name)" \
         "not-needed" \
         "$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw tff_example_worker_external_ip_address)" \
         "$(terraform -chdir="<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" output -raw tff_example_worker_external_ip_address)" \
