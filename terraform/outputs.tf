@@ -16,3 +16,8 @@ output "config_sync_repository_path" {
   description = "Path to the Config Sync repository on the local machine."
   value       = var.acm_repository_path
 }
+
+output "kubernetes_apps_service_account_name" {
+  description = "Kubernetes service account name for workloads running in the cluster"
+  value       = module.fl-workload-identity.k8s_sa_name
+}
