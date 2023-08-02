@@ -11,3 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+output "config_sync_repository_path" {
+  description = "Path to the Config Sync repository on the local machine."
+  value       = var.acm_repository_path
+}
