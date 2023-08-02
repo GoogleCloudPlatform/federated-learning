@@ -37,6 +37,12 @@ docker compose \
 
 1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
 1. From Cloud Shell, change the working directory to the root of this repository.
+1. Build the needed container images and push them to Artifact Registry:
+
+    ```sh
+    # TODO
+    ```
+
 1. Render the Kpt package for the first worker:
 
     ```sh
@@ -81,8 +87,6 @@ docker compose \
         "<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" \
         "true" \
         "not-needed" \
-        "<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" \
-        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" \
         "<WORKER_1_SERVICE_IP_ADDRESS>" \
         "<WORKER_2_SERVICE_IP_ADDRESS>"
     ```
@@ -91,12 +95,6 @@ docker compose \
         - `<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>` is the path to the
             Terraform directory where you stored the Terraform descriptors to
             provision the cloud environment for the coordinator.
-        - `<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>` is the path to the Terraform
-            directory where you stored the Terraform descriptors to provision
-            the cloud environment for the first worker.
-        - `<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>` is the path to the Terraform
-            directory where you stored the Terraform descriptors to provision
-            the cloud environment for the second worker.
         - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
             that exposes the first worker workloads.
         - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer

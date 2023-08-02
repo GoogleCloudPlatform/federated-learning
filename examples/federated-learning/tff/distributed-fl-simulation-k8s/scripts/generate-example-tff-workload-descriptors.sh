@@ -23,10 +23,8 @@ TERRAFORM_ENVIRONMENT_DIRECTORY_PATH="${3}"
 IS_TFF_COORDINATOR="${4:-"false"}"
 TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${5:-"not-needed"}"
 
-TFF_WORKER_1_TERRAFORM_DIRECTORY_PATH="${6:-"not-needed"}"
-TFF_WORKER_2_TERRAFORM_DIRECTORY_PATH="${7:-"not-needed"}"
-TFF_WORKER_1_ADDRESS="${8:-"not-needed"}"
-TFF_WORKER_2_ADDRESS="${9:-"not-needed"}"
+TFF_WORKER_1_ADDRESS="${6:-"not-needed"}"
+TFF_WORKER_2_ADDRESS="${7:-"not-needed"}"
 
 echo "Loading data from Terraform"
 OUTPUT_DIRECTORY_PATH="$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/${NAMESPACE}"
