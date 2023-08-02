@@ -170,3 +170,11 @@ module "cloud_router" {
 data "http" "installation_workstation_ip" {
   url = "http://ipv4.icanhazip.com"
 }
+
+module "example_tff_workload_external_ip" {
+  source  = "terraform-google-modules/address/google"
+  version = "3.1.3"
+
+  names  = ["example-tff-workload-external-ip"]
+  global = true
+}

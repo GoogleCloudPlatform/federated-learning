@@ -17,6 +17,11 @@ output "config_sync_repository_path" {
   value       = var.acm_repository_path
 }
 
+output "example_tff_workload_external_ip" {
+  description = "Example TensorFlow Federated workload external IP address"
+  value       = module.example_tff_workload_external_ip.addresses[0]
+}
+
 output "kubernetes_apps_service_account_name" {
   description = "Kubernetes service account name for workloads running in the cluster"
   value       = module.fl-workload-identity.k8s_sa_name
