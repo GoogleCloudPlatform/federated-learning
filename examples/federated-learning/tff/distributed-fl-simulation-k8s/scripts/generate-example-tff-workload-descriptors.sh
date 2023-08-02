@@ -25,6 +25,8 @@ TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${5:-"not-needed"}"
 
 TFF_WORKER_1_TERRAFORM_DIRECTORY_PATH="${6:-"not-needed"}"
 TFF_WORKER_2_TERRAFORM_DIRECTORY_PATH="${7:-"not-needed"}"
+TFF_WORKER_1_ADDRESS="${8:-"not-needed"}"
+TFF_WORKER_2_ADDRESS="${9:-"not-needed"}"
 
 echo "Loading data from Terraform"
 OUTPUT_DIRECTORY_PATH="$(terraform -chdir="<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" output -raw config_sync_repository_path)/tenants/${NAMESPACE}"
@@ -39,12 +41,6 @@ _CONTAINER_IMAGE_LOCALIZED_ID="${_CONTAINER_IMAGE_REPOSITORY_ID}/tff-runtime:lat
 
 TFF_WORKER_1_ADDRESS="not-needed"
 TFF_WORKER_2_ADDRESS="not-needed"
-
-if [ "${IS_TFF_COORDINATOR}" = "true" ]; then
-  echo "Loading worker IP addresses from Terraform"
-  TFF_WORKER_1_ADDRESS="$(terraform -chdir="${TFF_WORKER_1_TERRAFORM_DIRECTORY_PATH}" output -raw tff_example_worker_external_ip_address)"
-  TFF_WORKER_2_ADDRESS="$(terraform -chdir="${TFF_WORKER_2_TERRAFORM_DIRECTORY_PATH}" output -raw tff_example_worker_external_ip_address)"
-fi
 
 echo "Configuring ${KPT_PACKAGE_PATH} package for ${NAMESPACE} namespace. Output directory: ${OUTPUT_DIRECTORY_PATH}"
 

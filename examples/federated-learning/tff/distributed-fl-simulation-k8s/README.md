@@ -69,6 +69,9 @@ docker compose \
     environment for the second worker.
 
 1. Commit changes to the second worker Config Sync repository.
+1. Wait for the workers Deployments and Services to be ready.
+1. Take note of the IP addresses of the load balancers that expose the workers
+    workloads.
 1. Render the Kpt package for the coordinator:
 
     ```sh
@@ -79,7 +82,9 @@ docker compose \
         "true" \
         "not-needed" \
         "<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" \
-        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>"
+        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" \
+        "<WORKER_1_SERVICE_IP_ADDRESS>" \
+        "<WORKER_2_SERVICE_IP_ADDRESS>"
     ```
 
     Where:
@@ -92,5 +97,9 @@ docker compose \
         - `<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>` is the path to the Terraform
             directory where you stored the Terraform descriptors to provision
             the cloud environment for the second worker.
+        - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+            that exposes the first worker workloads.
+        - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+            that exposes the second worker workloads.
 
 1. Commit changes to the coordinator Config Sync repository.
