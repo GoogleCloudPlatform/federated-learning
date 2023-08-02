@@ -39,4 +39,19 @@ jobs:
           --build \
           --exit-code-from tff-client
         working-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s
+  generate-kpt-packages:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate the distributed-fl-workload-pkg Kpt package
+        run: |
+          terraform/scripts/generate-example-tff-workload-descriptors.sh \
+            . \
+            examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
+            "main" \
+            "partition-name" \
+            "worker-1-ip-address" \
+            "worker-2-ip-address" \
+            "true"
 ...
