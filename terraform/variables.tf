@@ -29,6 +29,12 @@ variable "zones" {
   type        = list(string)
 }
 
+variable "google_artifact_registry_location" {
+  default     = "europe"
+  description = "The default location where to create Artifact Registry repositories."
+  type        = string
+}
+
 variable "cluster_name" {
   default     = "tp-w"
   description = "The GKE cluster name"
@@ -99,12 +105,6 @@ variable "cluster_secrets_keyname" {
   description = "The name of the Cloud KMS key used to encrypt cluster secrets"
   default     = "clusterSecretsKey"
   type        = string
-}
-
-variable "enable_tff_workload_external_ip_address" {
-  default     = false
-  description = "Set to true to provision an external IP address for the example TensorFlow Federated workload"
-  type        = bool
 }
 
 variable "acm_version" {
