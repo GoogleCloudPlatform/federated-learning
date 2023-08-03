@@ -69,7 +69,7 @@ docker build \
 
 echo "Authenticating Docker against ${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
 gcloud auth configure-docker \
-    "${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
+  "${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
 
 echo "Pushing the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image"
 docker image push "${_CONTAINER_IMAGE_LOCALIZED_ID}"
