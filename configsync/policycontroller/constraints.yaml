@@ -64,7 +64,7 @@ spec:
       - "gcr.io/"
       - "eu.gcr.io/"
       - "us-docker.pkg.dev/"
-      - "eu-docker.pkg.dev/"
+      - "europe-docker.pkg.dev/"
 ...
 ---
 # ASM/Istio DestinationRules must enable TLS
