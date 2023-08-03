@@ -27,7 +27,7 @@ TFF_WORKER_1_ADDRESS="${6:-"not-needed"}"
 TFF_WORKER_2_ADDRESS="${7:-"not-needed"}"
 
 echo "Loading data from Terraform"
-OUTPUT_DIRECTORY_PATH="$(terraform -chdir="${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw config_sync_repository_path)/tenants/${NAMESPACE}"
+OUTPUT_DIRECTORY_PATH="$(terraform -chdir="${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw config_sync_repository_tenants_configuration_directory_path)/${NAMESPACE}"
 TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="$(terraform -chdir="${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw kubernetes_apps_service_account_name)"
 
 _CONTAINER_IMAGE_REPOSITORY_LOCATION="$(terraform -chdir="${TERRAFORM_ENVIRONMENT_DIRECTORY_PATH}" output -raw artifact_registry_container_image_repository_location)"
@@ -64,5 +64,5 @@ docker build \
   --tag "${_CONTAINER_IMAGE_LOCALIZED_ID}" \
   examples/federated-learning/tff/distributed-fl-simulation-k8s
 
-echo "Pushing the ${_CONTAINER_IMAGE_ID_DESTINATION} container image"
-docker image push "${_CONTAINER_IMAGE_ID_DESTINATION}"
+echo "Pushing the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image"
+docker image push "${_CONTAINER_IMAGE_LOCALIZED_ID}"

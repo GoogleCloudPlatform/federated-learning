@@ -27,9 +27,9 @@ output "artifact_registry_container_image_repository_project_id" {
   value       = google_artifact_registry_repository.container_image_repository.project
 }
 
-output "config_sync_repository_path" {
-  description = "Path to the Config Sync repository on the local machine."
-  value       = var.acm_repository_path
+output "config_sync_repository_tenants_configuration_directory_path" {
+  description = "Path to the tenant configuration path in the Config Sync repository on the local machine."
+  value       = local.acm_config_sync_tenants_configuration_destination_directory_path
 }
 
 output "kubernetes_apps_service_account_name" {
