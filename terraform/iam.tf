@@ -67,7 +67,7 @@ module "fl-workload-identity" {
   project_id = data.google_project.project.project_id
 
   annotate_k8s_sa     = false
-  k8s_sa_name         = "ksa"
+  k8s_sa_name         = local.tenant_apps_kubernetes_service_account_name
   location            = module.gke.location
   name                = module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].account_id
   namespace           = each.key

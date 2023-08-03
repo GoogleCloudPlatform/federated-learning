@@ -31,6 +31,8 @@ locals {
     }
   }
 
+  tenant_apps_kubernetes_service_account_name = "ksa"
+
   tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }
 
   gke_robot_sa = "service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"

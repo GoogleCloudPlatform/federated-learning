@@ -34,5 +34,5 @@ output "config_sync_repository_path" {
 
 output "kubernetes_apps_service_account_name" {
   description = "Kubernetes service account name for workloads running in the cluster"
-  value       = module.fl-workload-identity.k8s_service_account_name
+  value       = local.tenant_apps_kubernetes_service_account_name
 }
