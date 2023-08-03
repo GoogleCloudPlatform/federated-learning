@@ -57,3 +57,12 @@ else
   echo "This configuration is for a worker. Deleting coordinator-specific configuration."
   rm -v "${OUTPUT_DIRECTORY_PATH}/deployment.yaml" "${OUTPUT_DIRECTORY_PATH}/service.yaml"
 fi
+
+echo "Build the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image"
+docker build \
+  --file examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile \
+  --tag "${_CONTAINER_IMAGE_LOCALIZED_ID}" \
+  examples/federated-learning/tff/distributed-fl-simulation-k8s
+
+echo "Pushing the ${_CONTAINER_IMAGE_ID_DESTINATION} container image"
+docker image push "${_CONTAINER_IMAGE_ID_DESTINATION}"
