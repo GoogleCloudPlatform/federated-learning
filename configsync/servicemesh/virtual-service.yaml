@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
+# Route requests to the example external hosts that we added to the service
+# registry from the sidecar to the egress gateway service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -37,6 +39,8 @@ spec:
           weight: 100
 ...
 ---
+# Route from the egress gateway to the example.com service that we added to the
+# service registry
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -60,6 +64,8 @@ spec:
           weight: 100
 ...
 ---
+# Route from the egress gateway to the httbin.org service that we added to the
+# service registry
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
