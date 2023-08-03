@@ -37,12 +37,6 @@ docker compose \
 
 1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
 1. From Cloud Shell, change the working directory to the root of this repository.
-1. Build the needed container images and push them to Artifact Registry:
-
-    ```sh
-    # TODO
-    ```
-
 1. Render the Kpt package for the first worker:
 
     ```sh
