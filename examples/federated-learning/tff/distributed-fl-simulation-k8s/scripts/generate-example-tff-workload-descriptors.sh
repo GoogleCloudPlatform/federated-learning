@@ -40,6 +40,9 @@ _CONTAINER_IMAGE_LOCALIZED_ID="${_CONTAINER_IMAGE_REPOSITORY_ID}/tff-runtime:lat
 TFF_WORKER_1_ADDRESS="not-needed"
 TFF_WORKER_2_ADDRESS="not-needed"
 
+echo "Cleaning ${OUTPUT_DIRECTORY_PATH}"
+rm -rfv "${OUTPUT_DIRECTORY_PATH}"
+
 echo "Configuring ${KPT_PACKAGE_PATH} package for ${NAMESPACE} namespace. Output directory: ${OUTPUT_DIRECTORY_PATH}"
 
 kpt fn eval "${KPT_PACKAGE_PATH}" --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${OUTPUT_DIRECTORY_PATH}" -- \
@@ -63,6 +66,10 @@ docker build \
   --file examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile \
   --tag "${_CONTAINER_IMAGE_LOCALIZED_ID}" \
   examples/federated-learning/tff/distributed-fl-simulation-k8s
+
+echo "Authenticating Docker against ${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
+gcloud auth configure-docker \
+    "${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
 
 echo "Pushing the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image"
 docker image push "${_CONTAINER_IMAGE_LOCALIZED_ID}"
