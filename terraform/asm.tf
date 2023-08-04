@@ -30,7 +30,7 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
 
   location   = "global"
   feature    = "servicemesh"
-  membership = "${module.gke.name}-membership"
+  membership = module.gke.name
   mesh {
     management = "MANAGEMENT_AUTOMATIC"
   }
