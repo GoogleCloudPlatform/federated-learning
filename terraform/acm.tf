@@ -12,33 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: switch back to the official module once we have a release that includes
-# https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1685
-# module "acm" {
-#   source  = "terraform-google-modules/kubernetes-engine/google//modules/acm"
-#   version = "27.0.0"
-
-#   project_id   = data.google_project.project.project_id
-#   cluster_name = module.gke.name
-#   location     = module.gke.location
-
-#   configmanagement_version  = var.acm_version
-#   create_metrics_gcp_sa     = true
-#   enable_mutation           = true
-#   gcp_service_account_email = local.source_repository_service_account_email
-#   policy_dir                = var.acm_dir
-#   secret_type               = "gcpServiceAccount"
-#   source_format             = "unstructured"
-#   sync_repo                 = google_sourcerepo_repository.configsync-repository.url
-#   sync_branch               = var.acm_branch
-
-#   depends_on = [
-#     module.asm.asm_wait,
-#     module.gke,
-#     module.project-services
-#   ]
-# }
-
 resource "google_gke_hub_feature" "acm_feature" {
   name     = "configmanagement"
   location = "global"

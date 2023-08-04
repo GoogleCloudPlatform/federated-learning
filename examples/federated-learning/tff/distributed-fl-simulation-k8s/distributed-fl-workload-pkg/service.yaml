@@ -26,4 +26,5 @@ spec:
   ports:
     - port: 8000
       targetPort: 8000
+      name: grpc
 ...
