@@ -139,12 +139,6 @@ variable "asm_release_channel" {
   type        = string
 }
 
-variable "asm_enable_mesh_feature" {
-  description = "Set to true to enable Anthos Service Mesh feature. It is required to install the ASM CRDs."
-  default     = true
-  type        = bool
-}
-
 variable "gke_rbac_security_group_domain" {
   default     = null
   description = "Domain of the Google Group to assign RBAC permissions. For more information, refer to https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac"

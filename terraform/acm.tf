@@ -39,7 +39,7 @@
 #   ]
 # }
 
-resource "google_gke_hub_feature" "feature" {
+resource "google_gke_hub_feature" "acm_feature" {
   name     = "configmanagement"
   location = "global"
   provider = google-beta
@@ -49,9 +49,9 @@ resource "google_gke_hub_feature" "feature" {
   ]
 }
 
-resource "google_gke_hub_feature_membership" "feature_member" {
-  location   = "global"
-  feature    = google_gke_hub_feature.feature.name
+resource "google_gke_hub_feature_membership" "acm_feature_member" {
+  location   = google_gke_hub_feature.acm_feature.location
+  feature    = google_gke_hub_feature.acm_feature.name
   membership = google_gke_hub_membership.membership.membership_id
   configmanagement {
     version = var.acm_version
@@ -73,8 +73,4 @@ resource "google_gke_hub_feature_membership" "feature_member" {
     }
   }
   provider = google-beta
-
-  depends_on = [
-    module.asm.asm_wait,
-  ]
 }

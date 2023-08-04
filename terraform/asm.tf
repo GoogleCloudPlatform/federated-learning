@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "google_gke_hub_feature" "mesh" {
-  count    = var.enable_mesh_feature ? 1 : 0
+resource "google_gke_hub_feature" "mesh_feature" {
   name     = "servicemesh"
   project  = data.google_project.project.project_id
   location = "global"
@@ -23,10 +22,8 @@ resource "google_gke_hub_feature" "mesh" {
 # This is needed until https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1702
 # is merged, and we update to a ASM module release that includes that.
 resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
-  count = var.asm_enable_mesh_feature ? 1 : 0
-
-  location   = "global"
-  feature    = "servicemesh"
+  location   = google_gke_hub_feature.mesh_feature.location
+  feature    = google_gke_hub_feature.mesh_feature.name
   membership = module.gke.name
   mesh {
     management = "MANAGEMENT_AUTOMATIC"
