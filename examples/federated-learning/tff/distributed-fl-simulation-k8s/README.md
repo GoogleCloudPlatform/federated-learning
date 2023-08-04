@@ -77,7 +77,7 @@ docker compose \
     ```sh
     examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
         examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
-        "main" \
+        "fltenant1" \
         "<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" \
         "true" \
         "not-needed" \

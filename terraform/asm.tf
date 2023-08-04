@@ -22,3 +22,17 @@ module "asm" {
   project_id          = data.google_project.project.project_id
   enable_mesh_feature = var.asm_enable_mesh_feature
 }
+
+# This is needed until https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1702
+# is merged, and we update to a ASM module release that includes that.
+resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
+  count = var.asm_enable_mesh_feature ? 1 : 0
+
+  location   = "global"
+  feature    = "servicemesh"
+  membership = "${module.gke.name}-membership"
+  mesh {
+    management = "MANAGEMENT_AUTOMATIC"
+  }
+  provider = google-beta
+}

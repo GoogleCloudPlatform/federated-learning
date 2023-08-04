@@ -4,6 +4,7 @@
     "consoleFull"
   ],
   "ignore": [
+    "**/examples/**",
     "**/tenants/**"
   ],
   "absolute": true
