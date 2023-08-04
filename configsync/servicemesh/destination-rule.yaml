@@ -19,7 +19,7 @@ metadata:
   name: target-egress-gateway
   namespace: istio-system
 spec:
-  host: istio-egressgateway.istio-system.svc.cluster.local
+  host: istio-egressgateway.istio-egress.svc.cluster.local
   subsets:
     - name: target-egress-gateway-mTLS
       trafficPolicy:

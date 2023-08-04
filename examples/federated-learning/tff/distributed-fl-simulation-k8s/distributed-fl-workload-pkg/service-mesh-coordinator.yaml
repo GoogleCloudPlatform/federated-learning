@@ -58,11 +58,11 @@ spec:
   hosts:
     - tff-worker-1
   gateways:
-    - istio-system/egress-gateway
+    - istio-egress/egress-gateway
   http:
     - match:
         - gateways:
-            - istio-system/egress-gateway
+            - istio-egress/egress-gateway
           port: 80
       route:
         - destination:
@@ -83,11 +83,11 @@ spec:
   hosts:
     - tff-worker-1
   gateways:
-    - istio-system/egress-gateway
+    - istio-egress/egress-gateway
   http:
     - match:
         - gateways:
-            - istio-system/egress-gateway
+            - istio-egress/egress-gateway
           port: 80
       route:
         - destination:

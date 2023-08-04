@@ -32,7 +32,7 @@ spec:
           port: 80
       route:
         - destination:
-            host: istio-egressgateway.istio-system.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             subset: target-egress-gateway-mTLS
             port:
               number: 80
@@ -50,11 +50,11 @@ spec:
   hosts:
     - example.com
   gateways:
-    - istio-system/egress-gateway
+    - istio-egress/egress-gateway
   http:
     - match:
         - gateways:
-            - istio-system/egress-gateway
+            - istio-egress/egress-gateway
           port: 80
       route:
         - destination:
@@ -75,11 +75,11 @@ spec:
   hosts:
     - httpbin.org
   gateways:
-    - istio-system/egress-gateway
+    - istio-egress/egress-gateway
   http:
     - match:
         - gateways:
-            - istio-system/egress-gateway
+            - istio-egress/egress-gateway
           port: 80
       route:
         - destination:
