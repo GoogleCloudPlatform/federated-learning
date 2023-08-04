@@ -12,15 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "asm" {
-  source  = "terraform-google-modules/kubernetes-engine/google//modules/asm"
-  version = "27.0.0"
+resource "google_gke_hub_membership" "membership" {
+  provider      = google-beta
+  project       = data.google_project.project.project_id
+  membership_id = "${module.gke.name}-membership"
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${module.gke.id}"
+    }
+  }
+}
 
-  channel             = var.asm_release_channel
-  cluster_location    = module.gke.location
-  cluster_name        = module.gke.name
-  project_id          = data.google_project.project.project_id
-  enable_mesh_feature = var.asm_enable_mesh_feature
+resource "google_gke_hub_feature" "mesh" {
+  count    = var.enable_mesh_feature ? 1 : 0
+  name     = "servicemesh"
+  project  = data.google_project.project.project_id
+  location = "global"
+  provider = google-beta
 }
 
 # This is needed until https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1702

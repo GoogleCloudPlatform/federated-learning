@@ -41,6 +41,10 @@ module "gke" {
   subnetwork                   = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
   zones                        = var.zones
 
+  # The mesh_id label on the cluster is required for metrics to get displayed on
+  # the Anthos Service Mesh pages in the Cloud console.
+  cluster_resource_labels = { "mesh_id" : "proj-${data.google_project.project.number}" }
+
   # Encrypt cluster secrets at the application layer
   database_encryption = [{
     "key_name" : module.kms.keys[var.cluster_secrets_keyname],
