@@ -61,12 +61,12 @@ variable "cluster_default_pool_machine_type" {
 
 variable "cluster_default_pool_min_nodes" {
   description = "The min number of nodes in the default node pool"
-  default     = 3
+  default     = 1
   type        = number
 }
 
 variable "cluster_default_pool_max_nodes" {
-  description = "The min number of nodes in the default node pool"
+  description = "The max number of nodes in the default node pool"
   default     = 5
   type        = number
 }
@@ -91,12 +91,12 @@ variable "cluster_tenant_pool_machine_type" {
 
 variable "cluster_tenant_pool_min_nodes" {
   description = "The min number of nodes in the tenant node pool"
-  default     = 2
+  default     = 1
   type        = number
 }
 
 variable "cluster_tenant_pool_max_nodes" {
-  description = "The min number of nodes in the tenant node pool"
+  description = "The max number of nodes in the tenant node pool"
   default     = 5
   type        = number
 }
@@ -130,12 +130,6 @@ variable "acm_dir" {
 # Ref: https://github.com/hashicorp/terraform/issues/33394
 variable "acm_repository_path" {
   description = "Path to the Config Management repository on the local machine"
-  type        = string
-}
-
-variable "asm_release_channel" {
-  description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
-  default     = "regular"
   type        = string
 }
 
