@@ -12,17 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "google_gke_hub_membership" "membership" {
-  provider      = google-beta
-  project       = data.google_project.project.project_id
-  membership_id = "${module.gke.name}-membership"
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${module.gke.id}"
-    }
-  }
-}
-
 resource "google_gke_hub_feature" "mesh" {
   count    = var.enable_mesh_feature ? 1 : 0
   name     = "servicemesh"

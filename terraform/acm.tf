@@ -39,20 +39,6 @@
 #   ]
 # }
 
-resource "google_gke_hub_membership" "membership" {
-  membership_id = module.gke.name
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${module.gke.cluster_id}"
-    }
-  }
-  provider = google-beta
-
-  depends_on = [
-    module.project-services
-  ]
-}
-
 resource "google_gke_hub_feature" "feature" {
   name     = "configmanagement"
   location = "global"
