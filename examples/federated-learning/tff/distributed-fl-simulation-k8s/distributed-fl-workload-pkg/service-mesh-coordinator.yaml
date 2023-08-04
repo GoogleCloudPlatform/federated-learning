@@ -1,0 +1,98 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+# Add example external hosts to the service registry
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: external-tff-example-hosts
+  namespace: istio-system
+spec:
+  hosts:
+    - tff-worker-1
+    - tff-worker-2
+  ports:
+    - number: 80
+      name: http
+      protocol: HTTP
+  resolution: DNS
+  location: MESH_EXTERNAL
+...
+---
+# Allow requests to this set of (external) hosts.
+# No 'from' condition, so requests can originate from anywhere in the mesh
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-specific-hosts
+  namespace: istio-system
+spec:
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1
+              - tff-worker-2
+...
+---
+# Route from the egress gateway to the first worker services that we added to the
+# service registry
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: worker-1-through-egress-gateway
+  namespace: istio-system
+spec:
+  hosts:
+    - tff-worker-1
+  gateways:
+    - istio-system/egress-gateway
+  http:
+    - match:
+        - gateways:
+            - istio-system/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: tff-worker-1  # kpt-set: ${tff-worker-1-address}
+            port:
+              number: 80
+          weight: 100
+...
+---
+# Route from the egress gateway to the second worker services that we added to the
+# service registry
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: worker-2-through-egress-gateway
+  namespace: istio-system
+spec:
+  hosts:
+    - tff-worker-1
+  gateways:
+    - istio-system/egress-gateway
+  http:
+    - match:
+        - gateways:
+            - istio-system/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: tff-worker-2  # kpt-set: ${tff-worker-2-address}
+            port:
+              number: 80
+          weight: 100
+...

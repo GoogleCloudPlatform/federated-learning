@@ -56,8 +56,9 @@ kpt fn eval "${KPT_PACKAGE_PATH}" --image gcr.io/kpt-fn/apply-setters:v0.2.0 --o
 if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
   echo "This configuration is for a worker. Deleting worker-specific configuration."
   rm -v "${OUTPUT_DIRECTORY_PATH}/deployment-coordinator.yaml"
+  rm -v "${OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator.yaml"
 else
-  echo "This configuration is for a worker. Deleting coordinator-specific configuration."
+  echo "This configuration is for a coordinator. Deleting coordinator-specific configuration."
   rm -v "${OUTPUT_DIRECTORY_PATH}/deployment.yaml" "${OUTPUT_DIRECTORY_PATH}/service.yaml"
 fi
 
