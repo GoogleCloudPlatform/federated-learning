@@ -23,7 +23,7 @@ metadata:
     istio.io/rev: asm-managed
 ...
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-egressgateway
@@ -46,7 +46,9 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 80
+        target:
+          type: Utilization
+          averageUtilization: 80
 ...
 ---
 apiVersion: apps/v1
@@ -107,7 +109,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             readOnlyRootFilesystem: true
           resources:
@@ -118,69 +120,69 @@ spec:
               cpu: 100m
               memory: 128Mi
           env:
-          - name: ISTIO_META_UNPRIVILEGED_POD
-            value: "true"
+            - name: ISTIO_META_UNPRIVILEGED_POD
+              value: "true"
           volumeMounts:
-          - name: egressgateway-certs
-            mountPath: "/etc/istio/egressgateway-certs"
-            readOnly: true
-          - name: egressgateway-ca-certs
-            mountPath: "/etc/istio/egressgateway-ca-certs"
-            readOnly: true
+            - name: egressgateway-certs
+              mountPath: "/etc/istio/egressgateway-certs"
+              readOnly: true
+            - name: egressgateway-ca-certs
+              mountPath: "/etc/istio/egressgateway-ca-certs"
+              readOnly: true
       volumes:
-      - name: egressgateway-certs
-        secret:
-          secretName: "istio-egressgateway-certs"
-          optional: true
-      - name: egressgateway-ca-certs
-        secret:
-          secretName: "istio-egressgateway-ca-certs"
-          optional: true
+        - name: egressgateway-certs
+          secret:
+            secretName: "istio-egressgateway-certs"
+            optional: true
+        - name: egressgateway-ca-certs
+          secret:
+            secretName: "istio-egressgateway-ca-certs"
+            optional: true
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - "amd64"
-                  - "arm64"
-                  - "ppc64le"
-                  - "s390x"
-                - key: cloud.google.com/gke-nodepool
-                  operator: In
-                  values:
-                  - "main"
+                - matchExpressions:
+                    - key: kubernetes.io/arch
+                      operator: In
+                      values:
+                        - "amd64"
+                        - "arm64"
+                        - "ppc64le"
+                        - "s390x"
+                    - key: cloud.google.com/gke-nodepool
+                      operator: In
+                      values:
+                        - "main"
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 2
               preference:
                 matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - "amd64"
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "amd64"
             - weight: 2
               preference:
                 matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - "arm64"
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "arm64"
             - weight: 2
               preference:
                 matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - "ppc64le"
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "ppc64le"
             - weight: 2
               preference:
                 matchExpressions:
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - "s390x"
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "s390x"
 ...
 ---
 apiVersion: policy/v1
@@ -214,9 +216,9 @@ metadata:
     install.operator.istio.io/owning-resource: unknown
     operator.istio.io/component: "EgressGateways"
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "watch", "list"]
 ...
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -234,8 +236,8 @@ roleRef:
   kind: Role
   name: istio-egressgateway-sds
 subjects:
-- kind: ServiceAccount
-  name: istio-egressgateway-service-account
+  - kind: ServiceAccount
+    name: istio-egressgateway-service-account
 ...
 ---
 apiVersion: v1
@@ -257,13 +259,11 @@ spec:
     app: istio-egressgateway
     istio: egressgateway
   ports:
-    -
-      name: http2
+    - name: http2
       port: 80
       protocol: TCP
       targetPort: 8080
-    -
-      name: https
+    - name: https
       port: 443
       protocol: TCP
       targetPort: 8443
