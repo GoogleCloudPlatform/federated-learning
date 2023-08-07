@@ -23,7 +23,7 @@ metadata:
     istio.io/rev: asm-managed
 ...
 ---
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-egressgateway
@@ -183,7 +183,7 @@ spec:
                   - "s390x"
 ...
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: istio-egressgateway
