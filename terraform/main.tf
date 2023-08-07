@@ -103,7 +103,7 @@ locals {
 
   generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
 
-  delete_acm_tenant_content_script_path = local.delete_acm_common_content_script_path
+  delete_acm_tenant_content_script_path = local.delete_fileset_script_path
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"
