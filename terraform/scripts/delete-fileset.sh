@@ -19,4 +19,6 @@ set -o errexit
 
 FILE_SET="${1}"
 
+echo "Deleting: ${FILE_SET}"
+
 rm -rfv "${FILE_SET}"
