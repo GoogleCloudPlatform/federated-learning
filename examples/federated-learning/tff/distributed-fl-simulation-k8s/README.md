@@ -36,62 +36,44 @@ docker compose \
 ### Containers running in different GKE clusters
 
 1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
-1. From Cloud Shell, change the working directory to the root of this repository.
-1. Render the Kpt package for the first worker:
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the first worker.
+1. Initialize the following Terraform variables for the first worker:
 
-    ```sh
-    examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
-        "fltenant1" \
-        "<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>" \
-        "false" \
-        "emnist_partition_1.sqlite"
+    ```hcl
+    distributed_tff_example_deploy                            = true
+    distributed_tff_example_worker_emnist_partition_file_name = "emnist_partition_1.sqlite"
     ```
 
-    Where `<PATH_TO_WORKER_1_TERRAFORM_DIRECTORY>` is the path to the Terraform
-    directory where you stored the Terraform descriptors to provision the cloud
-    environment for the first worker.
+1. Run `terraform apply`.
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the second worker.
+1. Initialize the following Terraform variables for the second worker:
 
-1. Commit changes to the first worker Config Sync repository.
-1. Render the Kpt package for the second worker:
-
-    ```sh
-    examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
-        "fltenant1" \
-        "<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>" \
-        "false" \
-        "emnist_partition_2.sqlite"
+    ```hcl
+    distributed_tff_example_deploy                            = true
+    distributed_tff_example_worker_emnist_partition_file_name = "emnist_partition_2.sqlite"
     ```
 
-    Where `<PATH_TO_WORKER_2_TERRAFORM_DIRECTORY>` is the path to the Terraform
-    directory where you stored the Terraform descriptors to provision the cloud
-    environment for the second worker.
-
-1. Commit changes to the second worker Config Sync repository.
+1. Run `terraform apply`.
 1. Wait for the workers Deployments and Services to be ready.
-1. Take note of the IP addresses of the load balancers that expose the workers
-    workloads.
-1. Render the Kpt package for the coordinator:
+1. TODO: get information about worker addresses
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the second worker.
+1. Initialize the following Terraform variables for the coordinator:
 
-    ```sh
-    examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-example-tff-workload-descriptors.sh \
-        examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg \
-        "fltenant1" \
-        "<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>" \
-        "true" \
-        "not-needed" \
-        "<WORKER_1_SERVICE_IP_ADDRESS>" \
-        "<WORKER_2_SERVICE_IP_ADDRESS>"
+    ```hcl
+    distributed_tff_example_deploy         = true
+    distributed_tff_example_is_coordinator = true
+
+    distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+    distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
     ```
 
     Where:
-        - `<PATH_TO_COORDINATOR_TERRAFORM_DIRECTORY>` is the path to the
-            Terraform directory where you stored the Terraform descriptors to
-            provision the cloud environment for the coordinator.
         - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
             that exposes the first worker workloads.
         - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
             that exposes the second worker workloads.
 
-1. Commit changes to the coordinator Config Sync repository.
+1. Run `terraform apply`.
