@@ -18,6 +18,7 @@ kind: Namespace
 metadata:
   name: istio-egress
   labels:
+    tenant-ns: "false"
     # Allow Anthos Service Mesh to manage the workloads in the namespace
     # Ref: https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel#injection_labels
     istio.io/rev: asm-managed
@@ -153,7 +154,7 @@ spec:
                     - key: cloud.google.com/gke-nodepool
                       operator: In
                       values:
-                        - "main"
+                        - "main-pool"
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 2
               preference:
