@@ -54,6 +54,9 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
   _CONTAINER_IMAGE_LOCALIZED_ID="${_CONTAINER_IMAGE_REPOSITORY_ID}/tff-runtime:latest"
 
   DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH="${TENANT_CONFIGURATION_DIRECTORY_PATH}/example-tff-image-classification"
+
+  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH="${DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH}/.."
+
   echo "Configuring ${DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH} package for ${TENANT} namespace. Output directory: ${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}"
 
   kpt fn eval "${DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH}" --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}" -- \
@@ -73,11 +76,11 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
     rm -v "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/deployment.yaml" "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service.yaml"
   fi
 
-  echo "Build the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image"
+  echo "Build the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image. Context: ${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
   docker build \
     --file examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile \
     --tag "${_CONTAINER_IMAGE_LOCALIZED_ID}" \
-    examples/federated-learning/tff/distributed-fl-simulation-k8s
+    "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
 
   echo "Authenticating Docker against ${_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
   gcloud auth configure-docker \
