@@ -26,6 +26,10 @@ DISTRIBUTED_TFF_EXAMPLE_DEPLOY="${6}"
 
 TENANT_CONFIGURATION_DIRECTORY_PATH="${TENANTS_CONFIGURATION_DIRECTORY_PATH}/${TENANT}"
 
+# This is needed because Terraform doesn't handle all cases when destroying a resource.
+# Ref: https://github.com/hashicorp/terraform/issues/13549#issuecomment-293627472
+rm -rfv "${TENANT_CONFIGURATION_DIRECTORY_PATH}"
+
 echo "Configuring ${TENANT_CONFIGURATION_PACKAGE_PATH} package for ${TENANT} tenant. Output directory: ${TENANT_CONFIGURATION_DIRECTORY_PATH}"
 mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
 
