@@ -54,7 +54,6 @@ The infrastructure provisioned by this blueprint includes:
 - A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept). The blueprint helps you create GKE clusters that implement recommended security settings, such as those described in the [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster). For example, the blueprint helps you:
   - Limit exposure of your cluster nodes and control plane to the internet by creating a private GKE cluster with [authorised networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
   - Use shielded nodes that use a hardened node image with the containerd runtime.
-  - Harden isolation of tenant workloads using [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
   - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
 - Two GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).

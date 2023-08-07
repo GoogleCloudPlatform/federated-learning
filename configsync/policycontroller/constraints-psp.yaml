@@ -17,17 +17,17 @@
 
 ---
 # prevent privileged containers
-# Note that you need to use the Istio cni-plugin (or else exclude istio-system namespace from the policy)
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPPrivilegedContainer
 metadata:
   name: psp-privileged-container
 spec:
+  enforcementAction: dryrun
   match:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["kube-system"]
+    excludedNamespaces: ["istio-egress", "istio-system", "kube-system"]
 ...
 ---
 # prevent hostPath volumes
@@ -41,7 +41,7 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["kube-system"]
+    excludedNamespaces: ["istio-egress", "istio-system", "kube-system"]
   parameters:
     allowedHostPaths: []
 ...
