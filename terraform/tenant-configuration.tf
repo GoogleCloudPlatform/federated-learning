@@ -69,7 +69,17 @@ resource "null_resource" "tenant_configuration" {
         "${local.acm_config_sync_tenant_configuration_package_source_directory_path}" \
         "${each.value.tenant_name}" \
         "${module.service_accounts.service_accounts_map[each.value.tenant_apps_sa_name].email}" \
-        "${local.tenant_developer_example_account}"
+        "${local.tenant_developer_example_account}" \
+        "${each.value.distributed_tff_example_deploy}" \
+        "${local.distributed_tff_example_package_source_directory_path}" \
+        "${each.value.distributed_tff_example_is_coordinator}" \
+        "${each.value.distributed_tff_example_worker_emnist_partition_file_name}" \
+        "${var.distributed_tff_example_worker_1_address}" \
+        "${var.distributed_tff_example_worker_2_address}" \
+        "${each.value.tenant_apps_kubernetes_service_account_name}" \
+        "${google_artifact_registry_repository.container_image_repository.location}" \
+        "${google_artifact_registry_repository.container_image_repository.project}" \
+        "${google_artifact_registry_repository.container_image_repository.repository_id}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT

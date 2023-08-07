@@ -138,3 +138,39 @@ variable "gke_rbac_security_group_domain" {
   description = "Domain of the Google Group to assign RBAC permissions. For more information, refer to https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac"
   type        = string
 }
+
+variable "distributed_tff_example_worker_1_address" {
+  default     = ""
+  description = "Address of the first worker of the distributed TensorFlow Federated example."
+  type        = string
+}
+
+variable "distributed_tff_example_worker_2_address" {
+  default     = ""
+  description = "Address of the second worker of the distributed TensorFlow Federated example."
+  type        = string
+}
+
+variable "distributed_tff_example_deploy" {
+  default     = false
+  description = "Set to true to deploy a TensorFlow Federated example in the cluster."
+  type        = bool
+}
+
+variable "distributed_tff_example_is_coordinator" {
+  default     = false
+  description = "Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster."
+  type        = bool
+}
+
+variable "distributed_tff_example_deploy_namespace" {
+  default     = "fltenant1"
+  description = "Name of the Kubernetes namespace where to deploy the distributed TensorFlow Federated example."
+  type        = string
+}
+
+variable "distributed_tff_example_worker_emnist_partition_file_name" {
+  default     = ""
+  description = "Name of the EMNIST partition file of the distributed TensorFlow Federated example."
+  type        = string
+}

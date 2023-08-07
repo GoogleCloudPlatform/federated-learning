@@ -24,10 +24,15 @@ locals {
 
   tenants = {
     for name in local.tenant_and_main_pool_names : name => {
-      tenant_name             = name
-      tenant_nodepool_name    = format("%s-pool", name)
-      tenant_nodepool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, name)
-      tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
+      tenant_name                                 = name
+      tenant_nodepool_name                        = format("%s-pool", name)
+      tenant_nodepool_sa_name                     = format("%s-%s-nodes-sa", var.cluster_name, name)
+      tenant_apps_sa_name                         = format("%s-%s-apps-sa", var.cluster_name, name)
+      tenant_apps_kubernetes_service_account_name = local.tenant_apps_kubernetes_service_account_name
+
+      distributed_tff_example_deploy                            = var.distributed_tff_example_deploy && name == var.distributed_tff_example_deploy_namespace ? true : false
+      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_is_coordinator
+      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_worker_emnist_partition_file_name
     }
   }
 
@@ -57,6 +62,7 @@ locals {
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
   acm_config_sync_tenant_configuration_package_source_directory_path = abspath("${path.module}/../tenant-config-pkg")
+  distributed_tff_example_package_source_directory_path              = abspath("${path.module}/../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg")
 
   acm_config_sync_destination_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/tenants"
