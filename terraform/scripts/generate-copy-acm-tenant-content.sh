@@ -77,7 +77,7 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
 
   echo "Build the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image. Context: ${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
   docker build \
-    --file examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile \
+    --file "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}/Dockerfile" \
     --tag "${_CONTAINER_IMAGE_LOCALIZED_ID}" \
     "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
 
