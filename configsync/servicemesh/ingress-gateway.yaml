@@ -137,18 +137,18 @@ metadata:
     istio: ingressgateway
 spec:
   ports:
-  # status-port exposes a /healthz/ready endpoint that can be used with GKE Ingress health checks
-  - name: status-port
-    port: 15021
-    protocol: TCP
-    targetPort: 15021
-  # Any ports exposed in Gateway resources should be exposed here.
-  - name: http2
-    port: 80
-  - name: https
-    port: 443
-  - name: grpc
-    port: 8000
+    # status-port exposes a /healthz/ready endpoint that can be used with GKE Ingress health checks
+    - name: status-port
+      port: 15021
+      protocol: TCP
+      targetPort: 15021
+    # Any ports exposed in Gateway resources should be exposed here.
+    - name: http2
+      port: 80
+    - name: https
+      port: 443
+    - name: grpc
+      port: 8000
   selector:
     istio: ingressgateway
     app: istio-ingressgateway
