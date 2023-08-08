@@ -42,7 +42,7 @@ spec:
         kinds: ["Ingress"]
       - apiGroups: ["networking.istio.io"]
         kinds: ["Gateway"]
-    excludedNamespaces: ["istio-ingress", "istio-ingress"]
+    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system"]
 ...
 ---
 # In tenant namespaces, only allow images to be pulled from
