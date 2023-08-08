@@ -27,7 +27,7 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["istio-egress", "istio-system", "kube-system"]
+    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
 ...
 ---
 # prevent hostPath volumes
@@ -41,7 +41,7 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["istio-egress", "istio-system", "kube-system"]
+    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
   parameters:
     allowedHostPaths: []
 ...

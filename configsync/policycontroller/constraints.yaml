@@ -42,6 +42,7 @@ spec:
         kinds: ["Service"]
       - apiGroups: ["networking.k8s.io"]
         kinds: ["Ingress"]
+    excludedNamespaces: ["istio-ingress"]
 ...
 ---
 # In tenant namespaces, only allow images to be pulled from
