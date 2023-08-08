@@ -6,7 +6,10 @@ metadata:
    namespace: istio-system
 data:
    mesh: |-
-      defaultConfig:
-        tracing:
-          stackdriver: {}
+    accessLogFile: /dev/stdout
+    defaultConfig:
+      tracing:
+        stackdriver: {}
+    outboundTrafficPolicy:
+      mode: REGISTRY_ONLY
 ...
