@@ -43,7 +43,7 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-egress-to-specific-hosts
+  name: allow-ingress-from-ingress-namespace
   namespace: istio-system
 spec:
   rules:
