@@ -93,7 +93,7 @@ The cluster includes:
     - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
     - AuthorizationPolicies that:
       - by default deny all communication between services in the mesh,
-      - allow communication to a set of known external hosts (such as example.com)
+      - allow communication to a set of known external hosts
     - VirtualService and DestinationRule resources that route traffic from sidecar proxies through the egress gateway to external destinations.
   - The tenant namespace is configured for automatic sidecar proxy injection, see next section.
   - Note that the mesh does not include an Ingress Gateway

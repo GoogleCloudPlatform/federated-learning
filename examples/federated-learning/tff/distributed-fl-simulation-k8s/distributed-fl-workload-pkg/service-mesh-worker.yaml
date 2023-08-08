@@ -13,6 +13,24 @@
 # limitations under the License.
 
 ---
+# Allow traffic from the istio-ingress namespace to port 8000
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-from-ingress-namespace-grpc-port
+  namespace: ns # kpt-set: ${namespace}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["istio-ingress"]
+      to:
+        - operation:
+            ports: ["8000"]
+
+...
+---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -22,7 +40,7 @@ spec:
   hosts:
     - "*"
   gateways:
-    - ingress-gateway
+    - istio-ingress/ingress-gateway
   http:
     - route:
       - destination:

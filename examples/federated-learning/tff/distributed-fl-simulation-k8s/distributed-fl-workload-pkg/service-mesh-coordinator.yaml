@@ -18,7 +18,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: external-tff-example-hosts
-  namespace: istio-system
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
     - tff-worker-1
@@ -31,14 +31,15 @@ spec:
   location: MESH_EXTERNAL
 ...
 ---
-# Allow requests to this set of (external) hosts.
+# Allow requests to workers
 # No 'from' condition, so requests can originate from anywhere in the mesh
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-egress-to-specific-hosts
-  namespace: istio-system
+  namespace: ns  # kpt-set: ${namespace}
 spec:
+  action: ALLOW
   rules:
     - to:
         - operation:
@@ -53,7 +54,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: worker-1-through-egress-gateway
-  namespace: istio-system
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
     - tff-worker-1
@@ -78,7 +79,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: worker-2-through-egress-gateway
-  namespace: istio-system
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
     - tff-worker-1

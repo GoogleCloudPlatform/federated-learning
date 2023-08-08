@@ -12,48 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
-# By default, allow nothing (equivalent to deny all).
-# Applies to all pods in the mesh (as in the root namespace, istio-system)
-# Allowed interactions between services must be explicitly defined
+# By default, allow nothing if there are no other ALLOW policies.
+# Applies to all pods in the mesh because it's deployed in the root namespace.
+# Ref: https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview#allow_nothing
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-nothing
   namespace: istio-system
 spec:
-  {}
-...
----
-# Allow requests to this set of (external) hosts.
-# No 'from' condition, so requests can originate from anywhere in the mesh
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-egress-to-specific-hosts
-  namespace: istio-system
-  annotations:
-    "istio.io/dry-run": "true"
-spec:
-  rules:
-    - to:
-        - operation:
-            hosts:
-              - 'example.com'
-              - 'httpbin.org'
-...
----
-# Allow inbound traffic from the ingress namespaces.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingress-from-ingress-namespace
-  namespace: istio-system
-  annotations:
-    "istio.io/dry-run": "true"
-spec:
-  rules:
-    - from:
-        - source:
-            namespaces:
-              - istio-ingress
+  action: ALLOW
 ...
