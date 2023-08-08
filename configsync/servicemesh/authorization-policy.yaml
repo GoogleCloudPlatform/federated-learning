@@ -33,8 +33,6 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-egress-to-specific-hosts
   namespace: istio-system
-  annotations:
-    "istio.io/dry-run": "true"
 spec:
   rules:
     - to:
@@ -50,8 +48,6 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-from-ingress-namespace
   namespace: istio-system
-  annotations:
-    "istio.io/dry-run": "true"
 spec:
   rules:
     - from:
