@@ -23,21 +23,3 @@ spec:
   mtls:
     mode: STRICT
 ...
----
-apiVersion: security.istio.io/v1beta1
-kind: PeerAuthentication
-metadata:
-  name: default
-  namespace: istio-ingress
-spec:
-  selector:
-    matchLabels:
-      app: istio-ingressgateway
-  # Inherit from the mesh-wide setting
-  mtls:
-    mode: UNSET
-  # Allow plain-text on port 8000
-  portLevelMtls:
-    8000:
-      mode: DISABLE
-...
