@@ -33,6 +33,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-egress-to-specific-hosts
   namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   rules:
     - to:
