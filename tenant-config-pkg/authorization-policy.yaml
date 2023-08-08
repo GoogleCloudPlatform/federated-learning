@@ -24,3 +24,17 @@ spec:
             namespaces:
               - "ns" # kpt-set: ${tenant-name}
 ...
+---
+# Allow inbound traffic from the ingress namespaces.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-from-ingress-namespace
+  namespace: istio-system
+spec:
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - istio-ingress
+...
