@@ -143,10 +143,13 @@ spec:
       protocol: TCP
       targetPort: 15021
     # Any ports exposed in Gateway resources should be exposed here.
-    - name: http2
-      port: 80
-    - name: https
-      port: 443
+    # Uncomment if you need to expose HTTP traffic on port 80
+    # - name: http2
+    #   port: 80
+    # Uncomment if you need to expose HTTPS traffic on port 443
+    # - name: https
+    #   port: 443
+    # We use this gRPC port in examples
     - name: grpc
       port: 8000
   selector:
@@ -171,18 +174,24 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-    - port:
-        number: 80
-        name: http2
-        protocol: http2
-      hosts:
-        - "*"
-    - port:
-        number: 443
-        name: https
-        protocol: https
-      hosts:
-        - "*"
+    # Uncomment if you need to expose HTTP traffic on port 80.
+    # - port:
+    #     number: 80
+    #     name: http2
+    #     protocol: http2
+    #   hosts:
+    #     - "*"
+    # Uncomment if you need to expose HTTPS traffic on port 443.
+    # You also need to configure TLS settings.
+    # Ref: https://istio.io/latest/docs/reference/config/networking/gateway/
+    # Ref: https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
+    # - port:
+    #     number: 443
+    #     name: https
+    #     protocol: https
+    #   hosts:
+    #     - "*"
+    # We use this gRPC port in examples
     - port:
         number: 8000
         name: grpc
