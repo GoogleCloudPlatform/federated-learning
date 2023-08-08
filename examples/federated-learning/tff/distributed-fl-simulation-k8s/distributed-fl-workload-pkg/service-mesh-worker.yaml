@@ -14,23 +14,6 @@
 
 ---
 apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: tff-worker-gateway
-  namespace: ns  # kpt-set: ${namespace}
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-    - port:
-        number: 8000
-        name: grpc
-        protocol: GRPC
-      hosts:
-        - "*"
-...
----
-apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: tff-worker-ingress
@@ -39,7 +22,7 @@ spec:
   hosts:
     - "*"
   gateways:
-    - tff-worker-gateway
+    - ingress-gateway
   http:
     - route:
       - destination:

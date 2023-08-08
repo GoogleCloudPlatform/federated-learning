@@ -161,3 +161,32 @@ metadata:
   name: istio-ingressgateway
   namespace: istio-ingress
 ...
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: ingress-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http2
+        protocol: http2
+      hosts:
+        - "*"
+    - port:
+        number: 443
+        name: https
+        protocol: https
+      hosts:
+        - "*"
+    - port:
+        number: 8000
+        name: grpc
+        protocol: GRPC
+      hosts:
+        - "*"
+...
