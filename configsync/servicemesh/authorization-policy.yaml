@@ -39,3 +39,16 @@ spec:
               - 'example.com'
               - 'httpbin.org'
 ...
+# Allow inbound traffic from the ingress namespaces.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-specific-hosts
+  namespace: istio-system
+spec:
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - istio-ingress
+...
