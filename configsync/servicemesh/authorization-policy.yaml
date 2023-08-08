@@ -50,6 +50,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-from-ingress-namespace
   namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   rules:
     - from:
