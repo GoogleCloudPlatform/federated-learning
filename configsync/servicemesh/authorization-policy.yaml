@@ -20,6 +20,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-nothing
   namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   {}
 ...
@@ -31,6 +33,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-egress-to-specific-hosts
   namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   rules:
     - to:
@@ -38,4 +42,20 @@ spec:
             hosts:
               - 'example.com'
               - 'httpbin.org'
+...
+---
+# Allow inbound traffic from the ingress namespaces.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-from-ingress-namespace
+  namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
+spec:
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - istio-ingress
 ...
