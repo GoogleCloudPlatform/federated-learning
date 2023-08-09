@@ -30,7 +30,6 @@ spec:
       to:
         - operation:
             ports: ["8000"]
-
 ...
 ---
 apiVersion: networking.istio.io/v1beta1
