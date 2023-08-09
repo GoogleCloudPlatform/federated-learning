@@ -29,13 +29,6 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: istio-egressgateway
   namespace: istio-egress
-  labels:
-    app: istio-egressgateway
-    istio: egressgateway
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 spec:
   maxReplicas: 5
   minReplicas: 3
@@ -57,13 +50,6 @@ kind: Deployment
 metadata:
   name: istio-egressgateway
   namespace: istio-egress
-  labels:
-    app: istio-egressgateway
-    istio: egressgateway
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 spec:
   selector:
     matchLabels:
@@ -75,44 +61,18 @@ spec:
       maxUnavailable: 25%
   template:
     metadata:
+      annotations:
+        # This is required to tell Anthos Service Mesh to inject the gateway with the
+        # required configuration.
+        inject.istio.io/templates: gateway
       labels:
         app: istio-egressgateway
         istio: egressgateway
-        install.operator.istio.io/owning-resource: unknown
-        operator.istio.io/component: "EgressGateways"
-        sidecar.istio.io/inject: "true"
-        istio.io/rev: asm-managed
-      annotations:
-        prometheus.io/port: "15020"
-        prometheus.io/scrape: "true"
-        prometheus.io/path: "/stats/prometheus"
-        sidecar.istio.io/inject: "true"
-        inject.istio.io/templates: "gateway"
     spec:
-      securityContext:
-        runAsUser: 1337
-        runAsGroup: 1337
-        runAsNonRoot: true
-        fsGroup: 1337
       serviceAccountName: istio-egressgateway-service-account
       containers:
         - name: istio-proxy
-          image: auto
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-            - containerPort: 8443
-              protocol: TCP
-            - containerPort: 15090
-              protocol: TCP
-              name: http-envoy-prom
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
+          image: auto # The image will automatically update each time the pod starts.
           resources:
             limits:
               cpu: 2000m
@@ -120,70 +80,15 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
-          env:
-            - name: ISTIO_META_UNPRIVILEGED_POD
-              value: "true"
-          volumeMounts:
-            - name: egressgateway-certs
-              mountPath: "/etc/istio/egressgateway-certs"
-              readOnly: true
-            - name: egressgateway-ca-certs
-              mountPath: "/etc/istio/egressgateway-ca-certs"
-              readOnly: true
-      volumes:
-        - name: egressgateway-certs
-          secret:
-            secretName: "istio-egressgateway-certs"
-            optional: true
-        - name: egressgateway-ca-certs
-          secret:
-            secretName: "istio-egressgateway-ca-certs"
-            optional: true
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - "amd64"
-                      - "arm64"
-                      - "ppc64le"
-                      - "s390x"
                   - key: cloud.google.com/gke-nodepool
                     operator: In
                     values:
                       - "main-pool"
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 2
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - "amd64"
-            - weight: 2
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - "arm64"
-            - weight: 2
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - "ppc64le"
-            - weight: 2
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - "s390x"
 ...
 ---
 apiVersion: policy/v1
@@ -191,13 +96,6 @@ kind: PodDisruptionBudget
 metadata:
   name: istio-egressgateway
   namespace: istio-egress
-  labels:
-    app: istio-egressgateway
-    istio: egressgateway
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 spec:
   minAvailable: 1
   selector:
@@ -211,11 +109,6 @@ kind: Role
 metadata:
   name: istio-egressgateway-sds
   namespace: istio-egress
-  labels:
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 rules:
   - apiGroups: [""]
     resources: ["secrets"]
@@ -227,11 +120,6 @@ kind: RoleBinding
 metadata:
   name: istio-egressgateway-sds
   namespace: istio-egress
-  labels:
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -246,13 +134,6 @@ kind: Service
 metadata:
   name: istio-egressgateway
   namespace: istio-egress
-  labels:
-    app: istio-egressgateway
-    istio: egressgateway
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 spec:
   type: ClusterIP
   selector:
@@ -274,13 +155,6 @@ kind: ServiceAccount
 metadata:
   name: istio-egressgateway-service-account
   namespace: istio-egress
-  labels:
-    app: istio-egressgateway
-    istio: egressgateway
-    release: istio
-    istio.io/rev: asm-managed
-    install.operator.istio.io/owning-resource: unknown
-    operator.istio.io/component: "EgressGateways"
 ...
 ---
 # Handle all egress traffic
