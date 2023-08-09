@@ -20,6 +20,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-nothing
   namespace: istio-system
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
 ...

@@ -206,6 +206,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-gateway-status-port
   namespace: istio-ingress
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
   rules:
@@ -225,6 +227,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-gateway-grpc-port
   namespace: istio-ingress
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
   rules:
