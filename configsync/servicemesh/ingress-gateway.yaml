@@ -200,35 +200,12 @@ spec:
         - "*"
 ...
 ---
-# Allow traffic to the ingress gateway status-port
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingress-gateway-status-port
-  namespace: istio-ingress
-  annotations:
-    "istio.io/dry-run": "true"
-spec:
-  action: ALLOW
-  rules:
-    - to:
-      - operation:
-          methods: ["GET"]
-          paths: ["/healthz/ready"]
-          ports: ["15021"]
-  selector:
-    matchLabels:
-      app: istio-ingressgateway
-...
----
 # Allow traffic to the ingress gateway gRPC port
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-gateway-grpc-port
   namespace: istio-ingress
-  annotations:
-    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
   rules:
@@ -236,7 +213,7 @@ spec:
       - operation:
           # For gRPC services, it's always POST.
           # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
-          methods: ["POST"]
+          # methods: ["POST"]
           ports: ["8000"]
   selector:
     matchLabels:
