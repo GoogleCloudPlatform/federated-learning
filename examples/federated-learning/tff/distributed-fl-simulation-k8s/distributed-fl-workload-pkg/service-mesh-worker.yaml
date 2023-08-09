@@ -18,7 +18,7 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-ingress-istio-ingress
-  namespace: ns # kpt-set: ${tenant-name}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   podSelector: {}
   policyTypes:
