@@ -13,6 +13,23 @@
 # limitations under the License.
 
 ---
+# Allow egress traffic from istio-ingress namespace
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-egress-istio-ingress
+  namespace: istio-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ns # kpt-set: ${namespace}
+...
+---
 # Allow ingress traffic from istio-ingress namespace
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
