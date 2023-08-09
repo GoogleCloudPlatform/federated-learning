@@ -19,6 +19,8 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-from-ingress-namespace-grpc-port
   namespace: ns # kpt-set: ${namespace}
+  annotations:
+    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
   rules:
