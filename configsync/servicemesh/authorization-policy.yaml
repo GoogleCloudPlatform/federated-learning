@@ -11,17 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# ---
-# # By default, allow nothing if there are no other ALLOW policies.
-# # Applies to all pods in the mesh because it's deployed in the root namespace.
-# # Ref: https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview#allow_nothing
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-nothing
-#   namespace: istio-system
-#   annotations:
-#     "istio.io/dry-run": "true"
-# spec:
-#   action: ALLOW
-# ...
+---
+# By default, allow nothing if there are no other ALLOW policies.
+# Applies to all pods in the mesh because it's deployed in the root namespace.
+# Ref: https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview#allow_nothing
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-nothing
+  namespace: istio-system
+spec:
+  action: ALLOW
+...
