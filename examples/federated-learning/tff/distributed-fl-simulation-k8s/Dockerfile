@@ -19,7 +19,7 @@ ENV DATASET_DESTINATION_DIRECTORY_PATH="/tmp/dataset/emnist-partitions/2-partiti
 RUN gsutil -m cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_1.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_1.sqlite" \
     && gsutil -m cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_2.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_2.sqlite"
 
-FROM python:3.9-buster
+FROM python:3.11-buster
 
 WORKDIR "/"
 COPY requirements.txt requirements.txt
