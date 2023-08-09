@@ -54,7 +54,7 @@ metadata:
   name: allow-from-ingress-gateway-to-grpc-port
   namespace: ns # kpt-set: ${namespace}
 spec:
-  action: ALLOW
+  action: AUDIT
   rules:
     - from:
       - source:
