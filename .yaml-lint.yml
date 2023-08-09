@@ -28,6 +28,8 @@ rules:
   document-start:
     level: error
   empty-values: enable
+  indentation:
+    indent-sequences: false
   line-length:
     allow-non-breakable-inline-mappings: true
     max: 250
