@@ -18,8 +18,6 @@ kind: AuthorizationPolicy
 metadata:
   name: allow-within-namespace
   namespace: ns # kpt-set: ${tenant-name}
-  annotations:
-    "istio.io/dry-run": "true"
 spec:
   action: ALLOW
   rules:

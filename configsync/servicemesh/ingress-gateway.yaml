@@ -199,23 +199,3 @@ spec:
       hosts:
         - "*"
 ...
----
-# Allow traffic to the ingress gateway gRPC port
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingress-gateway-grpc-port
-  namespace: istio-ingress
-spec:
-  action: ALLOW
-  rules:
-    - to:
-      - operation:
-          # For gRPC services, it's always POST.
-          # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
-          # methods: ["POST"]
-          ports: ["8000"]
-  selector:
-    matchLabels:
-      app: istio-ingressgateway
-...

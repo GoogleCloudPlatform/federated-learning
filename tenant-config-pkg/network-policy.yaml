@@ -108,22 +108,6 @@ spec:
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-ingress-istio-ingress
-  namespace: ns # kpt-set: ${tenant-name}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: istio-ingress
-...
----
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
   name: allow-egress-kube-system-dns
   namespace: ns # kpt-set: ${tenant-name}
 spec:
