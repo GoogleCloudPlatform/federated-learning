@@ -50,7 +50,7 @@ spec:
           ports: ["8000"]
   selector:
     matchLabels:
-      app: istio-ingressgateway
+      app: tff-worker
 ...
 ---
 apiVersion: networking.istio.io/v1beta1
