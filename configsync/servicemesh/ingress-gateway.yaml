@@ -211,7 +211,12 @@ spec:
   rules:
     - to:
       - operation:
+          methods: ["GET"]
+          paths: ["/healthz/ready"]
           ports: ["15021"]
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
 ...
 ---
 # Allow traffic to the ingress gateway gRPC port
@@ -229,4 +234,7 @@ spec:
           # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
           methods: ["POST"]
           ports: ["8000"]
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
 ...
