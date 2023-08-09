@@ -88,7 +88,8 @@ resource "null_resource" "tenant_configuration" {
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
 
-    source_contents_hash = local.acm_config_sync_tenant_configuration_package_source_content_hash
+    source_contents_hash                  = local.acm_config_sync_tenant_configuration_package_source_content_hash
+    distributed_tff_example_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_source_content_hash : ""
   }
 
   provisioner "local-exec" {

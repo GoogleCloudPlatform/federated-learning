@@ -76,6 +76,9 @@ locals {
   acm_config_sync_tenant_configuration_source_fileset              = [for f in fileset(local.acm_config_sync_tenant_configuration_package_source_directory_path, "**") : "${local.acm_config_sync_tenant_configuration_package_source_directory_path}/${f}"]
   acm_config_sync_tenant_configuration_package_source_content_hash = sha512(join("", [for f in local.acm_config_sync_tenant_configuration_source_fileset : filesha512(f)]))
 
+  distributed_tff_example_source_fileset      = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
+  distributed_tff_example_source_content_hash = sha512(join("", [for f in local.distributed_tff_example_source_fileset : filesha512(f)]))
+
   acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
 
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
