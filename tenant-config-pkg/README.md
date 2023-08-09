@@ -8,7 +8,7 @@ for a tenant within the untrusted workloads cluster. The package contains cluste
 - namespace, with a label for automatic service mesh proxy injection
 - network policy
 - service account, with a Workload Identity annotation
-- service mesh resources like AuthorizationPolicy and Sidecar
+- service mesh resources, such as AuthorizationPolicy
 - config for Policy Controller Mutuations that automatically apply labels/tolerations etc to Pods
 in the tenant namespace
 
