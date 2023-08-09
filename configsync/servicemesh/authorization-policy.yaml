@@ -23,3 +23,20 @@ metadata:
 spec:
   action: ALLOW
 ...
+---
+# Allow requests to this set of (external) hosts.
+# No 'from' condition, so requests can originate from anywhere in the mesh
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-specific-hosts
+  namespace: istio-system
+spec:
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - 'example.com'
+              - 'httpbin.org'
+  action: ALLOW
+...
