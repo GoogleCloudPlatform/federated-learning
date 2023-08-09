@@ -12,19 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-within-namespace
-#   namespace: ns # kpt-set: ${tenant-name}
-#   annotations:
-#     "istio.io/dry-run": "true"
-# spec:
-#   action: ALLOW
-#   rules:
-#     - from:
-#       - source:
-#           namespaces:
-#             - "ns" # kpt-set: ${tenant-name}
-# ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-within-namespace
+  namespace: ns # kpt-set: ${tenant-name}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          namespaces:
+            - "ns" # kpt-set: ${tenant-name}
+...
