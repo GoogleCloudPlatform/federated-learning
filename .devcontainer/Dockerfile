@@ -14,7 +14,7 @@
 
 FROM hashicorp/terraform:1.5.5 as terraform
 
-FROM mcr.microsoft.com/devcontainers/python:3.10
+FROM mcr.microsoft.com/devcontainers/python:3.11
 
 SHELL ["/bin/bash", "-o", "pipefail", "-o", "errexit", "-c"]
 
