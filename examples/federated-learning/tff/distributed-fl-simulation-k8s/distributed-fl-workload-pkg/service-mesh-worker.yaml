@@ -12,40 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ---
-# # Allow egress traffic from istio-ingress namespace
-# kind: NetworkPolicy
-# apiVersion: networking.k8s.io/v1
-# metadata:
-#   name: allow-egress-istio-ingress
-#   namespace: istio-ingress
-# spec:
-#   podSelector: {}
-#   policyTypes:
-#     - Egress
-#   egress:
-#     - to:
-#         - namespaceSelector:
-#             matchLabels:
-#               kubernetes.io/metadata.name: ns # kpt-set: ${namespace}
-# ...
-# ---
-# # Allow ingress traffic from istio-ingress namespace
-# kind: NetworkPolicy
-# apiVersion: networking.k8s.io/v1
-# metadata:
-#   name: allow-ingress-istio-ingress
-#   namespace: ns # kpt-set: ${namespace}
-# spec:
-#   podSelector: {}
-#   policyTypes:
-#     - Ingress
-#   ingress:
-#     - from:
-#         - namespaceSelector:
-#             matchLabels:
-#               kubernetes.io/metadata.name: istio-ingress
-# ...
+---
+# Allow egress traffic from istio-ingress namespace
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-egress-istio-ingress
+  namespace: istio-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ns # kpt-set: ${namespace}
+...
+---
+# Allow ingress traffic from istio-ingress namespace
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-ingress-istio-ingress
+  namespace: ns # kpt-set: ${namespace}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-ingress
+...
 ---
 # # Allow traffic from the ingress gateway on the gRPC port
 # apiVersion: security.istio.io/v1beta1
