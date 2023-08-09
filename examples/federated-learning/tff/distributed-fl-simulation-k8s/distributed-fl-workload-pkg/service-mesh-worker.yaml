@@ -47,30 +47,30 @@
 #               kubernetes.io/metadata.name: istio-ingress
 # ...
 ---
-# Allow traffic from the ingress gateway on the gRPC port
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-from-ingress-gateway-to-grpc-port
-  namespace: ns # kpt-set: ${namespace}
-  annotations:
-    "istio.io/dry-run": "true"
-spec:
-  action: ALLOW
-  rules:
-    - from:
-      - source:
-          namespaces: ["istio-ingress"]
-    - to:
-      - operation:
-          # For gRPC services, it's always POST.
-          # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
-          # methods: ["POST"]
-          ports: ["8000"]
-  selector:
-    matchLabels:
-      app: tff-worker
-...
+# # Allow traffic from the ingress gateway on the gRPC port
+# apiVersion: security.istio.io/v1beta1
+# kind: AuthorizationPolicy
+# metadata:
+#   name: allow-from-ingress-gateway-to-grpc-port
+#   namespace: ns # kpt-set: ${namespace}
+#   annotations:
+#     "istio.io/dry-run": "true"
+# spec:
+#   action: ALLOW
+#   rules:
+#     - from:
+#       - source:
+#           namespaces: ["istio-ingress"]
+#     - to:
+#       - operation:
+#           # For gRPC services, it's always POST.
+#           # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
+#           # methods: ["POST"]
+#           ports: ["8000"]
+#   selector:
+#     matchLabels:
+#       app: tff-worker
+# ...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
