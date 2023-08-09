@@ -19,7 +19,7 @@ metadata:
   name: allow-within-namespace
   namespace: ns # kpt-set: ${tenant-name}
 spec:
-  action: AUDIT
+  action: ALLOW
   rules:
     - from:
       - source:
