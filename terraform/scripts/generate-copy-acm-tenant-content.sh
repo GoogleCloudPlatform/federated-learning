@@ -33,7 +33,7 @@ rm -rfv "${TENANT_CONFIGURATION_DIRECTORY_PATH}"
 echo "Configuring ${TENANT_CONFIGURATION_PACKAGE_PATH} package for ${TENANT} tenant. Output directory: ${TENANT_CONFIGURATION_DIRECTORY_PATH}"
 mkdir -vp "${TENANTS_CONFIGURATION_DIRECTORY_PATH}"
 
-kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 "${TENANT_CONFIGURATION_PACKAGE_PATH}" --output="${TENANT_CONFIGURATION_DIRECTORY_PATH}"  --truncate-output=false -- \
+kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 "${TENANT_CONFIGURATION_PACKAGE_PATH}" --output="${TENANT_CONFIGURATION_DIRECTORY_PATH}" --truncate-output=false -- \
   tenant-name="${TENANT}" \
   gcp-service-account="${TENANT_APPS_SERVICE_ACCOUNT_EMAIL}" \
   tenant-developer="${TENANT_DEVELOPER_EMAIL}"

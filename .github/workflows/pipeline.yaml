@@ -41,6 +41,8 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_JSCPD_ALL_CODEBASE: true
           VALIDATE_NATURAL_LANGUAGE: false
+          # Disable Terrascan until https://github.com/tenable/terrascan/issues/1532 is resolved
+          VALIDATE_TERRAFORM_TERRASCAN: false
   ci:
     runs-on: ubuntu-latest
 
