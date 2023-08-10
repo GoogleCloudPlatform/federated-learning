@@ -74,8 +74,8 @@ resource "null_resource" "tenant_configuration" {
         "${local.distributed_tff_example_package_source_directory_path}" \
         "${each.value.distributed_tff_example_is_coordinator}" \
         "${each.value.distributed_tff_example_worker_emnist_partition_file_name}" \
-        "${var.distributed_tff_example_worker_1_address}" \
-        "${var.distributed_tff_example_worker_2_address}" \
+        "${each.value.distributed_tff_example_worker_1_address}" \
+        "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${google_artifact_registry_repository.container_image_repository.location}" \
         "${google_artifact_registry_repository.container_image_repository.project}" \

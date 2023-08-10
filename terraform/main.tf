@@ -30,9 +30,11 @@ locals {
       tenant_apps_sa_name                         = format("%s-%s-apps-sa", var.cluster_name, name)
       tenant_apps_kubernetes_service_account_name = local.tenant_apps_kubernetes_service_account_name
 
-      distributed_tff_example_deploy                            = var.distributed_tff_example_deploy && name == var.distributed_tff_example_deploy_namespace ? true : false
-      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_is_coordinator
-      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_worker_emnist_partition_file_name
+      distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
+      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
+      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
+      distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) && var.distributed_tff_example_configuration[name].is_coordinator ? var.distributed_tff_example_configuration[name].worker_1_address : ""
+      distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) && var.distributed_tff_example_configuration[name].is_coordinator ? var.distributed_tff_example_configuration[name].worker_2_address : ""
     }
   }
 

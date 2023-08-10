@@ -139,44 +139,20 @@ variable "gke_rbac_security_group_domain" {
   type        = string
 }
 
-variable "distributed_tff_example_worker_1_address" {
-  default     = ""
-  description = "Address of the first worker of the distributed TensorFlow Federated example."
-  type        = string
-}
-
-variable "distributed_tff_example_worker_2_address" {
-  default     = ""
-  description = "Address of the second worker of the distributed TensorFlow Federated example."
-  type        = string
-}
-
-variable "distributed_tff_example_deploy" {
-  default     = false
-  description = "Set to true to deploy a TensorFlow Federated example in the cluster."
-  type        = bool
+variable "distributed_tff_example_configuration" {
+  default     = null
+  description = "Configuration of the TensorFlow Federated example."
+  type = map(object({
+    namespace                  = string # Name of the Kubernetes namespace where to deploy the distributed TensorFlow Federated example
+    emnist_partition_file_name = string # Name of the EMNIST partition file of the distributed TensorFlow Federated example
+    is_coordinator             = bool   # Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster
+    worker_1_address           = string # Address of the first worker of the distributed TensorFlow Federated example
+    worker_2_address           = string # Address of the second worker of the distributed TensorFlow Federated example
+  }))
 }
 
 variable "distributed_tff_example_deploy_ingress_gateway" {
   default     = false
   description = "Set to true to deploy an Ingress Gateway to expose workers."
   type        = bool
-}
-
-variable "distributed_tff_example_is_coordinator" {
-  default     = false
-  description = "Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster."
-  type        = bool
-}
-
-variable "distributed_tff_example_deploy_namespace" {
-  default     = "fltenant1"
-  description = "Name of the Kubernetes namespace where to deploy the distributed TensorFlow Federated example."
-  type        = string
-}
-
-variable "distributed_tff_example_worker_emnist_partition_file_name" {
-  default     = ""
-  description = "Name of the EMNIST partition file of the distributed TensorFlow Federated example."
-  type        = string
 }
