@@ -57,11 +57,11 @@ spec:
   action: ALLOW
   rules:
     - from:
-      - source:
-          namespaces: ["istio-ingress"]
+        - source:
+            namespaces: ["istio-ingress"]
     - to:
-      - operation:
-          ports: ["8000"]
+        - operation:
+            ports: ["8000"]
   selector:
     matchLabels:
       app: tff-worker
@@ -79,8 +79,8 @@ spec:
     - istio-ingress/ingress-gateway
   http:
     - route:
-      - destination:
-          host: tff-worker-service
-          port:
-            number: 8000
+        - destination:
+            host: tff-worker-service
+            port:
+              number: 8000
 ...

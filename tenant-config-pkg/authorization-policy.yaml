@@ -22,7 +22,7 @@ spec:
   action: ALLOW
   rules:
     - from:
-      - source:
-          namespaces:
-            - "ns" # kpt-set: ${tenant-name}
+        - source:
+            namespaces:
+              - "ns" # kpt-set: ${tenant-name}
 ...
