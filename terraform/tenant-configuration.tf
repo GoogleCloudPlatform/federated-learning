@@ -114,7 +114,8 @@ resource "null_resource" "copy_servicemesh_tff_example_content" {
     source_contents_hash = local.distributed_tff_example_servicemesh_source_content_hash
     create_command       = <<-EOT
       "${local.copy_distributed_tff_example_servicemesh_content_script_path}" \
-        "${local.distributed_tff_example_servicemesh_destination_directory_path}"
+        "${local.distributed_tff_example_servicemesh_source_directory_path}" \
+        "${local.distributed_tff_example_servicemesh_destination_directory_path}/"
     EOT
     destroy_command      = <<-EOT
       "${local.delete_distributed_tff_example_servicemesh_content_script_path}" \

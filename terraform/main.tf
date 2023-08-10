@@ -115,11 +115,6 @@ locals {
   delete_acm_tenant_content_script_path = local.delete_fileset_script_path
 
   copy_distributed_tff_example_servicemesh_content_script_path   = local.copy_acm_common_content_script_path
-  copy_distributed_tff_example_servicemesh_content_command       = <<-EOT
-    "${local.copy_distributed_tff_example_servicemesh_content_script_path}" \
-      "${local.distributed_tff_example_servicemesh_source_directory_path}" \
-      "${local.distributed_tff_example_servicemesh_destination_directory_path}/"
-  EOT
   delete_distributed_tff_example_servicemesh_content_script_path = local.delete_fileset_script_path
 
   # Temporary placeholder
