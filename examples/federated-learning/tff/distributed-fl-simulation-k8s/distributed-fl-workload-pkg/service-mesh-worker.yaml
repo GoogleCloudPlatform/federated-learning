@@ -13,11 +13,10 @@
 # limitations under the License.
 
 ---
-# Allow egress traffic from istio-ingress namespace
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-egress-istio-ingress # kpt-set: allow-egress-${coordinator-namespace}
+  name: allow-egress-from-istio-ingress-to-ns # kpt-set: allow-egress-from-${coordinator-namespace}-to-${namespace}
   namespace: istio-ingress # kpt-set: ${coordinator-namespace}
 spec:
   podSelector: {}
@@ -30,7 +29,6 @@ spec:
               kubernetes.io/metadata.name: ns # kpt-set: ${namespace}
 ...
 ---
-# Allow ingress traffic from istio-ingress namespace
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -47,7 +45,6 @@ spec:
               kubernetes.io/metadata.name: istio-ingress # kpt-set: ${coordinator-namespace}
 ...
 ---
-# Allow traffic from the ingress gateway on the gRPC port
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
