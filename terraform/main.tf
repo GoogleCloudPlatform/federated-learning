@@ -30,11 +30,12 @@ locals {
       tenant_apps_sa_name                         = format("%s-%s-apps-sa", var.cluster_name, name)
       tenant_apps_kubernetes_service_account_name = local.tenant_apps_kubernetes_service_account_name
 
+      # We can't use this variable in the following lines because we're still defining this object
       distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
-      distributed_tff_example_is_coordinator                    = local.distributed_tff_example_deploy ? var.distributed_tff_example_configuration[name].is_coordinator : false
-      distributed_tff_example_worker_emnist_partition_file_name = local.distributed_tff_example_deploy ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
-      distributed_tff_example_worker_1_address                  = local.distributed_tff_example_deploy ? var.distributed_tff_example_configuration[name].worker_1_address : ""
-      distributed_tff_example_worker_2_address                  = local.distributed_tff_example_deploy ? var.distributed_tff_example_configuration[name].worker_2_address : ""
+      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
+      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
+      distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_address : ""
+      distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_address : ""
     }
   }
 
