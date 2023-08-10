@@ -65,11 +65,11 @@ docker compose \
     }
     ```
 
-    Where:
-        - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-            that exposes the first worker workloads.
-        - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-            that exposes the second worker workloads.
+1. Configure the namespace where you deployed the coordinator:
+
+    ```hcl
+    distributed_tff_example_coordinator_namespace = "fltenant3"
+    ```
 
 ### Containers running in different GKE clusters
 

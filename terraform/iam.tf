@@ -78,6 +78,12 @@ module "fl-workload-identity" {
   module_depends_on = [
     module.gke
   ]
+
+  depends_on = [
+    # Wait for the service accounts to be ready before trying to load data about them
+    # Ref: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/issues/1059
+    module.service_accounts
+  ]
 }
 
 module "cloud-source-repositories-workload-identity" {
