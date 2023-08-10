@@ -62,7 +62,6 @@ locals {
   source_repository_service_account_iam_email = "serviceAccount:${local.source_repository_service_account_email}"
 
   acm_config_sync_tenant_configuration_package_source_directory_path = abspath("${path.module}/../tenant-config-pkg")
-  distributed_tff_example_package_source_directory_path              = abspath("${path.module}/../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg")
 
   acm_config_sync_destination_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/tenants"
@@ -76,8 +75,15 @@ locals {
   acm_config_sync_tenant_configuration_source_fileset              = [for f in fileset(local.acm_config_sync_tenant_configuration_package_source_directory_path, "**") : "${local.acm_config_sync_tenant_configuration_package_source_directory_path}/${f}"]
   acm_config_sync_tenant_configuration_package_source_content_hash = sha512(join("", [for f in local.acm_config_sync_tenant_configuration_source_fileset : filesha512(f)]))
 
-  distributed_tff_example_source_fileset      = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
-  distributed_tff_example_source_content_hash = sha512(join("", [for f in local.distributed_tff_example_source_fileset : filesha512(f)]))
+  distributed_tff_example_source_directory_path         = abspath("${path.module}/../examples/federated-learning/tff/distributed-fl-simulation-k8s")
+  distributed_tff_example_package_source_directory_path = "${local.distributed_tff_example_source_directory_path}/distributed-fl-workload-pkg"
+  distributed_tff_example_package_source_fileset        = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
+  distributed_tff_example_package_source_content_hash   = sha512(join("", [for f in local.distributed_tff_example_package_source_fileset : filesha512(f)]))
+
+  distributed_tff_example_servicemesh_source_directory_path      = "${local.distributed_tff_example_source_directory_path}/servicemesh"
+  distributed_tff_example_servicemesh_source_fileset             = [for f in fileset(local.distributed_tff_example_servicemesh_source_directory_path, "**") : "${local.distributed_tff_example_servicemesh_source_directory_path}/${f}"]
+  distributed_tff_example_servicemesh_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_servicemesh_source_fileset : filesha512(f)]))
+  distributed_tff_example_servicemesh_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification"
 
   acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
 
@@ -107,6 +113,14 @@ locals {
   generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
 
   delete_acm_tenant_content_script_path = local.delete_fileset_script_path
+
+  copy_distributed_tff_example_servicemesh_content_script_path   = local.copy_acm_common_content_script_path
+  copy_distributed_tff_example_servicemesh_content_command       = <<-EOT
+    "${local.copy_distributed_tff_example_servicemesh_content_script_path}" \
+      "${local.distributed_tff_example_servicemesh_source_directory_path}" \
+      "${local.distributed_tff_example_servicemesh_destination_directory_path}/"
+  EOT
+  delete_distributed_tff_example_servicemesh_content_script_path = local.delete_fileset_script_path
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"

@@ -157,6 +157,12 @@ variable "distributed_tff_example_deploy" {
   type        = bool
 }
 
+variable "distributed_tff_example_deploy_ingress_gateway" {
+  default     = false
+  description = "Set to true to deploy an Ingress Gateway to expose workers."
+  type        = bool
+}
+
 variable "distributed_tff_example_is_coordinator" {
   default     = false
   description = "Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster."

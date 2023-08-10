@@ -88,8 +88,40 @@ resource "null_resource" "tenant_configuration" {
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
 
-    source_contents_hash                  = local.acm_config_sync_tenant_configuration_package_source_content_hash
-    distributed_tff_example_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_source_content_hash : ""
+    source_contents_hash                                 = local.acm_config_sync_tenant_configuration_package_source_content_hash
+    distributed_tff_example_package_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = self.triggers.create_command
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = self.triggers.destroy_command
+  }
+
+  depends_on = [
+    null_resource.copy_common_acm_content
+  ]
+}
+
+resource "null_resource" "copy_servicemesh_tff_example_content" {
+  count = var.distributed_tff_example_deploy_ingress_gateway ? 1 : 0
+
+  triggers = {
+    source_contents_hash = local.distributed_tff_example_servicemesh_source_content_hash
+    create_command       = <<-EOT
+      "${local.copy_distributed_tff_example_servicemesh_content_script_path}" \
+        "${local.distributed_tff_example_servicemesh_destination_directory_path}"
+    EOT
+    destroy_command      = <<-EOT
+      "${local.delete_distributed_tff_example_servicemesh_content_script_path}" \
+        "${local.distributed_tff_example_servicemesh_destination_directory_path}"
+    EOT
+    create_script_hash   = md5(file(local.copy_distributed_tff_example_servicemesh_content_script_path))
+    destroy_script_hash  = md5(file(local.delete_distributed_tff_example_servicemesh_content_script_path))
   }
 
   provisioner "local-exec" {
@@ -124,6 +156,7 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
   }
 
   depends_on = [
+    null_resource.copy_servicemesh_tff_example_content,
     null_resource.copy_common_acm_content,
     null_resource.tenant_configuration
   ]

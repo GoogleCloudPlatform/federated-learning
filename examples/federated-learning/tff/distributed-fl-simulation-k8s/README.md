@@ -42,6 +42,7 @@ docker compose \
 
     ```hcl
     distributed_tff_example_deploy                            = true
+    distributed_tff_example_deploy_ingress_gateway            = true
     distributed_tff_example_worker_emnist_partition_file_name = "emnist_partition_1.sqlite"
     ```
 
@@ -52,6 +53,7 @@ docker compose \
 
     ```hcl
     distributed_tff_example_deploy                            = true
+    distributed_tff_example_deploy_ingress_gateway            = true
     distributed_tff_example_worker_emnist_partition_file_name = "emnist_partition_2.sqlite"
     ```
 
