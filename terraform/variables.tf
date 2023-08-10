@@ -141,13 +141,12 @@ variable "gke_rbac_security_group_domain" {
 
 variable "distributed_tff_example_configuration" {
   default     = null
-  description = "Configuration of the TensorFlow Federated example."
+  description = "Configuration of the TensorFlow Federated example. The keys of this map are the names of the Kubernetes namespaces where to deploy the distributed TensorFlow Federated example"
   type = map(object({
-    namespace                  = string # Name of the Kubernetes namespace where to deploy the distributed TensorFlow Federated example
-    emnist_partition_file_name = string # Name of the EMNIST partition file of the distributed TensorFlow Federated example
-    is_coordinator             = bool   # Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster
-    worker_1_address           = string # Address of the first worker of the distributed TensorFlow Federated example
-    worker_2_address           = string # Address of the second worker of the distributed TensorFlow Federated example
+    emnist_partition_file_name = optional(string, "")  # Name of the EMNIST partition file of the distributed TensorFlow Federated example
+    is_coordinator             = optional(bool, false) # Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster
+    worker_1_address           = optional(string, "")  # Address of the first worker of the distributed TensorFlow Federated example
+    worker_2_address           = optional(string, "")  # Address of the second worker of the distributed TensorFlow Federated example
   }))
 }
 
