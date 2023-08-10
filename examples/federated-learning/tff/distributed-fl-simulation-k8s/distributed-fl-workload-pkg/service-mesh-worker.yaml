@@ -17,8 +17,8 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-egress-istio-ingress
-  namespace: istio-ingress
+  name: allow-egress-istio-ingress # kpt-set: allow-egress-${coordinator-namespace}
+  namespace: istio-ingress # kpt-set: ${coordinator-namespace}
 spec:
   podSelector: {}
   policyTypes:
@@ -34,7 +34,7 @@ spec:
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-ingress-istio-ingress
+  name: allow-ingress-istio-ingress # kpt-set: allow-ingress-${coordinator-namespace}
   namespace: ns # kpt-set: ${namespace}
 spec:
   podSelector: {}
@@ -44,21 +44,22 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: istio-ingress
+              kubernetes.io/metadata.name: istio-ingress # kpt-set: ${coordinator-namespace}
 ...
 ---
 # Allow traffic from the ingress gateway on the gRPC port
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-from-ingress-gateway-to-grpc-port
+  name: allow-from-ingress-gateway-to-grpc-port # kpt-set: allow-from-${coordinator-namespace}-to-grpc-port
   namespace: ns # kpt-set: ${namespace}
 spec:
   action: ALLOW
   rules:
     - from:
         - source:
-            namespaces: ["istio-ingress"]
+            namespaces:
+              - "istio-ingress" # kpt-set: ${coordinator-namespace}
     - to:
         - operation:
             ports: ["8000"]

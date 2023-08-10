@@ -150,6 +150,12 @@ variable "distributed_tff_example_configuration" {
   }))
 }
 
+variable "distributed_tff_example_coordinator_namespace" {
+  default     = "istio-ingress"
+  description = "Name of the Kubernetes namespace where you deployed the coordinator. Don't change the default value unless you deployed the coordinator in the same cluster where you deployed workers."
+  type        = string
+}
+
 variable "distributed_tff_example_deploy_ingress_gateway" {
   default     = false
   description = "Set to true to deploy an Ingress Gateway to expose workers."

@@ -79,7 +79,8 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${google_artifact_registry_repository.container_image_repository.location}" \
         "${google_artifact_registry_repository.container_image_repository.project}" \
-        "${google_artifact_registry_repository.container_image_repository.repository_id}"
+        "${google_artifact_registry_repository.container_image_repository.repository_id}" \
+        "${var.distributed_tff_example_coordinator_namespace}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
