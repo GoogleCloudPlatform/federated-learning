@@ -109,8 +109,8 @@ ip_address_2 = sys.argv[2]
 port = 8000
 
 logger.info(
-    "Connecting to {ip_address_1} and {ip_address_1}, port: {port}".format(
-        ip_address_1, ip_address_2, port
+    "Connecting to {ip_address_1} and {ip_address_2}, port: {port}".format(
+        ip_address_1=ip_address_1, ip_address_2=ip_address_2, port=port
     )
 )
 
