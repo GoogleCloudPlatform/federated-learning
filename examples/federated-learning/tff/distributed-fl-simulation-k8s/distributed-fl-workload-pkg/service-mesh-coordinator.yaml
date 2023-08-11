@@ -13,30 +13,12 @@
 # limitations under the License.
 
 ---
-# Add example external hosts to the service registry
-apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
-metadata:
-  name: external-tff-example-hosts
-  namespace: ns  # kpt-set: ${namespace}
-spec:
-  hosts:
-    - tff-worker-1
-    - tff-worker-2
-  ports:
-    - number: 80
-      name: http
-      protocol: HTTP
-  resolution: DNS
-  location: MESH_EXTERNAL
-...
----
 # Allow requests to workers
 # No 'from' condition, so requests can originate from anywhere in the mesh
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-egress-to-specific-hosts
+  name: allow-egress-to-tff-example-hosts
   namespace: ns  # kpt-set: ${namespace}
 spec:
   action: ALLOW
@@ -44,8 +26,8 @@ spec:
     - to:
         - operation:
             hosts:
-              - tff-worker-1
-              - tff-worker-2
+              - tff-worker-1.example.com
+              - tff-worker-2.example.com
 ...
 ---
 # Route from the egress gateway to the first worker services that we added to the
@@ -57,7 +39,7 @@ metadata:
   namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker-1
+    - tff-worker-1.example.com
   gateways:
     - istio-egress/egress-gateway
   http:
@@ -67,9 +49,9 @@ spec:
           port: 80
       route:
         - destination:
-            host: tff-worker-1  # kpt-set: ${tff-worker-1-address}
+            host: tff-worker-1.example.com
             port:
-              number: 80
+              number: 8000
           weight: 100
 ...
 ---
@@ -92,8 +74,8 @@ spec:
           port: 80
       route:
         - destination:
-            host: tff-worker-2  # kpt-set: ${tff-worker-2-address}
+            host: tff-worker-2.example.com
             port:
-              number: 80
+              number: 8000
           weight: 100
 ...

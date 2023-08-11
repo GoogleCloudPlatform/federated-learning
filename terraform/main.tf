@@ -83,10 +83,10 @@ locals {
   distributed_tff_example_package_source_fileset        = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
   distributed_tff_example_package_source_content_hash   = sha512(join("", [for f in local.distributed_tff_example_package_source_fileset : filesha512(f)]))
 
-  distributed_tff_example_servicemesh_source_directory_path      = "${local.distributed_tff_example_source_directory_path}/mesh-wide"
-  distributed_tff_example_servicemesh_source_fileset             = [for f in fileset(local.distributed_tff_example_servicemesh_source_directory_path, "**") : "${local.distributed_tff_example_servicemesh_source_directory_path}/${f}"]
-  distributed_tff_example_servicemesh_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_servicemesh_source_fileset : filesha512(f)]))
-  distributed_tff_example_servicemesh_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
+  distributed_tff_example_mesh_wide_source_directory_path      = "${local.distributed_tff_example_source_directory_path}/mesh-wide"
+  distributed_tff_example_mesh_wide_source_fileset             = [for f in fileset(local.distributed_tff_example_mesh_wide_source_directory_path, "**") : "${local.distributed_tff_example_mesh_wide_source_directory_path}/${f}"]
+  distributed_tff_example_mesh_wide_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_mesh_wide_source_fileset : filesha512(f)]))
+  distributed_tff_example_mesh_wide_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
 
   acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
 
@@ -117,8 +117,8 @@ locals {
 
   delete_acm_tenant_content_script_path = local.delete_fileset_script_path
 
-  copy_distributed_tff_example_servicemesh_content_script_path   = local.copy_acm_common_content_script_path
-  delete_distributed_tff_example_servicemesh_content_script_path = local.delete_fileset_script_path
+  copy_distributed_tff_example_mesh_wide_content_script_path   = abspath("${path.module}/scripts/copy-tff-example-mesh-wide-content.sh")
+  delete_distributed_tff_example_mesh_wide_content_script_path = local.delete_fileset_script_path
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"
