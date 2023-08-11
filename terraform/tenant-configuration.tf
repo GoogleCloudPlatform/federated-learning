@@ -119,7 +119,7 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
     create_command      = <<-EOT
       "${local.copy_distributed_tff_example_mesh_wide_content_script_path}" \
         "${local.distributed_tff_example_mesh_wide_source_directory_path}" \
-        "${local.distributed_tff_example_mesh_wide_destination_directory_path}/" \
+        "${local.distributed_tff_example_mesh_wide_destination_directory_path}" \
         "${var.distributed_tff_example_deploy_ingress_gateway}" \
         "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}"
     EOT
