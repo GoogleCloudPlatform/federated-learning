@@ -77,9 +77,6 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_worker_1_address}" \
         "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
-        "${google_artifact_registry_repository.container_image_repository.location}" \
-        "${google_artifact_registry_repository.container_image_repository.project}" \
-        "${google_artifact_registry_repository.container_image_repository.repository_id}" \
         "${var.distributed_tff_example_coordinator_namespace}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
@@ -105,6 +102,38 @@ resource "null_resource" "tenant_configuration" {
 
   depends_on = [
     null_resource.copy_common_acm_content
+  ]
+}
+
+resource "null_resource" "build_push_distributed_tff_example_container_image" {
+  count = local.build_push_distributed_tff_example_container_image ? 1 : 0
+
+  triggers = {
+    create_command     = <<-EOT
+      "${local.build_push_distributed_tff_example_container_image_script_path}" \
+        "${google_artifact_registry_repository.container_image_repository.location}" \
+        "${google_artifact_registry_repository.container_image_repository.project}" \
+        "${google_artifact_registry_repository.container_image_repository.repository_id}" \
+        "${local.distributed_tff_example_container_image_tag}" \
+        "${local.distributed_tff_example_container_image_context_path}"
+    EOT
+    create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
+
+    source_contents_hash = local.build_push_distributed_tff_example_container_image_source_descriptors_content_hash
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = self.triggers.create_command
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = self.triggers.destroy_command
+  }
+
+  depends_on = [
+    null_resource.commit_acm_config_sync_configuration
   ]
 }
 
