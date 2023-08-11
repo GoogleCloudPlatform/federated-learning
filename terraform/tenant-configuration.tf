@@ -108,7 +108,7 @@ resource "null_resource" "tenant_configuration" {
   ]
 }
 
-resource "null_resource" "copy_mesh_wide_tff_example_content" {
+resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
   triggers = {
     source_contents_hash = local.distributed_tff_example_mesh_wide_source_content_hash
 
@@ -163,7 +163,7 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
   }
 
   depends_on = [
-    null_resource.copy_servicemesh_tff_example_content,
+    null_resource.copy_mesh_wide_distributed_tff_example_content,
     null_resource.copy_common_acm_content,
     null_resource.tenant_configuration
   ]
