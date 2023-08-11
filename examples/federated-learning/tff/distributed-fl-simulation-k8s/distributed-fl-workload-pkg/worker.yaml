@@ -13,29 +13,48 @@
 # limitations under the License.
 
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: tff-example-app
+  name: tff-worker-service
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  selector:
+    app: tff-worker
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: grpc
+...
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   labels:
     app: tff-example-app
-  name: tff-coordinator
+  name: tff-worker
   namespace: ns  # kpt-set: ${namespace}
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: tff-coordinator
+      app: tff-worker
   template:
     metadata:
       labels:
-        app: tff-coordinator
+        app: tff-worker
     spec:
       containers:
-        - name: tff-coordinator
+        - name: tff-worker
           image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
           args:
-            - "./training_procedure.py"
-            - "tff-worker-1.example.com"
-            - "tff-worker-2.example.com"
-      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
+            - "./worker_service.py"
+          env:
+            - name: EMNIST_PARTITION_FILE_NAME
+              value: emnist_part_1.sqlite  # kpt-set: ${tff-workload-emnist-partition-file-name}
+          ports:
+            - containerPort: 8000
+      serviceAccountName: tff-worker-service-account  # kpt-set: ${tff-pod-service-account-name}
 ...

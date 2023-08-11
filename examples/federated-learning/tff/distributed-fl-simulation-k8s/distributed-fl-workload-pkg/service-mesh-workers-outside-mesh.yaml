@@ -13,23 +13,6 @@
 # limitations under the License.
 
 ---
-# Allow requests to workers
-# No 'from' condition, so requests can originate from anywhere in the mesh
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-egress-to-tff-example-hosts
-  namespace: ns  # kpt-set: ${namespace}
-spec:
-  action: ALLOW
-  rules:
-    - to:
-        - operation:
-            hosts:
-              - tff-worker-1.example.com
-              - tff-worker-2.example.com
-...
----
 # Route from the egress gateway to the first worker services that we added to the
 # service registry
 apiVersion: networking.istio.io/v1beta1

@@ -18,27 +18,41 @@ apiVersion: apps/v1
 metadata:
   labels:
     app: tff-example-app
-  name: tff-worker
+  name: tff-coordinator
   namespace: ns  # kpt-set: ${namespace}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: tff-worker
+      app: tff-coordinator
   template:
     metadata:
       labels:
-        app: tff-worker
+        app: tff-coordinator
     spec:
       containers:
-        - name: tff-worker
+        - name: tff-coordinator
           image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
           args:
-            - "./worker_service.py"
-          env:
-            - name: EMNIST_PARTITION_FILE_NAME
-              value: emnist_part_1.sqlite  # kpt-set: ${tff-workload-emnist-partition-file-name}
-          ports:
-            - containerPort: 8000
-      serviceAccountName: tff-worker-service-account  # kpt-set: ${tff-pod-service-account-name}
+            - "./training_procedure.py"
+            - "tff-worker-1.example.com"
+            - "tff-worker-2.example.com"
+      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
+...
+---
+# Allow requests to workers
+# No 'from' condition, so requests can originate from anywhere in the mesh
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-tff-example-hosts
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1.example.com
+              - tff-worker-2.example.com
 ...
