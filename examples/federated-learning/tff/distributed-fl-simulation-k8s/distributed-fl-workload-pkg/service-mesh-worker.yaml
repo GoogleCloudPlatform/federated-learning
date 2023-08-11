@@ -64,21 +64,3 @@ spec:
     matchLabels:
       app: tff-worker
 ...
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: tff-worker-ingress
-  namespace: ns  # kpt-set: ${namespace}
-spec:
-  hosts:
-    - "*"
-  gateways:
-    - istio-ingress/ingress-gateway
-  http:
-    - route:
-        - destination:
-            host: tff-worker-service
-            port:
-              number: 8000
-...
