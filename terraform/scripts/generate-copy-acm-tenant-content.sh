@@ -83,12 +83,6 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
     rm -v \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/worker.yaml" \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker.yaml"
-    
-    if [ "${TFF_COORDINATOR_NAMESPACE}" != "istio-ingress" ]; then
-      echo "TFF_COORDINATOR_NAMESPACE (${TFF_COORDINATOR_NAMESPACE}) is not equal to istio-ingress so we assume that workers are running inside the cluster."
-      rm -v \
-        "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
-    fi
   fi
 
   echo "Build the ${_CONTAINER_IMAGE_LOCALIZED_ID} container image. Context: ${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
