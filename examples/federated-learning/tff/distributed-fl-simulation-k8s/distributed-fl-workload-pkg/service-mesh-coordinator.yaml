@@ -11,32 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: worker-1-to-service
-  namespace: ns # kpt-set: ${namespace}
-spec:
-  hosts:
-    - tff-worker-1.example.com
-  http:
-    - route:
-        - destination:
-            host: tff-worker-1.example.com # kpt-set: ${tff-worker-1-address}
-...
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: worker-2-to-service
-  namespace: ns # kpt-set: ${namespace}
-spec:
-  hosts:
-    - tff-worker-2.example.com
-  http:
-    - route:
-        - destination:
-            host: tff-worker-2.example.com # kpt-set: ${tff-worker-2-address}
-...
