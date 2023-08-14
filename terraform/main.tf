@@ -131,7 +131,7 @@ locals {
 
   ditributed_tff_example_container_image_repository_hostname = "${google_artifact_registry_repository.container_image_repository.location}-docker.pkg.dev"
   distributed_tff_example_container_image_repository_id      = "${local.ditributed_tff_example_container_image_repository_hostname}/${google_artifact_registry_repository.container_image_repository.project}/${google_artifact_registry_repository.container_image_repository.repository_id}"
-  distributed_tff_example_localized_container_image_id       = "${local.distributed_tff_example_container_image_repository_id}/tff-runtime:${data.external.blueprint_repository_head_commit_hash.output.sha}"
+  distributed_tff_example_localized_container_image_id       = "${local.distributed_tff_example_container_image_repository_id}/tff-runtime:${data.external.blueprint_repository_head_commit_hash.result.sha}"
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"
