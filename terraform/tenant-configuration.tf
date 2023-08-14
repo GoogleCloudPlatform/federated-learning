@@ -133,7 +133,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
   }
 
   # Set the commit hash here so we don't recreate the resource on every commit
-  # to the blueprint repository, but only when something related
+  # to the blueprint repository, but only when something related to the container image changes
   provisioner "local-exec" {
     when    = create
     command = <<-EOT
