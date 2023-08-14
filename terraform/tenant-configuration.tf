@@ -94,8 +94,7 @@ resource "null_resource" "tenant_configuration" {
   provisioner "local-exec" {
     when    = create
     command = <<-EOT
-      ${self.triggers.create_command} \
-        "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
+      ${self.triggers.create_command} "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
     EOT
   }
 
@@ -138,8 +137,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
   provisioner "local-exec" {
     when    = create
     command = <<-EOT
-      ${self.triggers.create_command} \
-        "${local.distributed_tff_example_localized_container_image_id}"
+      ${self.triggers.create_command} "${local.distributed_tff_example_localized_container_image_id}"
     EOT
   }
 
