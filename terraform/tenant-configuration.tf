@@ -123,7 +123,8 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
     create_command     = <<-EOT
       "${local.build_push_distributed_tff_example_container_image_script_path}" \
         "${local.distributed_tff_example_localized_container_image_id}" \
-        "${local.distributed_tff_example_container_image_source_directory_path}"
+        "${local.distributed_tff_example_container_image_source_directory_path}" \
+        "${local.ditributed_tff_example_container_image_repository_hostname}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
