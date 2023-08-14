@@ -130,6 +130,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
     source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
+    container_image_id   = local.distributed_tff_example_localized_container_image_id
   }
 
   # Set the commit hash here so we don't recreate the resource on every commit

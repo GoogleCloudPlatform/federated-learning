@@ -39,20 +39,3 @@ spec:
             - "tff-worker-2.example.com"  # kpt-set: ${tff-worker-2-address}
       serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
 ...
----
-# Allow requests to workers
-# No 'from' condition, so requests can originate from anywhere in the mesh
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-egress-to-tff-example-hosts
-  namespace: ns  # kpt-set: ${namespace}
-spec:
-  action: ALLOW
-  rules:
-    - to:
-        - operation:
-            hosts:
-              - tff-worker-1.example.com
-              - tff-worker-2.example.com
-...
