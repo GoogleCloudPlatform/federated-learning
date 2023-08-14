@@ -114,6 +114,8 @@ data "external" "config_management_repository_head_commit_hash" {
     "HEAD"
   ]
 
+  working_dir = var.acm_repository_path
+
   depends_on = [
     null_resource.commit_acm_config_sync_configuration
   ]
@@ -128,7 +130,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
         "${google_artifact_registry_repository.container_image_repository.location}" \
         "${google_artifact_registry_repository.container_image_repository.project}" \
         "${google_artifact_registry_repository.container_image_repository.repository_id}" \
-        "${data.external.config_management_repository_head_commit_hash.sha}" \
+        "${data.external.config_management_repository_head_commit_hash.result.sha}" \
         "${local.distributed_tff_example_container_image_context_path}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
