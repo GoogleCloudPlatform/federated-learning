@@ -41,6 +41,10 @@ module "gke" {
   subnetwork                   = module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].name
   zones                        = var.zones
 
+  # The mesh_id label on the cluster is required for metrics to get displayed on
+  # the Anthos Service Mesh pages in the Cloud console.
+  cluster_resource_labels = { "mesh_id" : "proj-${data.google_project.project.number}" }
+
   # Encrypt cluster secrets at the application layer
   database_encryption = [{
     "key_name" : module.kms.keys[var.cluster_secrets_keyname],
@@ -68,8 +72,14 @@ module "gke" {
     max_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_max_nodes : var.cluster_tenant_pool_max_nodes
     min_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_min_nodes : var.cluster_tenant_pool_min_nodes
     name                        = config.tenant_nodepool_name
-    sandbox_enabled             = tenant_name == local.main_tenant_name ? false : true
     service_account             = format("%s@%s.iam.gserviceaccount.com", config.tenant_nodepool_sa_name, data.google_project.project.project_id)
+
+    # GKE Sandbox is not compatible with the current version of Anthos Services Mesh with the
+    # Managed control plane because that control plane configures Istio-CNI.
+    # Ref: https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods#limitations-incompatible
+    # To keep this enabled, we would need to either allow privileged containers,
+    # or allow containers with the CAP_NET_ADMIN permission.
+    sandbox_enabled = false
   }]
 
   # Add a label with tenant name to each tenant nodepool

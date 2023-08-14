@@ -11,20 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 ---
-# Load balance traffic to the egress gateway, and enable mTLS
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
+apiVersion: kpt.dev/v1
+kind: Kptfile
 metadata:
-  name: target-egress-gateway
-  namespace: istio-system
-spec:
-  host: istio-egressgateway.istio-egress.svc.cluster.local
-  subsets:
-    - name: target-egress-gateway-mTLS
-      trafficPolicy:
-        loadBalancer:
-          simple: ROUND_ROBIN
-        tls:
-          mode: ISTIO_MUTUAL
+  name: distributed-fl-workload-package
+info:
+  description: |
+    This package provides the necessary to deploy an example distributed
+    TensorFlow Federated workload.
 ...

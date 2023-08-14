@@ -1,0 +1,58 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: tff-example-app
+  name: tff-coordinator
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tff-coordinator
+  template:
+    metadata:
+      labels:
+        app: tff-coordinator
+    spec:
+      containers:
+        - name: tff-coordinator
+          image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
+          args:
+            - "./training_procedure.py"
+            - "tff-worker-1.example.com"
+            - "tff-worker-2.example.com"
+      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
+...
+---
+# Allow requests to workers
+# No 'from' condition, so requests can originate from anywhere in the mesh
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-tff-example-hosts
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1.example.com
+              - tff-worker-2.example.com
+...

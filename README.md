@@ -54,7 +54,6 @@ The infrastructure provisioned by this blueprint includes:
 - A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept). The blueprint helps you create GKE clusters that implement recommended security settings, such as those described in the [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster). For example, the blueprint helps you:
   - Limit exposure of your cluster nodes and control plane to the internet by creating a private GKE cluster with [authorised networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
   - Use shielded nodes that use a hardened node image with the containerd runtime.
-  - Harden isolation of tenant workloads using [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
   - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
 - Two GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
@@ -89,12 +88,12 @@ The cluster includes:
       - Allow pods to pull container images only from a named set of repositories
   - See the resources in the [configsync/policycontroller](configsync/policycontroller) directory for details of the constraints applied by this blueprint.
 - [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview) (ASM) is powered by Istio and enables managed, observable, and secure communication across your services. The blueprint includes service mesh configuration that is applied to the cluster using Config Sync. The following points describe how this blueprint configures the service mesh.
+  - An Egress Gateway that acts a forward-proxy at the edge of the mesh in the `istio-egress` namespace.
   - The root istio namespace (istio-system) is configured with
     - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
     - AuthorizationPolicies that:
       - by default deny all communication between services in the mesh,
-      - allow communication to a set of known external hosts (such as example.com)
-    - Egress Gateway that acts a forward-proxy at the edge of the mesh
+      - allow communication to a set of known external hosts
     - VirtualService and DestinationRule resources that route traffic from sidecar proxies through the egress gateway to external destinations.
   - The tenant namespace is configured for automatic sidecar proxy injection, see next section.
   - Note that the mesh does not include an Ingress Gateway

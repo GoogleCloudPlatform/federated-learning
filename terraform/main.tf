@@ -24,12 +24,25 @@ locals {
 
   tenants = {
     for name in local.tenant_and_main_pool_names : name => {
-      tenant_name             = name
-      tenant_nodepool_name    = format("%s-pool", name)
-      tenant_nodepool_sa_name = format("%s-%s-nodes-sa", var.cluster_name, name)
-      tenant_apps_sa_name     = format("%s-%s-apps-sa", var.cluster_name, name)
+      tenant_name                                 = name
+      tenant_nodepool_name                        = format("%s-pool", name)
+      tenant_nodepool_sa_name                     = format("%s-%s-nodes-sa", var.cluster_name, name)
+      tenant_apps_sa_name                         = format("%s-%s-apps-sa", var.cluster_name, name)
+      tenant_apps_kubernetes_service_account_name = local.tenant_apps_kubernetes_service_account_name
+
+      # We can't use this variable in the following lines because we're still defining this object
+      distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
+      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
+      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
+      distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_address : ""
+      distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_address : ""
     }
   }
+
+  deploy_distributed_tff_example_flags      = [for tenant in local.tenants : tenant.distributed_tff_example_deploy]
+  deploy_distributed_tff_example_any_tenant = anytrue(local.deploy_distributed_tff_example_flags) # Useful to know if we deployed the distributed TensorFlow Federated example in any namespace
+
+  tenant_apps_kubernetes_service_account_name = "ksa"
 
   tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }
 
@@ -59,7 +72,7 @@ locals {
   acm_config_sync_destination_directory_path                       = "${var.acm_repository_path}/${var.acm_dir}"
   acm_config_sync_tenants_configuration_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/tenants"
 
-  acm_config_sync_common_content_destination_content_hash = sha512(join("", [for f in local.acm_config_sync_common_content_destination_fileset : filesha512(f)]))
+  acm_config_sync_common_content_destination_content_hash = sha512(join("", [for f in local.acm_config_sync_common_content_destination_fileset : fileexists(f) ? filesha512(f) : sha512("file-not-found")]))
   acm_config_sync_common_content_destination_fileset      = [for f in local.acm_config_sync_common_content_source_fileset : replace(f, local.acm_config_sync_common_content_source_directory_path, local.acm_config_sync_destination_directory_path)]
   acm_config_sync_common_content_source_content_hash      = sha512(join("", [for f in local.acm_config_sync_common_content_source_fileset : filesha512(f)]))
   acm_config_sync_common_content_source_fileset           = [for f in fileset(local.acm_config_sync_common_content_source_directory_path, "**") : "${local.acm_config_sync_common_content_source_directory_path}/${f}"]
@@ -67,6 +80,20 @@ locals {
 
   acm_config_sync_tenant_configuration_source_fileset              = [for f in fileset(local.acm_config_sync_tenant_configuration_package_source_directory_path, "**") : "${local.acm_config_sync_tenant_configuration_package_source_directory_path}/${f}"]
   acm_config_sync_tenant_configuration_package_source_content_hash = sha512(join("", [for f in local.acm_config_sync_tenant_configuration_source_fileset : filesha512(f)]))
+
+  distributed_tff_example_source_directory_path         = abspath("${path.module}/../examples/federated-learning/tff/distributed-fl-simulation-k8s")
+  distributed_tff_example_package_source_directory_path = "${local.distributed_tff_example_source_directory_path}/distributed-fl-workload-pkg"
+  distributed_tff_example_package_source_fileset        = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
+  distributed_tff_example_package_source_content_hash   = sha512(join("", [for f in local.distributed_tff_example_package_source_fileset : filesha512(f)]))
+
+  distributed_tff_example_mesh_wide_source_directory_path      = "${local.distributed_tff_example_source_directory_path}/mesh-wide"
+  distributed_tff_example_mesh_wide_source_fileset             = [for f in fileset(local.distributed_tff_example_mesh_wide_source_directory_path, "**") : "${local.distributed_tff_example_mesh_wide_source_directory_path}/${f}"]
+  distributed_tff_example_mesh_wide_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_mesh_wide_source_fileset : filesha512(f)]))
+  distributed_tff_example_mesh_wide_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
+
+  distributed_tff_example_container_image_source_directory_path           = "${local.distributed_tff_example_source_directory_path}/container-image"
+  distributed_tff_example_container_image_source_fileset                  = [for f in fileset(local.distributed_tff_example_container_image_source_directory_path, "**") : "${local.distributed_tff_example_container_image_source_directory_path}/${f}"]
+  distributed_tff_example_container_image_source_descriptors_content_hash = sha512(join("", [for f in local.distributed_tff_example_container_image_source_fileset : filesha512(f)]))
 
   acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
 
@@ -95,7 +122,17 @@ locals {
 
   generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
 
-  delete_acm_tenant_content_script_path = local.delete_acm_common_content_script_path
+  delete_acm_tenant_content_script_path = local.delete_fileset_script_path
+
+  copy_distributed_tff_example_mesh_wide_content_script_path   = abspath("${path.module}/scripts/copy-tff-example-mesh-wide-content.sh")
+  delete_distributed_tff_example_mesh_wide_content_script_path = local.delete_fileset_script_path
+
+  build_push_distributed_tff_example_container_image_script_path = abspath("${path.module}/scripts/build-push-container-image.sh")
+
+  ditributed_tff_example_container_image_repository_hostname    = "${google_artifact_registry_repository.container_image_repository.location}-docker.pkg.dev"
+  distributed_tff_example_container_image_repository_id         = "${local.ditributed_tff_example_container_image_repository_hostname}/${google_artifact_registry_repository.container_image_repository.project}/${google_artifact_registry_repository.container_image_repository.repository_id}"
+  distributed_tff_example_localized_untagged_container_image_id = "${local.distributed_tff_example_container_image_repository_id}/tff-runtime"
+  distributed_tff_example_localized_container_image_id          = "${local.distributed_tff_example_localized_untagged_container_image_id}:${data.external.blueprint_repository_head_commit_hash.result.sha}"
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"

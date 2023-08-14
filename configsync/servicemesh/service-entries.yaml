@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
+# Add the metadata server to the service registry
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -33,6 +34,7 @@ spec:
   location: MESH_EXTERNAL
 ...
 ---
+# Add the private Google APIs endpoints to the service registry
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -51,6 +53,7 @@ spec:
   location: MESH_EXTERNAL
 ...
 ---
+# Add example external hosts to the service registry
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:

@@ -29,8 +29,6 @@ spec:
 ...
 ---
 # Prevent the creation of known resources that expose workloads to external IPs.
-# By default, this also prevents Istio Gateway objects - but we don't include Gateway
-# in the match condition below, so Gateway can be created
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sNoExternalServices
 metadata:
@@ -42,6 +40,9 @@ spec:
         kinds: ["Service"]
       - apiGroups: ["networking.k8s.io"]
         kinds: ["Ingress"]
+      - apiGroups: ["networking.istio.io"]
+        kinds: ["Gateway"]
+    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system"]
 ...
 ---
 # In tenant namespaces, only allow images to be pulled from
@@ -64,7 +65,7 @@ spec:
       - "gcr.io/"
       - "eu.gcr.io/"
       - "us-docker.pkg.dev/"
-      - "eu-docker.pkg.dev/"
+      - "europe-docker.pkg.dev/"
 ...
 ---
 # ASM/Istio DestinationRules must enable TLS

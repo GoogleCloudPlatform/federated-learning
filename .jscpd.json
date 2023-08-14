@@ -4,6 +4,8 @@
     "consoleFull"
   ],
   "ignore": [
+    "**/configsync/**",
+    "**/examples/**",
     "**/tenants/**"
   ],
   "absolute": true

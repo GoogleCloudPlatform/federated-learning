@@ -33,6 +33,7 @@ module "project-services" {
   activate_apis = [
     "anthos.googleapis.com",
     "anthosconfigmanagement.googleapis.com",
+    "artifactregistry.googleapis.com",
     "cloudbilling.googleapis.com",
     "cloudkms.googleapis.com",
     "cloudtrace.googleapis.com",
@@ -44,6 +45,7 @@ module "project-services" {
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
     "logging.googleapis.com",
+    "mesh.googleapis.com",
     "meshca.googleapis.com",
     "meshconfig.googleapis.com",
     "meshtelemetry.googleapis.com",

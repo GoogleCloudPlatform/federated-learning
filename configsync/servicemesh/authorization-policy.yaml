@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
-# By default, allow nothing (equivalent to deny all).
-# Applies to all pods in the mesh (as in the root namespace, istio-system)
-# Allowed interactions between services must be explicitly defined
+# By default, allow nothing if there are no other ALLOW policies.
+# Applies to all pods in the mesh because it's deployed in the root namespace.
+# Ref: https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview#allow_nothing
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-nothing
   namespace: istio-system
 spec:
-  {}
+  action: ALLOW
 ...
 ---
 # Allow requests to this set of (external) hosts.
@@ -38,4 +38,5 @@ spec:
             hosts:
               - 'example.com'
               - 'httpbin.org'
+  action: ALLOW
 ...

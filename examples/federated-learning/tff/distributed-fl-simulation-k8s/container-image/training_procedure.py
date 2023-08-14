@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import collections
+import logging
 import sys
 from typing import Any, List, Optional
 
@@ -20,6 +21,10 @@ import grpc
 import nest_asyncio
 import tensorflow as tf
 import tensorflow_federated as tff
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 nest_asyncio.apply()
 
@@ -102,6 +107,12 @@ def train_loop(num_rounds=10, num_clients=10):
 ip_address_1 = sys.argv[1]
 ip_address_2 = sys.argv[2]
 port = 8000
+
+logger.info(
+    "Connecting to {ip_address_1} and {ip_address_2}, port: {port}".format(
+        ip_address_1=ip_address_1, ip_address_2=ip_address_2, port=port
+    )
+)
 
 channels = [
     grpc.insecure_channel(f"{ip_address_1}:{port}"),

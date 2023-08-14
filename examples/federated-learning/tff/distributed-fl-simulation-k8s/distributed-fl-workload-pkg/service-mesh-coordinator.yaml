@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,20 +11,32 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 ---
-# Load balance traffic to the egress gateway, and enable mTLS
 apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
+kind: VirtualService
 metadata:
-  name: target-egress-gateway
-  namespace: istio-system
+  name: worker-1-to-service
+  namespace: ns # kpt-set: ${namespace}
 spec:
-  host: istio-egressgateway.istio-egress.svc.cluster.local
-  subsets:
-    - name: target-egress-gateway-mTLS
-      trafficPolicy:
-        loadBalancer:
-          simple: ROUND_ROBIN
-        tls:
-          mode: ISTIO_MUTUAL
+  hosts:
+    - tff-worker-1.example.com
+  http:
+    - route:
+        - destination:
+            host: tff-worker-1.example.com # kpt-set: ${tff-worker-1-address}
+...
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: worker-2-to-service
+  namespace: ns # kpt-set: ${namespace}
+spec:
+  hosts:
+    - tff-worker-2.example.com
+  http:
+    - route:
+        - destination:
+            host: tff-worker-2.example.com # kpt-set: ${tff-worker-2-address}
 ...

@@ -29,6 +29,12 @@ variable "zones" {
   type        = list(string)
 }
 
+variable "google_artifact_registry_location" {
+  default     = "europe"
+  description = "The default location where to create Artifact Registry repositories."
+  type        = string
+}
+
 variable "cluster_name" {
   default     = "tp-w"
   description = "The GKE cluster name"
@@ -55,12 +61,12 @@ variable "cluster_default_pool_machine_type" {
 
 variable "cluster_default_pool_min_nodes" {
   description = "The min number of nodes in the default node pool"
-  default     = 3
+  default     = 1
   type        = number
 }
 
 variable "cluster_default_pool_max_nodes" {
-  description = "The min number of nodes in the default node pool"
+  description = "The max number of nodes in the default node pool"
   default     = 5
   type        = number
 }
@@ -85,12 +91,12 @@ variable "cluster_tenant_pool_machine_type" {
 
 variable "cluster_tenant_pool_min_nodes" {
   description = "The min number of nodes in the tenant node pool"
-  default     = 2
+  default     = 1
   type        = number
 }
 
 variable "cluster_tenant_pool_max_nodes" {
-  description = "The min number of nodes in the tenant node pool"
+  description = "The max number of nodes in the tenant node pool"
   default     = 5
   type        = number
 }
@@ -127,20 +133,31 @@ variable "acm_repository_path" {
   type        = string
 }
 
-variable "asm_release_channel" {
-  description = "Anthos Service Mesh release channel. See https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel for more information"
-  default     = "regular"
-  type        = string
-}
-
-variable "asm_enable_mesh_feature" {
-  description = "Set to true to enable Anthos Service Mesh feature. It is required to install the ASM CRDs."
-  default     = true
-  type        = bool
-}
-
 variable "gke_rbac_security_group_domain" {
   default     = null
   description = "Domain of the Google Group to assign RBAC permissions. For more information, refer to https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac"
   type        = string
+}
+
+variable "distributed_tff_example_configuration" {
+  default     = null
+  description = "Configuration of the TensorFlow Federated example. The keys of this map are the names of the Kubernetes namespaces where to deploy the distributed TensorFlow Federated example"
+  type = map(object({
+    emnist_partition_file_name = optional(string, "")  # Name of the EMNIST partition file of the distributed TensorFlow Federated example
+    is_coordinator             = optional(bool, false) # Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster
+    worker_1_address           = optional(string, "")  # Address of the first worker of the distributed TensorFlow Federated example
+    worker_2_address           = optional(string, "")  # Address of the second worker of the distributed TensorFlow Federated example
+  }))
+}
+
+variable "distributed_tff_example_coordinator_namespace" {
+  default     = "istio-ingress"
+  description = "Name of the Kubernetes namespace where you deployed the coordinator. Don't change the default value unless you deployed the coordinator in the same cluster where you deployed workers."
+  type        = string
+}
+
+variable "distributed_tff_example_deploy_ingress_gateway" {
+  default     = false
+  description = "Set to true to deploy an Ingress Gateway to expose workers."
+  type        = bool
 }

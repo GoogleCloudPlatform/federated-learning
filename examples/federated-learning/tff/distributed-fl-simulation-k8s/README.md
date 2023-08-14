@@ -8,6 +8,8 @@ This example runs on a single host.
 
 ## Prerequisites
 
+- A POSIX-compliant shell
+- Git (tested with version 2.41)
 - Docker (tested with version 20.10.21)
 - Docker Compose (tested with version 1.29.2)
 
@@ -31,6 +33,96 @@ docker compose \
     --exit-code-from tff-client
 ```
 
+### Containers running in different namespaces, in the same GKE clusters
+
+1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
+1. From Cloud Shell, change the working directory to the `terraform` directory.
+1. Initialize the following Terraform variables for the workers:
+
+    ```hcl
+    tenant_names = ["fltenant1", "fltenant2", "fltenant3"]
+
+    distributed_tff_example_configuration          = {
+        "fltenant1": {
+            emnist_partition_file_name = "emnist_part_1.sqlite"
+        },
+        "fltenant2": {
+            emnist_partition_file_name = "emnist_part_2.sqlite"
+        }
+    }
+    ```
+
+1. Run `terraform apply`, and wait for Terraform to complete the provisioning process, and the
+    workers to be up and running, and the load balancers to have IP addresses assigned.
+1. Configure the coordinator by adding the following element to the
+    `distributed_tff_example_configuration` map:
+
+    ```hcl
+    "fltenant3": {
+        is_coordinator = true
+        worker_1_address = "tff-worker-service.fltenant1"
+        worker_2_address = "tff-worker-service.fltenant2"
+    }
+    ```
+
+1. Configure the namespace where you deployed the coordinator:
+
+    ```hcl
+    distributed_tff_example_coordinator_namespace = "fltenant3"
+    ```
+
 ### Containers running in different GKE clusters
 
-TODO
+1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the first worker.
+1. Initialize the following Terraform variables for the first worker:
+
+    ```hcl
+    distributed_tff_example_deploy_ingress_gateway = true
+    distributed_tff_example_configuration          = {
+        "fltenant1": {
+            emnist_partition_file_name = "emnist_part_1.sqlite"
+        }
+    }
+    ```
+
+1. Run `terraform apply`.
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the second worker.
+1. Initialize the following Terraform variables for the second worker:
+
+    ```hcl
+    distributed_tff_example_deploy_ingress_gateway = true
+    distributed_tff_example_configuration          = {
+        "fltenant1": {
+            emnist_partition_file_name = "emnist_part_2.sqlite"
+        }
+    }
+    ```
+
+1. Run `terraform apply`.
+1. Wait for the workers Deployments and Services to be ready.
+1. TODO: get information about worker addresses
+1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
+    the resources for the second worker.
+1. Initialize the following Terraform variables for the coordinator:
+
+    ```hcl
+    distributed_tff_example_configuration          = {
+        "fltenant1": {
+            emnist_partition_file_name = "emnist_part_2.sqlite"
+            is_coordinator = true
+            worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+            worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
+        }
+    }
+    ```
+
+    Where:
+        - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+            that exposes the first worker workloads.
+        - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+            that exposes the second worker workloads.
+
+1. Run `terraform apply`.

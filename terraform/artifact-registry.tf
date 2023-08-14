@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,22 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: egress-gateway
-  namespace: istio-system
-spec:
-  selector:
-    istio: egressgateway
-  servers:
-    - port:
-        number: 80
-        name: https
-        protocol: HTTPS
-      hosts:
-        - '*'
-      tls:
-        mode: ISTIO_MUTUAL
-...
+
+resource "google_artifact_registry_repository" "container_image_repository" {
+  location      = var.google_artifact_registry_location
+  repository_id = "container-image-repository"
+  description   = "Container image repository"
+  format        = "DOCKER"
+
+  depends_on = [
+    module.project-services
+  ]
+}
