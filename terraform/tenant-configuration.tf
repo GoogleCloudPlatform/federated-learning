@@ -141,10 +141,6 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
       ${self.triggers.create_command} "${local.distributed_tff_example_localized_container_image_id}"
     EOT
   }
-
-  depends_on = [
-    null_resource.commit_acm_config_sync_configuration
-  ]
 }
 
 resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
