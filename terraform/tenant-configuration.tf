@@ -77,7 +77,8 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_worker_1_address}" \
         "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
-        "${var.distributed_tff_example_coordinator_namespace}"
+        "${var.distributed_tff_example_coordinator_namespace}" \
+        "${local.distributed_tff_example_localized_container_image_id}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -105,19 +106,13 @@ resource "null_resource" "tenant_configuration" {
   ]
 }
 
-data "external" "config_management_repository_head_commit_hash" {
+data "external" "blueprint_repository_head_commit_hash" {
   program = [
     "git",
     "log",
     "--pretty=format:{ \"sha\": \"%H\" }",
     "-1",
     "HEAD"
-  ]
-
-  working_dir = var.acm_repository_path
-
-  depends_on = [
-    null_resource.commit_acm_config_sync_configuration
   ]
 }
 
@@ -127,10 +122,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
   triggers = {
     create_command     = <<-EOT
       "${local.build_push_distributed_tff_example_container_image_script_path}" \
-        "${google_artifact_registry_repository.container_image_repository.location}" \
-        "${google_artifact_registry_repository.container_image_repository.project}" \
-        "${google_artifact_registry_repository.container_image_repository.repository_id}" \
-        "${data.external.config_management_repository_head_commit_hash.result.sha}" \
+        "${local.distributed_tff_example_localized_container_image_id}" \
         "${local.distributed_tff_example_container_image_source_directory_path}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))

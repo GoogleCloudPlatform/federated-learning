@@ -51,7 +51,9 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
 
   TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${12}"
 
-  TFF_COORDINATOR_NAMESPACE="${16:-"istio-ingress"}"
+  TFF_COORDINATOR_NAMESPACE="${13:-"istio-ingress"}"
+
+  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${14}"
 
   DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH="${TENANT_CONFIGURATION_DIRECTORY_PATH}/example-tff-image-classification"
 
@@ -64,7 +66,7 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
     tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
     tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
     tff-worker-2-address="${TFF_WORKER_2_ADDRESS}" \
-    tff-runtime-container-image-id="${_CONTAINER_IMAGE_LOCALIZED_ID}"
+    tff-runtime-container-image-id="${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}"
 
   if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
     echo "This configuration is for a worker. Deleting coordinator-specific configuration."
