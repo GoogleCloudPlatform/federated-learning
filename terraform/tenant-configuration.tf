@@ -77,8 +77,7 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_worker_1_address}" \
         "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
-        "${var.distributed_tff_example_coordinator_namespace}" \
-        "${local.distributed_tff_example_localized_container_image_id}"
+        "${var.distributed_tff_example_coordinator_namespace}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -87,13 +86,17 @@ resource "null_resource" "tenant_configuration" {
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
 
-    source_contents_hash                                 = local.acm_config_sync_tenant_configuration_package_source_content_hash
-    distributed_tff_example_package_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+    source_contents_hash                                         = local.acm_config_sync_tenant_configuration_package_source_content_hash
+    distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+    distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.create_command
+    command = <<-EOT
+      "${self.triggers.create_command}" \
+        "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
+    EOT
   }
 
   provisioner "local-exec" {
@@ -130,17 +133,14 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
     source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
   }
 
+  # Set the commit hash here so we don't recreate the resource on every commit
+  # to the blueprint repository, but only when something related
   provisioner "local-exec" {
     when    = create
     command = <<-EOT
       "${self.triggers.create_command}" \
         "${local.distributed_tff_example_localized_container_image_id}"
     EOT
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = self.triggers.destroy_command
   }
 
   depends_on = [
