@@ -49,5 +49,5 @@ CMD [ "./worker_service.py" ]
 
 EXPOSE 8000
 
-ENV GRPC_TRACE=all
+# ENV GRPC_TRACE=all
 ENV GRPC_VERBOSITY=DEBUG

@@ -140,24 +140,3 @@ spec:
         - ipBlock:
             cidr: 199.36.153.8/30
 ...
----
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-egress-to-metadata-server
-  namespace: ns # kpt-set: ${tenant-name}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-  egress:
-    - to: # For GKE data plane v2
-        - ipBlock:
-            cidr: 169.254.169.254/32
-    - to: # For GKE data plane v1
-        - ipBlock:
-            cidr: 127.0.0.1/32
-      ports:
-        - protocol: TCP
-          port: 988
-...
