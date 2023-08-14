@@ -106,8 +106,6 @@ resource "null_resource" "tenant_configuration" {
 }
 
 data "external" "config_management_repository_head_commit_hash" {
-  count = local.build_push_distributed_tff_example_container_image ? 1 : 0
-
   program = [
     "git",
     "log",
@@ -115,10 +113,14 @@ data "external" "config_management_repository_head_commit_hash" {
     "-1",
     "HEAD"
   ]
+
+  depends_on = [
+    null_resource.commit_acm_config_sync_configuration
+  ]
 }
 
 resource "null_resource" "build_push_distributed_tff_example_container_image" {
-  count = local.build_push_distributed_tff_example_container_image ? 1 : 0
+  count = local.deploy_distributed_tff_example_any_tenant ? 1 : 0
 
   triggers = {
     create_command     = <<-EOT
@@ -150,9 +152,10 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
 }
 
 resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
+  count = local.deploy_distributed_tff_example_any_tenant ? 1 : 0
+
   triggers = {
     source_contents_hash = local.distributed_tff_example_mesh_wide_source_content_hash
-
 
     # If the coordinator namespace is set to istio-ingress, we assume that workers are outside
     # the service mesh (example: in another cluster), so we need to deploy service entries
