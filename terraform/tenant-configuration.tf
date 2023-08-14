@@ -105,6 +105,18 @@ resource "null_resource" "tenant_configuration" {
   ]
 }
 
+data "external" "config_management_repository_head_commit_hash" {
+  count = local.build_push_distributed_tff_example_container_image ? 1 : 0
+
+  program = [
+    "git",
+    "log",
+    "--pretty=format:{ \"sha\": \"%H\" }",
+    "-1",
+    "HEAD"
+  ]
+}
+
 resource "null_resource" "build_push_distributed_tff_example_container_image" {
   count = local.build_push_distributed_tff_example_container_image ? 1 : 0
 
@@ -114,12 +126,12 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
         "${google_artifact_registry_repository.container_image_repository.location}" \
         "${google_artifact_registry_repository.container_image_repository.project}" \
         "${google_artifact_registry_repository.container_image_repository.repository_id}" \
-        "${local.distributed_tff_example_container_image_tag}" \
+        "${data.external.config_management_repository_head_commit_hash.sha}" \
         "${local.distributed_tff_example_container_image_context_path}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
-    source_contents_hash = local.build_push_distributed_tff_example_container_image_source_descriptors_content_hash
+    source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
   }
 
   provisioner "local-exec" {

@@ -88,6 +88,10 @@ locals {
   distributed_tff_example_mesh_wide_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_mesh_wide_source_fileset : filesha512(f)]))
   distributed_tff_example_mesh_wide_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
 
+  distributed_tff_example_container_image_source_directory_path           = "${local.distributed_tff_example_source_directory_path}/container-image"
+  distributed_tff_example_container_image_source_fileset                  = [for f in fileset(local.distributed_tff_example_container_image_source_directory_path, "**") : "${local.distributed_tff_example_container_image_source_directory_path}/${f}"]
+  distributed_tff_example_container_image_source_descriptors_content_hash = sha512(join("", [for f in local.distributed_tff_example_container_image_source_fileset : filesha512(f)]))
+
   acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
 
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
@@ -119,6 +123,8 @@ locals {
 
   copy_distributed_tff_example_mesh_wide_content_script_path   = abspath("${path.module}/scripts/copy-tff-example-mesh-wide-content.sh")
   delete_distributed_tff_example_mesh_wide_content_script_path = local.delete_fileset_script_path
+
+  build_push_distributed_tff_example_container_image_script_path = abspath("${path.module}/scripts/build-push-container-image.sh")
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"
