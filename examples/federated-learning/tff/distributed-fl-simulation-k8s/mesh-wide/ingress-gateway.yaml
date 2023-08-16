@@ -141,7 +141,7 @@ metadata:
     istio: ingressgateway
 spec:
   ports:
-    # status-port exposes a /healthz/ready endpoint that can be used with GKE Ingress health checks
+    # status-port exposes a /healthz/ready endpoint that can be used with GKE health checks
     - name: status-port
       port: 15021
       protocol: TCP
@@ -169,6 +169,8 @@ metadata:
 spec:
   selector:
     istio: ingressgateway
+  # Restrict the following items to tenant namespaces only if needed
+  # Ref: https://istio.io/latest/docs/reference/config/networking/gateway/#Server
   servers:
     - port:
         number: 8000
