@@ -164,3 +164,9 @@ module "cloud_router" {
     }
   ]
 }
+
+# IP address of the machine that this Terraform operation is running on.
+# This IP is added to "authorized networks" for access to GKE control plane
+data "http" "installation_workstation_ip" {
+  url = "http://ipv4.icanhazip.com"
+}
