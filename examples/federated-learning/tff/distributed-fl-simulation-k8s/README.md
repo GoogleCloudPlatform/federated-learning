@@ -11,7 +11,6 @@ This example runs on a single host.
 - A POSIX-compliant shell
 - Git (tested with version 2.41)
 - Docker (tested with version 20.10.21)
-- Docker Compose (tested with version 1.29.2)
 
 ## How to run
 
@@ -21,6 +20,11 @@ You can run this example in two different runtime environments:
 - Two workers and a coordinator running in different containers in different GKE clusters.
 
 ### Containers running on the same host
+
+Prerequisities:
+
+- The ones listed [above](#prerequisites)
+- Docker Compose (tested with version 1.29.2)
 
 To run this example, build the container images and run containers:
 
@@ -33,7 +37,7 @@ docker compose \
     --exit-code-from tff-client
 ```
 
-### Containers running in different namespaces, in the same GKE clusters
+### Containers running in different namespaces, in the same GKE cluster
 
 1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
 1. From Cloud Shell, change the working directory to the `terraform` directory.
@@ -63,13 +67,11 @@ docker compose \
         worker_1_address = "tff-worker.fltenant1"
         worker_2_address = "tff-worker.fltenant2"
     }
-    ```
 
-1. Configure the namespace where you deployed the coordinator:
-
-    ```hcl
     distributed_tff_example_coordinator_namespace = "fltenant3"
     ```
+
+1. Run `terraform apply`.
 
 ### Containers running in different GKE clusters
 
@@ -111,12 +113,13 @@ docker compose \
     ```hcl
     distributed_tff_example_configuration          = {
         "fltenant1": {
-            emnist_partition_file_name = "emnist_part_2.sqlite"
             is_coordinator = true
             worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
             worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
         }
     }
+
+    distributed_tff_example_coordinator_namespace = "fltenant1"
     ```
 
     Where:
