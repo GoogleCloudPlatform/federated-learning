@@ -164,35 +164,3 @@ module "cloud_router" {
     }
   ]
 }
-
-# IP address of the machine that this Terraform operation is running on.
-# This IP is added to "authorized networks" for access to GKE control plane
-data "http" "installation_workstation_ip" {
-  url = "http://ipv4.icanhazip.com"
-}
-
-module "distributed_tff_example_firewall_rules" {
-  count = var.distributed_tff_example_deploy_ingress_gateway ? 1 : 0
-
-  source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "7.2.0"
-
-  project_id   = data.google_project.project.project_id
-  network_name = module.fedlearn-vpc.network_name
-
-  ingress_rules = [{
-    name                    = "allow-distributed-tff-example-grpc-ingress"
-    description             = "Allow ingress to the gRPC port for the distributed TensorFlow Federated example"
-    destination_ranges      = [module.fedlearn-vpc.subnets[local.fedlearn_subnet_key].ip_cidr_range, local.fedlearn_pods_ip_range, local.fedlearn_services_ip_range]
-    target_service_accounts = local.list_nodepool_sa_emails
-
-    allow = [{
-      protocol = "tcp"
-      ports    = ["8000"]
-    }]
-
-    log_config = {
-      metadata = "INCLUDE_ALL_METADATA"
-    }
-  }]
-}
