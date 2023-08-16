@@ -37,7 +37,7 @@ metadata:
   name: tff-worker
   namespace: ns  # kpt-set: ${namespace}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: tff-worker

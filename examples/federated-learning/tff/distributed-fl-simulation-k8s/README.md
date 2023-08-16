@@ -60,8 +60,8 @@ docker compose \
     ```hcl
     "fltenant3": {
         is_coordinator = true
-        worker_1_address = "tff-worker-service.fltenant1"
-        worker_2_address = "tff-worker-service.fltenant2"
+        worker_1_address = "tff-worker.fltenant1"
+        worker_2_address = "tff-worker.fltenant2"
     }
     ```
 
