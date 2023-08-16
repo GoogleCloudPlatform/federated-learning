@@ -356,8 +356,10 @@ spec:
   rules:
     - to:
         - operation:
-            # methods:
-            #   - POST
+            # For gRPC it's always POST
+            # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
+            methods:
+              - POST
             ports:
               - "8000"
 ...
