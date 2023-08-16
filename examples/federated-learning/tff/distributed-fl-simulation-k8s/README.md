@@ -117,8 +117,6 @@ docker compose \
             worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
         }
     }
-
-    distributed_tff_example_coordinator_namespace = "fltenant1"
     ```
 
     Where:
