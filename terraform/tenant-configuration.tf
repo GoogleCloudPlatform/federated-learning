@@ -88,6 +88,7 @@ resource "null_resource" "tenant_configuration" {
 
     source_contents_hash                                         = local.acm_config_sync_tenant_configuration_package_source_content_hash
     distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+    distributed_tff_example_container_image_id                   = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : ""
     distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
   }
 
