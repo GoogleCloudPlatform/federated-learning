@@ -169,7 +169,7 @@ metadata:
 spec:
   selector:
     istio: ingressgateway
-  # Restrict the following items to tenant namespaces only if needed
+  # Restrict the following items to tenant namespaces only, as needed
   # Ref: https://istio.io/latest/docs/reference/config/networking/gateway/#Server
   servers:
     - port:
@@ -306,4 +306,21 @@ spec:
     - to:
         - ipBlock:
             cidr: 199.36.153.8/30
+...
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-distributed-tff-example-ports
+  namespace: istio-ingress
+spec:
+  podSelector:
+    matchLabels:
+      istio: ingress
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8000
 ...
