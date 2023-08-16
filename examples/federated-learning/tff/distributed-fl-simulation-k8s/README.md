@@ -105,7 +105,6 @@ docker compose \
 
 1. Run `terraform apply`.
 1. Wait for the workers Deployments and Services to be ready.
-1. TODO: get information about worker addresses
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
     the resources for the second worker.
 1. Initialize the following Terraform variables for the coordinator:
@@ -123,9 +122,10 @@ docker compose \
     ```
 
     Where:
-        - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-            that exposes the first worker workloads.
-        - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-            that exposes the second worker workloads.
+
+    - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+        that exposes the first worker workloads.
+    - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+        that exposes the second worker workloads.
 
 1. Run `terraform apply`.
