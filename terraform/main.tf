@@ -42,6 +42,9 @@ locals {
   deploy_distributed_tff_example_flags      = [for tenant in local.tenants : tenant.distributed_tff_example_deploy]
   deploy_distributed_tff_example_any_tenant = anytrue(local.deploy_distributed_tff_example_flags) # Useful to know if we deployed the distributed TensorFlow Federated example in any namespace
 
+  distributed_tff_example_is_there_a_coordinator_flags = [for tenant in local.tenants : tenant.distributed_tff_example_is_coordinator]
+  distributed_tff_example_is_there_a_coordinator       = anytrue(local.distributed_tff_example_is_there_a_coordinator_flags) # Useful to know if we deployed a coordinator for the distributed TensorFlow Federated example in any namespace
+
   tenant_apps_kubernetes_service_account_name = "ksa"
 
   tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }

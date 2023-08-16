@@ -96,8 +96,8 @@ The cluster includes:
       - allow communication to a set of known external hosts
     - VirtualService and DestinationRule resources that route traffic from sidecar proxies through the egress gateway to external destinations.
   - The tenant namespace is configured for automatic sidecar proxy injection, see next section.
-  - Note that the mesh does not include an Ingress Gateway
-  - See the [servicemesh](configsync/servicemesh) dir for the cluster-level mesh config
+  - The mesh does not include an Ingress Gateway by default.
+  - See the [servicemesh](configsync/servicemesh) directory for the cluster-level mesh config.
 
 The blueprint configures a dedicated namespace for tenant apps and resources:
 

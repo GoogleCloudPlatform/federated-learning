@@ -130,6 +130,7 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
     source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
+    container_image_id   = local.distributed_tff_example_localized_container_image_id
   }
 
   # Set the commit hash here so we don't recreate the resource on every commit
@@ -140,10 +141,6 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
       ${self.triggers.create_command} "${local.distributed_tff_example_localized_container_image_id}"
     EOT
   }
-
-  depends_on = [
-    null_resource.commit_acm_config_sync_configuration
-  ]
 }
 
 resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
@@ -160,7 +157,8 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
         "${local.distributed_tff_example_mesh_wide_source_directory_path}" \
         "${local.distributed_tff_example_mesh_wide_destination_directory_path}" \
         "${var.distributed_tff_example_deploy_ingress_gateway}" \
-        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}"
+        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}" \
+        "${local.distributed_tff_example_is_there_a_coordinator}"
     EOT
     destroy_command     = <<-EOT
       "${local.delete_distributed_tff_example_mesh_wide_content_script_path}" \

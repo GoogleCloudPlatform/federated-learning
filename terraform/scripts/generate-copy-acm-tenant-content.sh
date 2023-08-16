@@ -70,13 +70,16 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
 
   if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
     echo "This configuration is for a worker. Deleting coordinator-specific configuration."
-    rm -v \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/coordinator.yaml" \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator.yaml"
+    rm -fv \
+      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/coordinator.yaml"
   else
     echo "This configuration is for a coordinator. Deleting worker-specific configuration."
-    rm -v \
+    rm -fv \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/worker.yaml" \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker.yaml"
   fi
+
+  # These are leftovers from previous development iterations that we don't need anymore
+  rm -fv \
+    "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator.yaml"
 fi
