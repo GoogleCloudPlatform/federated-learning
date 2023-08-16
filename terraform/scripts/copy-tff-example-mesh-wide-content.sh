@@ -34,8 +34,16 @@ fi
 ARE_WORKERS_OUTSIDE_MESH="${4:-"false"}"
 echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
 
-if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "true" ]; then
-  rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
+IS_THERE_A_COORDINATOR="${5:-"false"}"
+echo "IS_THERE_A_COORDINATOR: ${IS_THERE_A_COORDINATOR}"
+
+if [ "${IS_THERE_A_COORDINATOR}" = "true" ]; then
+  if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "true" ]; then
+    rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
+  else
+    rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
+  fi
 else
+  rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
   rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
 fi

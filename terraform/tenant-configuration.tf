@@ -149,15 +149,13 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
   triggers = {
     source_contents_hash = local.distributed_tff_example_mesh_wide_source_content_hash
 
-    # If the coordinator namespace is set to istio-ingress, we assume that workers are outside
-    # the service mesh (example: in another cluster), so we need to deploy service entries
-    # to make them reachable from the mesh.
     create_command      = <<-EOT
       "${local.copy_distributed_tff_example_mesh_wide_content_script_path}" \
         "${local.distributed_tff_example_mesh_wide_source_directory_path}" \
         "${local.distributed_tff_example_mesh_wide_destination_directory_path}" \
         "${var.distributed_tff_example_deploy_ingress_gateway}" \
-        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}"
+        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}" \
+        "${local.distributed_tff_example_is_there_a_coordinator}"
     EOT
     destroy_command     = <<-EOT
       "${local.delete_distributed_tff_example_mesh_wide_content_script_path}" \
