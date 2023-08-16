@@ -11,3 +11,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tff-worker
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  hosts:
+    - tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+            port:
+              number: 8000
+...
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: tff-worker
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  host: tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+...
