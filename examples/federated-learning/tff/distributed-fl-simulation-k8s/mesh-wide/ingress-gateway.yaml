@@ -342,3 +342,22 @@ spec:
     8000:
       mode: DISABLE
 ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-to-distributed-tff-example-ports
+  namespace: istio-ingress
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  rules:
+    - to:
+        - operation:
+            # methods:
+            #   - POST
+            ports:
+              - "8000"
+...
