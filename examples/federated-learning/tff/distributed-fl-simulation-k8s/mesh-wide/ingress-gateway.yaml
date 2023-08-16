@@ -324,3 +324,21 @@ spec:
         - protocol: TCP
           port: 8000
 ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-ingress
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  # Inherit mTLS mode from mesh- or namespace-wide settings
+  mtls:
+    mode: UNSET
+  # Overwrite settings for the distributed TensorFlow Federated port
+  portLevelMtls:
+    8000:
+      mode: DISABLE
+...
