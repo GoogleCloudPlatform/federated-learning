@@ -37,13 +37,9 @@ echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
 IS_THERE_A_COORDINATOR="${5:-"false"}"
 echo "IS_THERE_A_COORDINATOR: ${IS_THERE_A_COORDINATOR}"
 
-if [ "${IS_THERE_A_COORDINATOR}" = "true" ]; then
-  if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "true" ]; then
-    rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
-  else
-    rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
-  fi
-else
-  rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
+if [ "${IS_THERE_A_COORDINATOR}" = "false" ] || [ "${ARE_WORKERS_OUTSIDE_MESH}" = "false" ]; then
   rm -v "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
 fi
+
+# These are leftovers from previous development iterations that we don't need anymore
+rm -fv "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"

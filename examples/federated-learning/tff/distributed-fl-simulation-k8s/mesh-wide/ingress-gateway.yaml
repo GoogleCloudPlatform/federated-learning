@@ -178,25 +178,6 @@ spec:
         - "*"
 ...
 ---
-# TODO: is this necessary?
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: tff-worker-ingress
-  namespace: istio-ingress
-spec:
-  hosts:
-    - "*"
-  gateways:
-    - istio-ingress/ingress-gateway
-  http:
-    - route:
-        - destination:
-            host: tff-worker
-            port:
-              number: 8000
-...
----
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
