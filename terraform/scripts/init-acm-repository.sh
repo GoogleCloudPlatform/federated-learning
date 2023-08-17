@@ -34,6 +34,6 @@ git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
 git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
 
 echo "Create the ${ACM_BRANCH} branch if necessary, and switch to it"
-if ! git "${ACM_REPOSITORY_PATH}" switch "${ACM_BRANCH}" 2>/dev/null; then
+if ! git "${ACM_REPOSITORY_PATH}" switch "${ACM_BRANCH}"; then
   git -C "${ACM_REPOSITORY_PATH}" switch --create "${ACM_BRANCH}"
 fi
