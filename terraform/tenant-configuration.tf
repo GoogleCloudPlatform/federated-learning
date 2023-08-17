@@ -110,16 +110,6 @@ resource "null_resource" "tenant_configuration" {
   ]
 }
 
-data "external" "blueprint_repository_head_commit_hash" {
-  program = [
-    "git",
-    "log",
-    "--pretty=format:{ \"sha\": \"%H\" }",
-    "-1",
-    "HEAD"
-  ]
-}
-
 resource "null_resource" "build_push_distributed_tff_example_container_image" {
   count = local.deploy_distributed_tff_example_any_tenant ? 1 : 0
 
