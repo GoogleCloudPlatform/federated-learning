@@ -18,6 +18,7 @@ resource "null_resource" "init_acm_repository" {
     create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
     create_command      = local.init_local_acm_repository_command
     destroy_command     = "rm -rf ${var.acm_repository_path}"
+    repository_exists   = fileexists("${var.acm_repository_path}/.git/HEAD")
   }
 
   provisioner "local-exec" {
