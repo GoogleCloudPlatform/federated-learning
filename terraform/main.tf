@@ -47,8 +47,8 @@ locals {
   distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
 
   distributed_tff_example_external_domain        = "tensorflow-federated.example.com"
-  distributed_tff_example_worker_1_external_fqdn = "tff-worker-1.${local.distributed_tff_example_domain}"
-  distributed_tff_example_worker_2_external_fqdn = "tff-worker-2.${local.distributed_tff_example_domain}"
+  distributed_tff_example_worker_1_external_fqdn = "tff-worker-1.${local.distributed_tff_example_external_domain}"
+  distributed_tff_example_worker_2_external_fqdn = "tff-worker-2.${local.distributed_tff_example_external_domain}"
 
   tenant_apps_kubernetes_service_account_name = "ksa"
 
