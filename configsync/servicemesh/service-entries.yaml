@@ -52,24 +52,3 @@ spec:
       protocol: TLS
   location: MESH_EXTERNAL
 ...
----
-# Add example external hosts to the service registry
-apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
-metadata:
-  name: external-web-hosts
-  namespace: istio-system
-spec:
-  hosts:
-    - example.com
-    - httpbin.org
-  ports:
-    - number: 80
-      name: http
-      protocol: HTTP
-    - number: 443
-      name: tls
-      protocol: TLS
-  resolution: DNS
-  location: MESH_EXTERNAL
-...

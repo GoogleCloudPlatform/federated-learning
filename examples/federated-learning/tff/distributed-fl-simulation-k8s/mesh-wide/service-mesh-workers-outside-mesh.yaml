@@ -25,7 +25,7 @@ spec:
   endpoints:
     - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   hosts:
-    - tff-worker-1.example.com
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   ports:
     - number: 8000
       name: grpc
@@ -46,7 +46,7 @@ spec:
   endpoints:
     - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   hosts:
-    - tff-worker-2.example.com
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   ports:
     - number: 8000
       name: grpc
@@ -74,7 +74,7 @@ spec:
           port: 80
       route:
         - destination:
-            host: tff-worker-1.example.com
+            host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
             port:
               number: 8000
           weight: 100
@@ -99,8 +99,25 @@ spec:
           port: 80
       route:
         - destination:
-            host: tff-worker-2.example.com
+            host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
             port:
               number: 8000
           weight: 100
+...
+---
+# Allow requests to this set of (external) hosts.
+# No 'from' condition, so requests can originate from anywhere in the mesh
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-to-distributed-tff-example-workers
+  namespace: istio-system
+spec:
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
+              - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
+  action: ALLOW
 ...

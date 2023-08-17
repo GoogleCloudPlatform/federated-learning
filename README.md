@@ -91,11 +91,8 @@ The cluster includes:
   - An Egress Gateway that acts a forward-proxy at the edge of the mesh in the `istio-egress` namespace.
   - The root istio namespace (istio-system) is configured with
     - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
-    - AuthorizationPolicies that:
-      - by default deny all communication between services in the mesh,
-      - allow communication to a set of known external hosts
-    - VirtualService and DestinationRule resources that route traffic from sidecar proxies through the egress gateway to external destinations.
-  - The tenant namespace is configured for automatic sidecar proxy injection, see next section.
+    - AuthorizationPolicies that by default deny all communication between services in the mesh.
+  - The tenant namespace is configured for automatic sidecar proxy injection.
   - The mesh does not include an Ingress Gateway by default.
   - See the [servicemesh](configsync/servicemesh) directory for the cluster-level mesh config.
 
