@@ -14,22 +14,20 @@
 
 resource "null_resource" "init_acm_repository" {
   triggers = {
-    create_command_hash               = md5(local.init_local_acm_repository_command)
-    acm_repository_path               = var.acm_repository_path
-    init_local_acm_repository_command = local.init_local_acm_repository_command
-    create_script_md5                 = md5(file(local.init_local_acm_repository_script_path))
+    acm_repository_path = var.acm_repository_path
+    create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
+    create_command      = local.init_local_acm_repository_command
+    destroy_command     = "rm -rf ${self.triggers.acm_repository_path}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.init_local_acm_repository_command
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = <<-EOT
-      rm -rf "${self.triggers.acm_repository_path}"
-    EOT
+    command = self.triggers.destroy_command
   }
 }
 
