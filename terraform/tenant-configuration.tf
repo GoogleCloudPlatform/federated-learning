@@ -192,6 +192,7 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
   depends_on = [
     null_resource.copy_mesh_wide_distributed_tff_example_content,
     null_resource.copy_common_acm_content,
+    null_resource.init_acm_repository,
     null_resource.tenant_configuration
   ]
 }
