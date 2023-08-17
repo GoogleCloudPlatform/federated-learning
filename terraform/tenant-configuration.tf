@@ -35,11 +35,13 @@ resource "null_resource" "copy_common_acm_content" {
   triggers = {
     source_contents_hash              = local.acm_config_sync_common_content_source_content_hash
     destination_contents_hash         = local.acm_config_sync_common_content_destination_content_hash
-    source_destination_diff           = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : true
     copy_acm_common_content_command   = local.copy_acm_common_content_command
     delete_acm_common_content_command = local.delete_acm_common_content_command
     create_script_hash                = md5(file(local.copy_acm_common_content_script_path))
     destroy_script_hash               = md5(file(local.delete_acm_common_content_script_path))
+
+    # Force the recreation of this resource if there's any difference between the source or the destination
+    source_destination_diff = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : timestamp()
   }
 
   provisioner "local-exec" {
