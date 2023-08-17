@@ -17,7 +17,7 @@ resource "null_resource" "init_acm_repository" {
     acm_repository_path = var.acm_repository_path
     create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
     create_command      = local.init_local_acm_repository_command
-    destroy_command     = "rm -rf ${self.triggers.acm_repository_path}"
+    destroy_command     = "rm -rf ${var.acm_repository_path}"
   }
 
   provisioner "local-exec" {
