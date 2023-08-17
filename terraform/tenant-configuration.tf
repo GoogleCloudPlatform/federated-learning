@@ -23,7 +23,9 @@ resource "null_resource" "init_acm_repository" {
         "${var.acm_branch}"
     EOT
     destroy_command     = "rm -rf ${var.acm_repository_path}"
-    repository_exists   = fileexists("${var.acm_repository_path}/.git/HEAD")
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
@@ -39,25 +41,26 @@ resource "null_resource" "init_acm_repository" {
 
 resource "null_resource" "copy_common_acm_content" {
   triggers = {
-    source_contents_hash              = local.acm_config_sync_common_content_source_content_hash
-    destination_contents_hash         = local.acm_config_sync_common_content_destination_content_hash
-    copy_acm_common_content_command   = local.copy_acm_common_content_command
-    delete_acm_common_content_command = local.delete_acm_common_content_command
-    create_script_hash                = md5(file(local.copy_acm_common_content_script_path))
-    destroy_script_hash               = md5(file(local.delete_acm_common_content_script_path))
+    create_command      = local.copy_acm_common_content_command
+    create_script_hash  = md5(file(local.copy_acm_common_content_script_path))
+    destroy_command     = local.delete_acm_common_content_command
+    destroy_script_hash = md5(file(local.delete_acm_common_content_script_path))
 
-    # Force the recreation of this resource if there's any difference between the source or the destination
-    source_destination_diff = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : timestamp()
+    source_contents_hash      = local.acm_config_sync_common_content_source_content_hash
+    destination_contents_hash = local.acm_config_sync_common_content_destination_content_hash
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.copy_acm_common_content_command
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = self.triggers.delete_acm_common_content_command
+    command = self.triggers.destroy_command
   }
 
   depends_on = [
@@ -97,6 +100,9 @@ resource "null_resource" "tenant_configuration" {
     distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
     distributed_tff_example_container_image_id                   = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : ""
     distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
@@ -189,11 +195,13 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
         "${var.acm_branch}"
     EOT
     script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
-    # Always run this. We check if there are changes to commit in the script to run
+
+    # Always run this. We check if something needs to be done in the creation script
     timestamp = timestamp()
   }
 
   provisioner "local-exec" {
+    when    = create
     command = self.triggers.command
   }
 

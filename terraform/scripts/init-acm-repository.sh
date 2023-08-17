@@ -26,8 +26,14 @@ if [ -e "${ACM_REPOSITORY_PATH}" ]; then
 else
   mkdir -vp "${ACM_REPOSITORY_PATH}"
   git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
+fi
+
+echo "Configure ${ACM_REPOSITORY_PATH}"
+git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
+git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
+git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
+
+echo "Create the ${ACM_BRANCH} branch if necessary, and switch to it"
+if ! git "${ACM_REPOSITORY_PATH}" switch "${ACM_BRANCH}" 2>/dev/null; then
   git -C "${ACM_REPOSITORY_PATH}" switch --create "${ACM_BRANCH}"
-  git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
-  git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
-  git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
 fi
