@@ -26,4 +26,3 @@ git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
 git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
 git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
 git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
-git -C "${ACM_REPOSITORY_PATH}" switch "${ACM_BRANCH}"
