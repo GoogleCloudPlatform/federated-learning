@@ -78,6 +78,7 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${var.distributed_tff_example_coordinator_namespace}" \
+        "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -88,6 +89,7 @@ resource "null_resource" "tenant_configuration" {
 
     source_contents_hash                                         = local.acm_config_sync_tenant_configuration_package_source_content_hash
     distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+    distributed_tff_example_container_image_id                   = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : ""
     distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
   }
 
@@ -105,16 +107,6 @@ resource "null_resource" "tenant_configuration" {
 
   depends_on = [
     null_resource.copy_common_acm_content
-  ]
-}
-
-data "external" "blueprint_repository_head_commit_hash" {
-  program = [
-    "git",
-    "log",
-    "--pretty=format:{ \"sha\": \"%H\" }",
-    "-1",
-    "HEAD"
   ]
 }
 
@@ -157,7 +149,7 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
         "${local.distributed_tff_example_mesh_wide_source_directory_path}" \
         "${local.distributed_tff_example_mesh_wide_destination_directory_path}" \
         "${var.distributed_tff_example_deploy_ingress_gateway}" \
-        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}" \
+        "${local.distributed_tff_example_are_workers_outside_the_coordinator_mesh}" \
         "${local.distributed_tff_example_is_there_a_coordinator}"
     EOT
     destroy_command     = <<-EOT

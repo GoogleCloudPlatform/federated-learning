@@ -45,6 +45,9 @@ locals {
   distributed_tff_example_is_there_a_coordinator_flags = [for tenant in local.tenants : tenant.distributed_tff_example_is_coordinator]
   distributed_tff_example_is_there_a_coordinator       = anytrue(local.distributed_tff_example_is_there_a_coordinator_flags) # Useful to know if we deployed a coordinator for the distributed TensorFlow Federated example in any namespace
 
+  # If the coordinator namespace is set to istio-ingress, we assume that workers are outside the service mesh (example: in another cluster)
+  distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
+
   tenant_apps_kubernetes_service_account_name = "ksa"
 
   tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }
@@ -135,7 +138,7 @@ locals {
   ditributed_tff_example_container_image_repository_hostname    = "${google_artifact_registry_repository.container_image_repository.location}-docker.pkg.dev"
   distributed_tff_example_container_image_repository_id         = "${local.ditributed_tff_example_container_image_repository_hostname}/${google_artifact_registry_repository.container_image_repository.project}/${google_artifact_registry_repository.container_image_repository.repository_id}"
   distributed_tff_example_localized_untagged_container_image_id = "${local.distributed_tff_example_container_image_repository_id}/tff-runtime"
-  distributed_tff_example_localized_container_image_id          = "${local.distributed_tff_example_localized_untagged_container_image_id}:${data.external.blueprint_repository_head_commit_hash.result.sha}"
+  distributed_tff_example_localized_container_image_id          = "${local.distributed_tff_example_localized_untagged_container_image_id}:${local.distributed_tff_example_container_image_source_descriptors_content_hash}"
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"

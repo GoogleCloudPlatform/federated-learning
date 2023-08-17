@@ -141,7 +141,7 @@ metadata:
     istio: ingressgateway
 spec:
   ports:
-    # status-port exposes a /healthz/ready endpoint that can be used with GKE Ingress health checks
+    # status-port exposes a /healthz/ready endpoint that can be used with GKE health checks
     - name: status-port
       port: 15021
       protocol: TCP
@@ -169,6 +169,8 @@ metadata:
 spec:
   selector:
     istio: ingressgateway
+  # Restrict the following items to tenant namespaces only, as needed
+  # Ref: https://istio.io/latest/docs/reference/config/networking/gateway/#Server
   servers:
     - port:
         number: 8000
@@ -304,4 +306,60 @@ spec:
     - to:
         - ipBlock:
             cidr: 199.36.153.8/30
+...
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-distributed-tff-example-ports
+  namespace: istio-ingress
+spec:
+  podSelector:
+    matchLabels:
+      istio: ingressgateway
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8000
+...
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-ingress
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  # Inherit mTLS mode from mesh- or namespace-wide settings
+  mtls:
+    mode: UNSET
+  # Overwrite settings for the distributed TensorFlow Federated port
+  portLevelMtls:
+    8000:
+      mode: DISABLE
+...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-to-distributed-tff-example-ports
+  namespace: istio-ingress
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  rules:
+    - to:
+        - operation:
+            # For gRPC it's always POST
+            # Ref: https://istio.io/latest/docs/reference/config/security/authorization-policy/#Operation
+            methods:
+              - POST
+            ports:
+              - "8000"
 ...
