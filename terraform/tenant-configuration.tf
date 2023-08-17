@@ -22,7 +22,6 @@ resource "null_resource" "init_acm_repository" {
         "${google_sourcerepo_repository.configsync-repository.url}" \
         "${var.acm_branch}"
     EOT
-    destroy_command     = "rm -rf ${var.acm_repository_path}"
 
     # Always run this. We check if something needs to be done in the creation script
     timestamp = timestamp()
@@ -31,11 +30,6 @@ resource "null_resource" "init_acm_repository" {
   provisioner "local-exec" {
     when    = create
     command = self.triggers.create_command
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = self.triggers.destroy_command
   }
 }
 
