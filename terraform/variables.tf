@@ -140,7 +140,7 @@ variable "gke_rbac_security_group_domain" {
 }
 
 variable "distributed_tff_example_configuration" {
-  default     = null
+  default     = {}
   description = "Configuration of the TensorFlow Federated example. The keys of this map are the names of the Kubernetes namespaces where to deploy the distributed TensorFlow Federated example"
   type = map(object({
     emnist_partition_file_name = optional(string, "")  # Name of the EMNIST partition file of the distributed TensorFlow Federated example
