@@ -78,6 +78,7 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_worker_2_address}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${var.distributed_tff_example_coordinator_namespace}" \
+        "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
