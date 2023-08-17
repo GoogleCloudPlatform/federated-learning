@@ -35,7 +35,9 @@ locals {
       distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
       distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
       distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_address : ""
+      distributed_tff_example_worker_1_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_hostname : ""
       distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_address : ""
+      distributed_tff_example_worker_2_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_hostname : ""
     }
   }
 

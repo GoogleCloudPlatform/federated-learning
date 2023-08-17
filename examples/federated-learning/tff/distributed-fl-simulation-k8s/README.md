@@ -64,8 +64,8 @@ docker compose \
     ```hcl
     "fltenant3": {
         is_coordinator = true
-        worker_1_address = "tff-worker.fltenant1"
-        worker_2_address = "tff-worker.fltenant2"
+        worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
+        worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
     }
 
     distributed_tff_example_coordinator_namespace = "fltenant3"
@@ -114,7 +114,9 @@ docker compose \
         "fltenant1": {
             is_coordinator = true
             worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+            worker_1_hostname = "tff-worker-1.fltenant1.svc.cluster.local"
             worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
+            worker_2_hostname = "tff-worker-2.fltenant1.svc.cluster.local"
         }
     }
     ```

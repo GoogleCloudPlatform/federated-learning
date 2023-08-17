@@ -78,7 +78,9 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.distributed_tff_example_is_coordinator}" \
         "${each.value.distributed_tff_example_worker_emnist_partition_file_name}" \
         "${each.value.distributed_tff_example_worker_1_address}" \
+        "${each.value.distributed_tff_example_worker_1_hostname}" \
         "${each.value.distributed_tff_example_worker_2_address}" \
+        "${each.value.distributed_tff_example_worker_2_hostname}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${var.distributed_tff_example_coordinator_namespace}" \
         "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
