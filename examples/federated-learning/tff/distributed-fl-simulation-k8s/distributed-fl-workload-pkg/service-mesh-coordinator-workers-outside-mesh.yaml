@@ -37,31 +37,31 @@ spec:
   resolution: STATIC
   location: MESH_EXTERNAL
 ...
----
-apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
-metadata:
-  name: tff-worker-2
-  namespace: ns  # kpt-set: ${namespace}
-  labels:
-    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
-    service.istio.io/canonical-name: tff-worker-2
-spec:
-  addresses:
-    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
-  endpoints:
-    - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
-      ports:
-        grpc: 8000
-  hosts:
-    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-  ports:
-    - number: 8000
-      name: grpc
-      protocol: GRPC
-  resolution: STATIC
-  location: MESH_EXTERNAL
-...
+# ---
+# apiVersion: networking.istio.io/v1beta1
+# kind: ServiceEntry
+# metadata:
+#   name: tff-worker-2
+#   namespace: ns  # kpt-set: ${namespace}
+#   labels:
+#     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
+#     service.istio.io/canonical-name: tff-worker-2
+# spec:
+#   addresses:
+#     - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
+#   endpoints:
+#     - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
+#       ports:
+#         grpc: 8000
+#   hosts:
+#     - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+#   ports:
+#     - number: 8000
+#       name: grpc
+#       protocol: GRPC
+#   resolution: STATIC
+#   location: MESH_EXTERNAL
+# ...
 # ---
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 # apiVersion: networking.istio.io/v1beta1

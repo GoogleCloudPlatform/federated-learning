@@ -19,8 +19,8 @@ metadata:
   name: metadata-google-internal
   namespace: istio-system
   labels:
-      # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
-      service.istio.io/canonical-name: metadata.google.internal
+    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
+    service.istio.io/canonical-name: metadata.google.internal
 spec:
   hosts:
     - metadata.google.internal
@@ -44,8 +44,8 @@ metadata:
   name: private-googleapis-com
   namespace: istio-system
   labels:
-      # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
-      service.istio.io/canonical-name: googleapis.com
+    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
+    service.istio.io/canonical-name: googleapis.com
 spec:
   hosts:
     - "*.googleapis.com"
