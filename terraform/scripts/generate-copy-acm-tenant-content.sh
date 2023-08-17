@@ -44,15 +44,13 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
   DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH="${7}"
   IS_TFF_COORDINATOR="${8}"
   TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${9:-"not-needed"}"
-  TFF_WORKER_1_ADDRESS="${10:-"not-needed"}"
-  TFF_WORKER_1_HOSTNAME="${11:-"not-needed"}"
-  TFF_WORKER_2_ADDRESS="${12:-"not-needed"}"
-  TFF_WORKER_2_HOSTNAME="${13:-"not-needed"}"
-  TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${14}"
-  TFF_COORDINATOR_NAMESPACE="${15:-"istio-ingress"}"
-  CONFIGURE_WORKER_INGRESS_GATEWAY="${16:-"false"}"
-  ARE_WORKERS_OUTSIDE_MESH="${17:-"false"}"
-  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${18}"
+  TFF_WORKER_1_HOSTNAME="${10:-"not-needed"}"
+  TFF_WORKER_2_HOSTNAME="${11:-"not-needed"}"
+  TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${12}"
+  TFF_COORDINATOR_NAMESPACE="${13:-"istio-ingress"}"
+  CONFIGURE_WORKER_INGRESS_GATEWAY="${14:-"false"}"
+  ARE_WORKERS_OUTSIDE_MESH="${15:-"false"}"
+  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${16}"
 
   echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
 
@@ -65,9 +63,7 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
     namespace="${TENANT}" \
     tff-pod-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
     tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
-    tff-worker-1-address="${TFF_WORKER_1_ADDRESS}" \
     tff-worker-1-hostname="${TFF_WORKER_1_HOSTNAME}" \
-    tff-worker-2-address="${TFF_WORKER_2_ADDRESS}" \
     tff-worker-2-hostname="${TFF_WORKER_2_HOSTNAME}" \
     tff-runtime-container-image-id="${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}"
 

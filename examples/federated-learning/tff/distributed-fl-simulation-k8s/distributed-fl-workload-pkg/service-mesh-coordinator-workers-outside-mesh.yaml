@@ -22,19 +22,13 @@ metadata:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
     service.istio.io/canonical-name: tff-worker-1
 spec:
-  addresses:
-    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
-  endpoints:
-    - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
-      ports:
-        grpc: 8000
   hosts:
     - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
   ports:
     - number: 8000
       name: grpc
       protocol: GRPC
-  resolution: STATIC
+  resolution: DNS
   location: MESH_EXTERNAL
 ...
 # ---

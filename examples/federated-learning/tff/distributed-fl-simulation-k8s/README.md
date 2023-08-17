@@ -114,9 +114,7 @@ docker compose \
         "fltenant1": {
             is_coordinator = true
             worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
-            worker_1_hostname = "tff-worker-1.fltenant1.svc.cluster.local"
             worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
-            worker_2_hostname = "tff-worker-2.fltenant1.svc.cluster.local"
         }
     }
     ```

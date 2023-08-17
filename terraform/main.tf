@@ -34,10 +34,6 @@ locals {
       distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
       distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
       distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
-      distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_address : ""
-      distributed_tff_example_worker_1_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_hostname : ""
-      distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_address : ""
-      distributed_tff_example_worker_2_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_hostname : ""
     }
   }
 
@@ -49,6 +45,10 @@ locals {
 
   # If the coordinator namespace is set to istio-ingress, we assume that workers are outside the service mesh (example: in another cluster)
   distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
+
+  distributed_tff_example_external_domain        = "tensorflow-federated.example.com"
+  distributed_tff_example_worker_1_external_fqdn = "tff-worker-1.${local.distributed_tff_example_domain}"
+  distributed_tff_example_worker_2_external_fqdn = "tff-worker-2.${local.distributed_tff_example_domain}"
 
   tenant_apps_kubernetes_service_account_name = "ksa"
 

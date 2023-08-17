@@ -146,3 +146,35 @@ module "source-repositories-private-artifact-registry" {
     },
   ]
 }
+
+module "distributed-tff-example-dns" {
+  count = local.distributed_tff_example_is_there_a_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? 1 : 0
+
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "5.0.1"
+
+  description = "Private DNS zone for the distributed TensorFlow Federated example"
+  domain      = "${local.distributed_tff_example_external_domain}."
+  name        = "distributed-tff-example"
+  project_id  = data.google_project.project.project_id
+  type        = "private"
+
+  private_visibility_config_networks = [
+    module.fedlearn-vpc.network_id
+  ]
+
+  recordsets = [
+    {
+      name    = "${local.distributed_tff_example_worker_1_external_fqdn}."
+      type    = "A"
+      ttl     = 300
+      records = [var.distributed_tff_example_worker_1_address]
+    },
+    {
+      name    = "${local.distributed_tff_example_worker_2_external_fqdn}."
+      type    = "A"
+      ttl     = 300
+      records = [var.distributed_tff_example_worker_2_address]
+    },
+  ]
+}
