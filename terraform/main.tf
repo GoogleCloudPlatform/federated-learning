@@ -45,6 +45,9 @@ locals {
   distributed_tff_example_is_there_a_coordinator_flags = [for tenant in local.tenants : tenant.distributed_tff_example_is_coordinator]
   distributed_tff_example_is_there_a_coordinator       = anytrue(local.distributed_tff_example_is_there_a_coordinator_flags) # Useful to know if we deployed a coordinator for the distributed TensorFlow Federated example in any namespace
 
+  # If the coordinator namespace is set to istio-ingress, we assume that workers are outside the service mesh (example: in another cluster)
+  distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
+
   tenant_apps_kubernetes_service_account_name = "ksa"
 
   tenants_excluding_main = { for k, v in local.tenants : k => v if k != local.main_tenant_name }

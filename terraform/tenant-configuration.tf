@@ -158,7 +158,7 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
         "${local.distributed_tff_example_mesh_wide_source_directory_path}" \
         "${local.distributed_tff_example_mesh_wide_destination_directory_path}" \
         "${var.distributed_tff_example_deploy_ingress_gateway}" \
-        "${var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false}" \
+        "${local.distributed_tff_example_are_workers_outside_the_coordinator_mesh}" \
         "${local.distributed_tff_example_is_there_a_coordinator}"
     EOT
     destroy_command     = <<-EOT
