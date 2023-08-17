@@ -24,8 +24,6 @@ metadata:
 spec:
   endpoints:
     - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
-  addresses:
-    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   hosts:
     - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
   ports:
@@ -47,8 +45,6 @@ metadata:
 spec:
   endpoints:
     - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
-  addresses:
-    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   hosts:
     - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
   ports:
