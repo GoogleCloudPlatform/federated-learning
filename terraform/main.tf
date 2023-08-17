@@ -106,12 +106,6 @@ locals {
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
-  init_local_acm_repository_command     = <<-EOT
-    "${local.init_local_acm_repository_script_path}" \
-      "${var.acm_repository_path}" \
-      "${google_sourcerepo_repository.configsync-repository.url}" \
-      "${var.acm_branch}"
-  EOT
 
   copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
   copy_acm_common_content_command     = <<-EOT

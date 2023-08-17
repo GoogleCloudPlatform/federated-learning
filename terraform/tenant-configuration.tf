@@ -16,8 +16,14 @@ resource "null_resource" "init_acm_repository" {
   triggers = {
     acm_repository_path = var.acm_repository_path
     create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
-    create_command      = local.init_local_acm_repository_command
+    create_command      = <<-EOT
+      "${local.init_local_acm_repository_script_path}" \
+        "${var.acm_repository_path}" \
+        "${google_sourcerepo_repository.configsync-repository.url}" \
+        "${var.acm_branch}"
+    EOT
     destroy_command     = "rm -rf ${var.acm_repository_path}"
+    repository_exists   = fileexists("${var.acm_repository_path}/.git/HEAD")
   }
 
   provisioner "local-exec" {

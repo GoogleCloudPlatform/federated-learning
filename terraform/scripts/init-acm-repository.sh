@@ -21,9 +21,13 @@ ACM_REPOSITORY_PATH="${1}"
 ACM_REPOSITORY_URL="${2}"
 ACM_BRANCH="${3}"
 
-mkdir -vp "${ACM_REPOSITORY_PATH}"
-git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
-git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
-git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
-git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
-git -C "${ACM_REPOSITORY_PATH}" switch --create "${ACM_BRANCH}"
+if [ -e "${ACM_REPOSITORY_PATH}" ]; then
+  echo "${ACM_REPOSITORY_PATH} already exists. Skipping creation."
+else
+  mkdir -vp "${ACM_REPOSITORY_PATH}"
+  git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
+  git -C "${ACM_REPOSITORY_PATH}" switch --create "${ACM_BRANCH}"
+  git -C "${ACM_REPOSITORY_PATH}" config pull.ff only
+  git -C "${ACM_REPOSITORY_PATH}" config user.email "committer@example.com"
+  git -C "${ACM_REPOSITORY_PATH}" config user.name "Config Sync committer"
+fi
