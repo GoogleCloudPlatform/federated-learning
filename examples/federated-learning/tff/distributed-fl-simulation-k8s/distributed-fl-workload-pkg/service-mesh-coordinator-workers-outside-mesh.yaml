@@ -16,36 +16,17 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: external-tff-example-worker-1
+  name: distributed-tff-example-external-workers
   namespace: ns  # kpt-set: ${namespace}
   labels:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
-    service.istio.io/canonical-name: tff-worker-1
+    service.istio.io/canonical-name: tff-worker
 spec:
   endpoints:
     - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
-  hosts:
+    - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-1-address}
+  addresses:
     - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
-  ports:
-    - number: 8000
-      name: grpc
-      protocol: GRPC
-  resolution: STATIC
-  location: MESH_EXTERNAL
-...
----
-apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
-metadata:
-  name: external-tff-example-worker-2
-  namespace: ns  # kpt-set: ${namespace}
-  labels:
-    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
-    service.istio.io/canonical-name: tff-worker-2
-spec:
-  endpoints:
-    - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
-  hosts:
     - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   ports:
     - number: 8000
@@ -60,11 +41,11 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: worker-1-through-egress-gateway
+  name: distributed-tff-example-worker-1-through-egress-gateway
   namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker-1.example.com
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   gateways:
     - istio-egress/egress-gateway
   http:
@@ -85,11 +66,11 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: worker-2-through-egress-gateway
+  name: distributed-tff-example-worker-2-through-egress-gateway
   namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker-1
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   gateways:
     - istio-egress/egress-gateway
   http:
