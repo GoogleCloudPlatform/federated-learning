@@ -168,7 +168,7 @@ variable "distributed_tff_example_worker_1_address" {
   type        = string
 }
 
-variable "distributed_tff_example_worker_1_address" {
+variable "distributed_tff_example_worker_2_address" {
   default     = ""
   description = "Address of the second worker of the distributed TensorFlow Federated example. Set this when the worker is outside the coordinator mesh."
   type        = string
