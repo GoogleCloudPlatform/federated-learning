@@ -102,8 +102,6 @@ module "cloud-source-repositories-workload-identity" {
   # The workload identity pool must exist before binding
   module_depends_on = [
     module.gke,
-    # Wait for the service accounts to be ready before trying to load data about them
-    # Ref: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/issues/1059
     module.service_accounts
   ]
 }
