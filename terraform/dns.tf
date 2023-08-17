@@ -165,13 +165,13 @@ module "distributed-tff-example-dns" {
 
   recordsets = [
     {
-      name    = "${local.distributed_tff_example_worker_1_hostname}."
+      name    = "${local.distributed_tff_example_worker_1_hostname}"
       type    = "A"
       ttl     = 300
       records = [var.distributed_tff_example_worker_1_address]
     },
     {
-      name    = "${local.distributed_tff_example_worker_2_hostname}."
+      name    = "${local.distributed_tff_example_worker_2_hostname}"
       type    = "A"
       ttl     = 300
       records = [var.distributed_tff_example_worker_2_address]
