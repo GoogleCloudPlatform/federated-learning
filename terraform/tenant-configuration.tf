@@ -82,6 +82,8 @@ resource "null_resource" "tenant_configuration" {
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${var.distributed_tff_example_coordinator_namespace}" \
         "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
+        "${local.distributed_tff_example_are_workers_outside_the_coordinator_mesh}" \
+        "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -101,9 +103,7 @@ resource "null_resource" "tenant_configuration" {
 
   provisioner "local-exec" {
     when    = create
-    command = <<-EOT
-      ${self.triggers.create_command} "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
-    EOT
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {
@@ -124,20 +124,20 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
       "${local.build_push_distributed_tff_example_container_image_script_path}" \
         "${local.distributed_tff_example_container_image_source_directory_path}" \
         "${local.ditributed_tff_example_container_image_repository_hostname}" \
+        "${local.distributed_tff_example_localized_container_image_id}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
     source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
     container_image_id   = local.distributed_tff_example_localized_container_image_id
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
-  # Set the commit hash here so we don't recreate the resource on every commit
-  # to the blueprint repository, but only when something related to the container image changes
   provisioner "local-exec" {
     when    = create
-    command = <<-EOT
-      ${self.triggers.create_command} "${local.distributed_tff_example_localized_container_image_id}"
-    EOT
+    command = self.triggers.create_command
   }
 }
 
@@ -164,6 +164,9 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
     EOT
     create_script_hash  = md5(file(local.copy_distributed_tff_example_mesh_wide_content_script_path))
     destroy_script_hash = md5(file(local.delete_distributed_tff_example_mesh_wide_content_script_path))
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {

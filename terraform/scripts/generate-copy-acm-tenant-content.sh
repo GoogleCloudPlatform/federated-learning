@@ -49,8 +49,10 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
   TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${12}"
   TFF_COORDINATOR_NAMESPACE="${13:-"istio-ingress"}"
   CONFIGURE_WORKER_INGRESS_GATEWAY="${14:-"false"}"
+  ARE_WORKERS_OUTSIDE_MESH="${15:-"false"}"
+  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${16}"
 
-  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${15}"
+  echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
 
   DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH="${TENANT_CONFIGURATION_DIRECTORY_PATH}/example-tff-image-classification"
 
@@ -68,7 +70,8 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
   if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
     echo "This configuration is for a worker. Deleting coordinator-specific configuration."
     rm -fv \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/coordinator.yaml"
+      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/coordinator.yaml" \
+      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator-workers-outside-mesh.yaml"
 
     if [ "${CONFIGURE_WORKER_INGRESS_GATEWAY}" = "false" ]; then
       echo "This configuration is for a worker but it doesn't need to be exposed using an ingress gateway. Deleting ingress gateway-specific configuration."
@@ -81,6 +84,10 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/worker.yaml" \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker.yaml" \
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker-ingress-gateway.yaml"
+
+    if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "false" ]; then
+      rm -v "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
+    fi
   fi
 
   # These are leftovers from previous development iterations that we don't need anymore

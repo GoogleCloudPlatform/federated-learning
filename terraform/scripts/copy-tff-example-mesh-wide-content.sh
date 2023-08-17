@@ -43,3 +43,4 @@ fi
 
 # These are leftovers from previous development iterations that we don't need anymore
 rm -fv "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"
+rm -fv "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
