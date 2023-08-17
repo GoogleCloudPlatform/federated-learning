@@ -22,6 +22,8 @@ metadata:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
     service.istio.io/canonical-name: tff-worker-1
 spec:
+  addresses:
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   endpoints:
     - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
       ports:
@@ -45,6 +47,8 @@ metadata:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
     service.istio.io/canonical-name: tff-worker-2
 spec:
+  addresses:
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   endpoints:
     - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
       ports:
