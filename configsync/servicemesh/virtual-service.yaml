@@ -11,30 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
----
-# Route requests to the example external hosts that we added to the service
-# registry from the sidecar to the egress gateway service
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: external-hosts-mtls-egress-gateway
-  namespace: istio-system
-spec:
-  hosts:
-    - example.com
-    - httpbin.org
-  gateways:
-    - mesh
-  http:
-    - match:
-        - gateways:
-            - mesh
-          port: 80
-      route:
-        - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
-            subset: target-egress-gateway-mTLS
-            port:
-              number: 80
-          weight: 100
-...
