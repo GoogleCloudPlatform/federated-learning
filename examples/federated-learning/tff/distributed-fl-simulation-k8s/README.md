@@ -113,10 +113,11 @@ docker compose \
     distributed_tff_example_configuration          = {
         "fltenant1": {
             is_coordinator = true
-            worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
-            worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
         }
     }
+
+    distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+    distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
     ```
 
     Where:

@@ -48,7 +48,8 @@ metadata:
     service.istio.io/canonical-name: googleapis.com
 spec:
   hosts:
-    - "*.googleapis.com"
+    - private.googleapis.com
+    - storage.googleapis.com
   ports:
     - number: 80
       name: http
