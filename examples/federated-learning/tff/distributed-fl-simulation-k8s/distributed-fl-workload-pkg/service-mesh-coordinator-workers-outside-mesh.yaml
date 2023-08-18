@@ -170,9 +170,9 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
- name: allow-all-ns  # kpt-set: allow-all-${namespace}
- namespace: ns  # kpt-set: ${namespace}
+  name: allow-all-ns  # kpt-set: allow-all-${namespace}
+  namespace: ns  # kpt-set: ${namespace}
 spec:
- rules:
- - {}
+  rules:
+    - {}
  ...

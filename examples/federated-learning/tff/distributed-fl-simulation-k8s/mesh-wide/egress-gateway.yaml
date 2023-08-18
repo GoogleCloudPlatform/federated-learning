@@ -105,9 +105,9 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
- name: allow-all-istio-egress
- namespace: istio-egress
+  name: allow-all-istio-egress
+  namespace: istio-egress
 spec:
- rules:
- - {}
+  rules:
+    - {}
  ...
