@@ -160,29 +160,3 @@ metadata:
   name: istio-egressgateway-service-account
   namespace: istio-egress
 ...
----
-# Handle all egress traffic
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: egress-gateway
-  namespace: istio-egress
-spec:
-  selector:
-    istio: egressgateway
-  servers:
-    - port:
-        number: 8000
-        name: grpc
-        protocol: GRPC
-      hosts:
-        - '*'
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      hosts:
-        - '*'
-      tls:
-        mode: ISTIO_MUTUAL
-...

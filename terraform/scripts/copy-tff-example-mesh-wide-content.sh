@@ -26,9 +26,8 @@ DEPLOY_INGRESS_GATEWAY="${3:-"false"}"
 echo "DEPLOY_INGRESS_GATEWAY: ${DEPLOY_INGRESS_GATEWAY}"
 
 if [ "${DEPLOY_INGRESS_GATEWAY}" = "false" ]; then
-  INGRESS_GATEWAY_DESCRIPTOR_PATH="${DESTINATION_DIRECTORY_PATH}/ingress-gateway.yaml"
-  echo "Ingress Gateway is not enabled. Deleting ${INGRESS_GATEWAY_DESCRIPTOR_PATH}"
-  rm -v "${INGRESS_GATEWAY_DESCRIPTOR_PATH}"
+  echo "Ingress Gateway is not enabled."
+  rm -v "${DESTINATION_DIRECTORY_PATH}/ingress-gateway.yaml"
 fi
 
 ARE_WORKERS_OUTSIDE_MESH="${4:-"false"}"
@@ -36,6 +35,11 @@ echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
 
 IS_THERE_A_COORDINATOR="${5:-"false"}"
 echo "IS_THERE_A_COORDINATOR: ${IS_THERE_A_COORDINATOR}"
+
+if [ "${IS_THERE_A_COORDINATOR}" = "false" ] || [ "${ARE_WORKERS_OUTSIDE_MESH}" = "false" ]; then
+  echo "Egress Gateway is not enabled."
+  rm -v "${DESTINATION_DIRECTORY_PATH}/egress-gateway.yaml"
+fi
 
 # These are leftovers from previous development iterations that we don't need anymore
 rm -fv "${DESTINATION_DIRECTORY_PATH}/service-mesh-workers-inside-mesh.yaml"

@@ -51,32 +51,6 @@ spec:
   location: MESH_EXTERNAL
 ...
 ---
-# Disable TLS from the egress gateway to the first worker
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: tff-worker-1-no-tls
-  namespace: istio-system
-spec:
-  host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-  trafficPolicy:
-    tls:
-      mode: DISABLE
-...
----
-# Disable TLS from the egress gateway to the second worker
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: tff-worker-2-no-tls
-  namespace: istio-system
-spec:
-  host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-  trafficPolicy:
-    tls:
-      mode: DISABLE
-...
----
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -98,8 +72,7 @@ spec:
         - destination:
             host: egress-gateway.istio-egress.svc.cluster.local
             port:
-              number: 8000
-            subset: target-egress-gateway-mTLS
+              number: 80
           weight: 100
     - match:
         - gateways:
@@ -134,8 +107,7 @@ spec:
         - destination:
             host: egress-gateway.istio-egress.svc.cluster.local
             port:
-              number: 8000
-            subset: target-egress-gateway-mTLS
+              number: 80
           weight: 100
     - match:
         - gateways:
@@ -167,7 +139,4 @@ spec:
               - egress-gateway.istio-egress.svc.cluster.local
               - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
               - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-      when:
-        - key: destination.port
-          values: ["8000"]
 ...
