@@ -61,6 +61,6 @@ spec:
     - to:
         - operation:
             hosts:
-              - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-              - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+              - tff-worker-1.tensorflow-federated.example.com  # kpt-set: ${tff-worker-1-hostname}
+              - tff-worker-2.tensorflow-federated.example.com  # kpt-set: ${tff-worker-2-hostname}
 ...
