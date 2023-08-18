@@ -72,12 +72,12 @@ spec:
         - destination:
             host: egress-gateway.istio-egress.svc.cluster.local
             port:
-              number: 80
+              number: 8000
           weight: 100
     - match:
         - gateways:
             - istio-egress/egress-gateway
-          port: 80
+          port: 8000
       route:
         - destination:
             host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
