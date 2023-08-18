@@ -49,3 +49,18 @@ spec:
     80:
       mode: DISABLE
 ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-from-egress-gateway-to-workers
+  namespace: istio-egress
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
+              - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+...
