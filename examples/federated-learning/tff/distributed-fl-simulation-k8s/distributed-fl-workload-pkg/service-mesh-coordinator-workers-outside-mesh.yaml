@@ -120,22 +120,6 @@ spec:
               number: 8000
           weight: 100
 ...
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-egress-from-ns-to-workers-and-egress-gateway  # kpt-set: allow-egress-from-${namespace}-to-workers-and-egress-gateway
-#   namespace: ns  # kpt-set: ${namespace}
-# spec:
-#   action: ALLOW
-#   rules:
-#     - to:
-#         - operation:
-#             hosts:
-#               - istio-egressgateway.istio-egress.svc.cluster.local
-#               - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-#               - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-# ...
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -150,29 +134,3 @@ spec:
             namespaces:
               - ns  # kpt-set: ${namespace}
 ...
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-egress-to-tff-example-ports
-#   namespace: ns  # kpt-set: ${namespace}
-# spec:
-#   action: ALLOW
-#   rules:
-#     - to:
-#         - operation:
-#             ports:
-#               - "80"
-#               - "8000"
-#               - "8080"
-# ...
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-all-ns
-#   namespace: ns  # kpt-set: ${namespace}
-# spec:
-#   rules:
-#     - {}
-# ...
