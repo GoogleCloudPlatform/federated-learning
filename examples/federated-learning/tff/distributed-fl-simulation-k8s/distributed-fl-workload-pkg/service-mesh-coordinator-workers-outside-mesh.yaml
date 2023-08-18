@@ -52,85 +52,94 @@ spec:
 ...
 # ---
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
-# apiVersion: networking.istio.io/v1beta1
-# kind: VirtualService
-# metadata:
-#   name: distributed-tff-example-worker-1-through-egress-gateway
-# spec:
-#   hosts:
-#     - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-#   gateways:
-#     - istio-egress/egress-gateway
-#     - mesh
-#   http:
-#     - match:
-#         - gateways:
-#             - mesh
-#           port: 8000
-#       route:
-#         - destination:
-#             host: egress-gateway.istio-egress.svc.cluster.local
-#             port:
-#               number: 80
-#           weight: 100
-#     - match:
-#         - gateways:
-#             - istio-egress/egress-gateway
-#           port: 80
-#       route:
-#         - destination:
-#             host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-#             port:
-#               number: 8000
-#           weight: 100
-# ...
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: distributed-tff-example-worker-1-through-egress-gateway
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  hosts:
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
+  gateways:
+    - istio-egress/egress-gateway
+    - mesh
+  http:
+    - match:
+        - gateways:
+            - mesh
+          port: 8000
+      route:
+        - destination:
+            host: egress-gateway.istio-egress.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
+    - match:
+        - gateways:
+            - istio-egress/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
+            port:
+              number: 8000
+          weight: 100
+...
 # ---
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
-# apiVersion: networking.istio.io/v1beta1
-# kind: VirtualService
-# metadata:
-#   name: distributed-tff-example-worker-2-through-egress-gateway
-# spec:
-#   hosts:
-#     - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-#   gateways:
-#     - istio-egress/egress-gateway
-#     - mesh
-#   http:
-#     - match:
-#         - gateways:
-#             - mesh
-#           port: 8000
-#       route:
-#         - destination:
-#             host: egress-gateway.istio-egress.svc.cluster.local
-#             port:
-#               number: 80
-#           weight: 100
-#     - match:
-#         - gateways:
-#             - istio-egress/egress-gateway
-#           port: 80
-#       route:
-#         - destination:
-#             host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-#             port:
-#               number: 8000
-#           weight: 100
-# ...
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: distributed-tff-example-worker-2-through-egress-gateway
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  hosts:
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+  gateways:
+    - istio-egress/egress-gateway
+    - mesh
+  http:
+    - match:
+        - gateways:
+            - mesh
+          port: 8000
+      route:
+        - destination:
+            host: egress-gateway.istio-egress.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
+    - match:
+        - gateways:
+            - istio-egress/egress-gateway
+          port: 80
+      route:
+        - destination:
+            host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+            port:
+              number: 8000
+          weight: 100
+...
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-egress-to-workers-and-egress-gateway
-  namespace: ns  # kpt-set: ${namespace}
+  name: allow-egress-from-ns-to-workers-and-egress-gateway  # kpt-set: allow-egress-from-${namespace}-to-workers-and-egress-gateway
+  namespace: istio-egress
 spec:
   action: ALLOW
   rules:
-    - to:
+    - from:
+        - source:
+            namespaces:
+              - ns  # kpt-set: ${namespace}
+      to:
         - operation:
             hosts:
               - egress-gateway.istio-egress.svc.cluster.local
               - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
               - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
+      when:
+        - key: destination.port
+          values: ["8000"]
 ...
