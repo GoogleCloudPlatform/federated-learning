@@ -73,6 +73,7 @@ spec:
             host: egress-gateway.istio-egress.svc.cluster.local
             port:
               number: 8000
+            subset: target-egress-gateway-mTLS
           weight: 100
     - match:
         - gateways:
@@ -83,6 +84,7 @@ spec:
             host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
             port:
               number: 8000
+            subset: target-egress-gateway-mTLS
           weight: 100
 ...
 ---
@@ -108,6 +110,7 @@ spec:
             host: egress-gateway.istio-egress.svc.cluster.local
             port:
               number: 8000
+            subset: target-egress-gateway-mTLS
           weight: 100
     - match:
         - gateways:
@@ -118,6 +121,7 @@ spec:
             host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
             port:
               number: 8000
+            subset: target-egress-gateway-mTLS
           weight: 100
 ...
 ---
