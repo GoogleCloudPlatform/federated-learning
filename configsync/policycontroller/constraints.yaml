@@ -78,4 +78,7 @@ spec:
     kinds:
       - apiGroups: ["networking.istio.io"]
         kinds: ["DestinationRule"]
+    # Exclude the root ASM namespace so we can selectively
+    # allow non-TLS connections to external hosts
+    excludedNamespaces: ["istio-system"]
 ...
