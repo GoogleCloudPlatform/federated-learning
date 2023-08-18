@@ -125,7 +125,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-egress-from-ns-to-workers-and-egress-gateway  # kpt-set: allow-egress-from-${namespace}-to-workers-and-egress-gateway
-  namespace: istio-egress
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   action: ALLOW
   rules:
