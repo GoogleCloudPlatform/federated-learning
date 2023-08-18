@@ -141,7 +141,7 @@ spec:
     istio: egressgateway
   ports:
     - name: http2
-      port: 80
+      port: 8000
       protocol: TCP
       targetPort: 8080
     - name: https
