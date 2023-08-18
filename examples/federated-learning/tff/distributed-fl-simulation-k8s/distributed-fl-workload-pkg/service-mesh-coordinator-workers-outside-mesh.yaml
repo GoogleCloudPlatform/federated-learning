@@ -67,22 +67,22 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 8000
+          # port: 8000
       route:
         - destination:
             host: egress-gateway.istio-egress.svc.cluster.local
-            port:
-              number: 80
+            # port:
+            #   number: 80
           weight: 100
     - match:
         - gateways:
             - istio-egress/egress-gateway
-          port: 80
+          # port: 80
       route:
         - destination:
             host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
-            port:
-              number: 8000
+            # port:
+            #   number: 8000
           weight: 100
 ...
 ---
@@ -102,22 +102,22 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 8000
+          # port: 8000
       route:
         - destination:
             host: egress-gateway.istio-egress.svc.cluster.local
-            port:
-              number: 80
+            # port:
+            #   number: 80
           weight: 100
     - match:
         - gateways:
             - istio-egress/egress-gateway
-          port: 80
+          # port: 80
       route:
         - destination:
             host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
-            port:
-              number: 8000
+            # port:
+            #   number: 8000
           weight: 100
 ...
 ---
