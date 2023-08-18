@@ -61,6 +61,22 @@ spec:
     - to:
         - operation:
             hosts:
+              - istio-egressgateway.istio-egress.svc.cluster.local
               - tff-worker-1.tensorflow-federated.example.com  # kpt-set: ${tff-worker-1-hostname}
               - tff-worker-2.tensorflow-federated.example.com  # kpt-set: ${tff-worker-2-hostname}
+...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-from-egress-gateway-to-tff-example-ports
+  namespace: istio-egress
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            ports:
+              - "80"
+              - "8000"
 ...
