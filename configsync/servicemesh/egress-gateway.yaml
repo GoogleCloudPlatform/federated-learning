@@ -168,7 +168,15 @@ spec:
     istio: egressgateway
   servers:
     - port:
-        number: 80
+        number: 8000
+        name: grpc
+        protocol: GRPC
+      hosts:
+        - '*'
+      tls:
+        mode: ISTIO_MUTUAL
+    - port:
+        number: 443
         name: https
         protocol: HTTPS
       hosts:
