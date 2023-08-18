@@ -173,8 +173,6 @@ spec:
         protocol: GRPC
       hosts:
         - '*'
-      tls:
-        mode: ISTIO_MUTUAL
     - port:
         number: 443
         name: https
