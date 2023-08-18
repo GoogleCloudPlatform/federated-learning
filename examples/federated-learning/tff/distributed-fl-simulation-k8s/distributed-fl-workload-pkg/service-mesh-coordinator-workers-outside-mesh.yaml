@@ -140,3 +140,17 @@ spec:
               - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
               - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
 ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-from-ns-to-egress-gateway  # kpt-set: allow-ingress-from-${namespace}-to-egress-gateway
+  namespace: ns  # kpt-set: ${namespace}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - ns  # kpt-set: ${namespace}
+...
