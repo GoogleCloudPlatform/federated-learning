@@ -49,35 +49,35 @@ spec:
     80:
       mode: DISABLE
 ...
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-within-namespace
-#   namespace: istio-egress
-# spec:
-#   action: ALLOW
-#   rules:
-#     - from:
-#         - source:
-#             namespaces:
-#               - "istio-egress"
-# ...
-# ---
-# apiVersion: security.istio.io/v1beta1
-# kind: AuthorizationPolicy
-# metadata:
-#   name: allow-egress-from-egress-gateway-to-workers
-#   namespace: istio-egress
-# spec:
-#   action: ALLOW
-#   rules:
-#     - to:
-#         - operation:
-#             hosts:
-#               - tff-worker-1.tensorflow-federated.example.com
-#               - tff-worker-2.tensorflow-federated.example.com
-# ...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-within-namespace
+  namespace: istio-egress
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - "istio-egress"
+...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-egress-from-egress-gateway-to-workers
+  namespace: istio-egress
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - tff-worker-1.tensorflow-federated.example.com
+              - tff-worker-2.tensorflow-federated.example.com
+...
 # ---
 # apiVersion: security.istio.io/v1beta1
 # kind: AuthorizationPolicy
@@ -101,13 +101,13 @@ spec:
 #               - "8000"
 #               - "8080"
 # ...
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-all-istio-egress
-  namespace: istio-egress
-spec:
-  rules:
-    - {}
-...
+# ---
+# apiVersion: security.istio.io/v1beta1
+# kind: AuthorizationPolicy
+# metadata:
+#   name: allow-all-istio-egress
+#   namespace: istio-egress
+# spec:
+#   rules:
+#     - {}
+# ...
