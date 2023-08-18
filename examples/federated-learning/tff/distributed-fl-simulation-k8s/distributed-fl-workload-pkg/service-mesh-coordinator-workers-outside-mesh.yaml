@@ -50,7 +50,7 @@ spec:
   resolution: DNS
   location: MESH_EXTERNAL
 ...
-# ---
+---
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -85,7 +85,7 @@ spec:
               number: 8000
           weight: 100
 ...
-# ---
+---
 # # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
