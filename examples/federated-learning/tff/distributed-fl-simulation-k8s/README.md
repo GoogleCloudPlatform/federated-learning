@@ -17,6 +17,7 @@ This example runs on a single host.
 You can run this example in two different runtime environments:
 
 - Two workers and a coordinator running in different containers on the same host.
+- Two workers and a coordinator running in different containers, each in a dedicated Kubernetes Namespace, in the same GKE cluster.
 - Two workers and a coordinator running in different containers in different GKE clusters.
 
 ### Containers running on the same host
@@ -128,3 +129,12 @@ docker compose \
         that exposes the second worker workloads.
 
 1. Run `terraform apply`.
+
+## Troubleshooting
+
+- If `istio-ingress` or `istio-egress` Pods fail to run because GKE cannot download
+    their container images, see
+    [Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
+    for details about the root cause. If this happens, wait for the cluster
+    to complete the initialiazation, and try deleting the deployment that has
+    this issue. Anthos Config Sync will deploy it again.

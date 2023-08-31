@@ -326,24 +326,6 @@ spec:
 ...
 ---
 apiVersion: security.istio.io/v1beta1
-kind: PeerAuthentication
-metadata:
-  name: disable-mtls-tff-example-port-ingress
-  namespace: istio-ingress
-spec:
-  selector:
-    matchLabels:
-      istio: ingressgateway
-  # Inherit mTLS mode from mesh- or namespace-wide settings
-  mtls:
-    mode: UNSET
-  # Overwrite settings for the distributed TensorFlow Federated port
-  portLevelMtls:
-    8000:
-      mode: DISABLE
-...
----
-apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-ingress-to-distributed-tff-example-ports
