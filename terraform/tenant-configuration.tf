@@ -14,44 +14,47 @@
 
 resource "null_resource" "init_acm_repository" {
   triggers = {
-    create_command_hash               = md5(local.init_local_acm_repository_command)
-    acm_repository_path               = var.acm_repository_path
-    init_local_acm_repository_command = local.init_local_acm_repository_command
-    create_script_md5                 = md5(file(local.init_local_acm_repository_script_path))
+    acm_repository_path = var.acm_repository_path
+    create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
+    create_command      = <<-EOT
+      "${local.init_local_acm_repository_script_path}" \
+        "${var.acm_repository_path}" \
+        "${google_sourcerepo_repository.configsync-repository.url}" \
+        "${var.acm_branch}"
+    EOT
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.init_local_acm_repository_command
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<-EOT
-      rm -rf "${self.triggers.acm_repository_path}"
-    EOT
+    command = self.triggers.create_command
   }
 }
 
 resource "null_resource" "copy_common_acm_content" {
   triggers = {
-    source_contents_hash              = local.acm_config_sync_common_content_source_content_hash
-    destination_contents_hash         = local.acm_config_sync_common_content_destination_content_hash
-    source_destination_diff           = local.acm_config_sync_common_content_source_content_hash == local.acm_config_sync_common_content_destination_content_hash ? false : true
-    copy_acm_common_content_command   = local.copy_acm_common_content_command
-    delete_acm_common_content_command = local.delete_acm_common_content_command
-    create_script_hash                = md5(file(local.copy_acm_common_content_script_path))
-    destroy_script_hash               = md5(file(local.delete_acm_common_content_script_path))
+    create_command      = local.copy_acm_common_content_command
+    create_script_hash  = md5(file(local.copy_acm_common_content_script_path))
+    destroy_command     = local.delete_acm_common_content_command
+    destroy_script_hash = md5(file(local.delete_acm_common_content_script_path))
+
+    source_contents_hash      = local.acm_config_sync_common_content_source_content_hash
+    destination_contents_hash = local.acm_config_sync_common_content_destination_content_hash
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
     when    = create
-    command = self.triggers.copy_acm_common_content_command
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = self.triggers.delete_acm_common_content_command
+    command = self.triggers.destroy_command
   }
 
   depends_on = [
@@ -74,11 +77,13 @@ resource "null_resource" "tenant_configuration" {
         "${local.distributed_tff_example_package_source_directory_path}" \
         "${each.value.distributed_tff_example_is_coordinator}" \
         "${each.value.distributed_tff_example_worker_emnist_partition_file_name}" \
-        "${each.value.distributed_tff_example_worker_1_address}" \
-        "${each.value.distributed_tff_example_worker_2_address}" \
+        "${each.value.distributed_tff_example_is_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? local.distributed_tff_example_worker_1_external_fqdn : each.value.distributed_tff_example_worker_1_hostname}" \
+        "${each.value.distributed_tff_example_is_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? local.distributed_tff_example_worker_2_external_fqdn : each.value.distributed_tff_example_worker_2_hostname}" \
         "${each.value.tenant_apps_kubernetes_service_account_name}" \
         "${var.distributed_tff_example_coordinator_namespace}" \
         "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
+        "${local.distributed_tff_example_are_workers_outside_the_coordinator_mesh}" \
+        "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -91,13 +96,14 @@ resource "null_resource" "tenant_configuration" {
     distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
     distributed_tff_example_container_image_id                   = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : ""
     distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
     when    = create
-    command = <<-EOT
-      ${self.triggers.create_command} "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
-    EOT
+    command = self.triggers.create_command
   }
 
   provisioner "local-exec" {
@@ -118,20 +124,20 @@ resource "null_resource" "build_push_distributed_tff_example_container_image" {
       "${local.build_push_distributed_tff_example_container_image_script_path}" \
         "${local.distributed_tff_example_container_image_source_directory_path}" \
         "${local.ditributed_tff_example_container_image_repository_hostname}" \
+        "${local.distributed_tff_example_localized_container_image_id}"
     EOT
     create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
 
     source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
     container_image_id   = local.distributed_tff_example_localized_container_image_id
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
-  # Set the commit hash here so we don't recreate the resource on every commit
-  # to the blueprint repository, but only when something related to the container image changes
   provisioner "local-exec" {
     when    = create
-    command = <<-EOT
-      ${self.triggers.create_command} "${local.distributed_tff_example_localized_container_image_id}"
-    EOT
+    command = self.triggers.create_command
   }
 }
 
@@ -158,6 +164,9 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
     EOT
     create_script_hash  = md5(file(local.copy_distributed_tff_example_mesh_wide_content_script_path))
     destroy_script_hash = md5(file(local.delete_distributed_tff_example_mesh_wide_content_script_path))
+
+    # Always run this. We check if something needs to be done in the creation script
+    timestamp = timestamp()
   }
 
   provisioner "local-exec" {
@@ -183,17 +192,20 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
         "${var.acm_branch}"
     EOT
     script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
-    # Always run this. We check if there are changes to commit in the script to run
+
+    # Always run this. We check if something needs to be done in the creation script
     timestamp = timestamp()
   }
 
   provisioner "local-exec" {
+    when    = create
     command = self.triggers.command
   }
 
   depends_on = [
     null_resource.copy_mesh_wide_distributed_tff_example_content,
     null_resource.copy_common_acm_content,
+    null_resource.init_acm_repository,
     null_resource.tenant_configuration
   ]
 }

@@ -64,11 +64,13 @@ The infrastructure provisioned by this blueprint includes:
   - Baseline rules that apply to all nodes in the cluster.
   - Additional rules that apply only to the nodes in the tenant node pool (targeted using the node Service Account below). These firewall rules limit egress from the tenant nodes.
 - [Cloud NAT](https://cloud.google.com/nat/docs/overview) to allow egress to the internet
-- [Cloud DNS](https://cloud.google.com/dns/docs/overview) rules configured to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet
+- [Cloud DNS](https://cloud.google.com/dns/docs/overview) records to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet.
 - [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts) used by the cluster.
   - A dedicated Service Account used by the nodes in the tenant node pool
-  - A dedicated Service Account for use by tenant apps (via Workload Identity, discussed later).
+  - A dedicated Service Account for use by tenant apps to use with Workload Identity.
 - Support for using [Google Groups for Kubernetes RBAC](https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac).
+- A [Cloud Source Repository](https://cloud.google.com/source-repositories/docs) to store configuration descriptors.
+- An [Artifact Registry](https://cloud.google.com/artifact-registry/docs) repository to store container images.
 
 ### Applications
 
@@ -78,8 +80,8 @@ The following diagram describes the apps and resources within the GKE cluster
 The cluster includes:
 
 - [Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview), which keeps cluster configuration in sync with config defined in a Git repository.
-  - The config defined by the blueprint includes namespaces, service accounts, network policies, Policy Controller policies and Istio resources that are applied to the cluster.
-  - See the [configsync](configsync) dir for the full set of resources applied to the cluster
+  - When you provision the resources using this blueprint, the tooling initializes a Git repository for Config Sync to consume, and automatically renders the relevant templates and commits changes.
+  - The tooling automatically commits any modification to templates in the Config Sync repository on each [run of the provisioning process](#deploy-the-blueprint).
 - [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller) enforces policies ('constraints') for your clusters. These policies act as 'guardrails' and prevent any changes to your cluster that violate security, operational, or compliance controls.
   - Example policies enforced by the blueprint include:
     - Selected constraints [similar to PodSecurityPolicy](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security)
@@ -91,31 +93,26 @@ The cluster includes:
   - An Egress Gateway that acts a forward-proxy at the edge of the mesh in the `istio-egress` namespace.
   - The root istio namespace (istio-system) is configured with
     - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
-    - AuthorizationPolicies that:
-      - by default deny all communication between services in the mesh,
-      - allow communication to a set of known external hosts
-    - VirtualService and DestinationRule resources that route traffic from sidecar proxies through the egress gateway to external destinations.
-  - The tenant namespace is configured for automatic sidecar proxy injection, see next section.
+    - AuthorizationPolicies that by default deny all communication between services in the mesh.
+  - Tenant namespaces are configured for automatic sidecar proxy injection.
   - The mesh does not include an Ingress Gateway by default.
-  - See the [servicemesh](configsync/servicemesh) directory for the cluster-level mesh config.
 
 The blueprint configures a dedicated namespace for tenant apps and resources:
 
 - The tenant namespace is part of the service mesh. Pods in the namespace receive sidecar proxy containers. The namespace-level mesh resources include:
-  - Sidecar resource that allows egress only to known hosts (outboundTrafficPolicy: REGISTRY_ONLY)
+  - Sidecar resource that allows egress only to known hosts (`outboundTrafficPolicy: REGISTRY_ONLY`).
   - AuthorizationPolicy that defines the allowed communication paths within the namespace. The blueprint only allows requests that originate from within the same namespace. This
   policy is added to the root policy in the istio-system namespace
 - The tenant namespace has [network policies](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) to limit traffic to and from pods in the namespace. For example, the network policy:
-  - By default, denies all ingress and egress traffic to/from the pods. This acts as baseline 'deny all' rule,
-  - Allows traffic between pods in the namespace
-  - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server
-  - Allows egress to Google APIs (via Private Google Access)
+  - By default, denies all ingress and egress traffic to and from the pods. This acts as baseline 'deny all' rule.
+  - Allows traffic between pods in the namespace.
+  - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server.
+  - Allows egress to Google APIs (via Private Google Access).
 - The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node pool.
-  - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node
-  - The toleration and nodeAffinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
+  - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node.
+  - The toleration and node affinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
 - The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.
 - The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](tenant-config-pkg/rbac.yaml) that grants the role to an example user.
-  - For example, different teams might be responsible for managing apps within each tenant namespace
   - Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
 
 ## Deploy the blueprint
@@ -189,3 +186,6 @@ cluster specifically when applying changes:
 ```sh
 terraform apply -target module.gke
 ```
+
+Then, you can try running `terraform apply` again, without any resource
+targeting.

@@ -33,9 +33,9 @@ locals {
       # We can't use this variable in the following lines because we're still defining this object
       distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
       distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
+      distributed_tff_example_worker_1_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_hostname : ""
+      distributed_tff_example_worker_2_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_hostname : ""
       distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
-      distributed_tff_example_worker_1_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_address : ""
-      distributed_tff_example_worker_2_address                  = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_address : ""
     }
   }
 
@@ -47,6 +47,12 @@ locals {
 
   # If the coordinator namespace is set to istio-ingress, we assume that workers are outside the service mesh (example: in another cluster)
   distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
+
+  distributed_tff_example_external_domain        = "tensorflow-federated.example.com"
+  distributed_tff_example_worker_1_hostname      = "tff-worker-1"
+  distributed_tff_example_worker_2_hostname      = "tff-worker-2"
+  distributed_tff_example_worker_1_external_fqdn = "${local.distributed_tff_example_worker_1_hostname}.${local.distributed_tff_example_external_domain}"
+  distributed_tff_example_worker_2_external_fqdn = "${local.distributed_tff_example_worker_2_hostname}.${local.distributed_tff_example_external_domain}"
 
   tenant_apps_kubernetes_service_account_name = "ksa"
 
@@ -106,12 +112,6 @@ locals {
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
   init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
-  init_local_acm_repository_command     = <<-EOT
-    "${local.init_local_acm_repository_script_path}" \
-      "${var.acm_repository_path}" \
-      "${google_sourcerepo_repository.configsync-repository.url}" \
-      "${var.acm_branch}"
-  EOT
 
   copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
   copy_acm_common_content_command     = <<-EOT

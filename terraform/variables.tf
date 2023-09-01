@@ -140,13 +140,13 @@ variable "gke_rbac_security_group_domain" {
 }
 
 variable "distributed_tff_example_configuration" {
-  default     = null
+  default     = {}
   description = "Configuration of the TensorFlow Federated example. The keys of this map are the names of the Kubernetes namespaces where to deploy the distributed TensorFlow Federated example"
   type = map(object({
     emnist_partition_file_name = optional(string, "")  # Name of the EMNIST partition file of the distributed TensorFlow Federated example
     is_coordinator             = optional(bool, false) # Set to true to deploy a coordinator for the TensorFlow Federated example in the cluster
-    worker_1_address           = optional(string, "")  # Address of the first worker of the distributed TensorFlow Federated example
-    worker_2_address           = optional(string, "")  # Address of the second worker of the distributed TensorFlow Federated example
+    worker_1_hostname          = optional(string, "")  # Hostname of the first worker of the distributed TensorFlow Federated example
+    worker_2_hostname          = optional(string, "")  # Hostname of the second worker of the distributed TensorFlow Federated example
   }))
 }
 
@@ -160,4 +160,16 @@ variable "distributed_tff_example_deploy_ingress_gateway" {
   default     = false
   description = "Set to true to deploy an Ingress Gateway to expose workers."
   type        = bool
+}
+
+variable "distributed_tff_example_worker_1_address" {
+  default     = ""
+  description = "Address of the first worker of the distributed TensorFlow Federated example. Set this when the worker is outside the coordinator mesh."
+  type        = string
+}
+
+variable "distributed_tff_example_worker_2_address" {
+  default     = ""
+  description = "Address of the second worker of the distributed TensorFlow Federated example. Set this when the worker is outside the coordinator mesh."
+  type        = string
 }

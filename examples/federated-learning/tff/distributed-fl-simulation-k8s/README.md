@@ -4,7 +4,9 @@ In this directory, you can find an example of the
 [High-Performance Simulation with Kubernetes](https://www.tensorflow.org/federated/tutorials/high_performance_simulation_with_kubernetes)
 tutorial.
 
-This example runs on a single host.
+This example builds on top of the infrastructure that the
+[blueprint provides](../../../../README.md), and follows the best practices the
+blueprint establishes.
 
 ## Prerequisites
 
@@ -14,10 +16,22 @@ This example runs on a single host.
 
 ## How to run
 
-You can run this example in two different runtime environments:
+You can run this example in three different runtime environments:
 
-- Two workers and a coordinator running in different containers on the same host.
-- Two workers and a coordinator running in different containers in different GKE clusters.
+- Two workers and a coordinator running in different containers on the same
+    host. For example, a developer can follow this approach for fast
+    development iterations.
+- Two workers and a coordinator running in different containers, each in a
+    dedicated Kubernetes Namespace, in the same Google Kubernetes Engine (GKE)
+    cluster. For example, a cloud platform administrator can follow this
+    approach to validate how the workload behaves in a GKE cluster across
+    different namespaces to simulate a distributed federated learning
+    environment, without having to provision and configure different Kubernetes
+    clusters.
+- Two workers and a coordinator running in different containers in different
+    GKE clusters. For example, a cloud platform administrator can follow this
+    approach to deploy the workload in an environment that more closely
+    resembles a production one.
 
 ### Containers running on the same host
 
@@ -64,8 +78,8 @@ docker compose \
     ```hcl
     "fltenant3": {
         is_coordinator = true
-        worker_1_address = "tff-worker.fltenant1"
-        worker_2_address = "tff-worker.fltenant2"
+        worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
+        worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
     }
 
     distributed_tff_example_coordinator_namespace = "fltenant3"
@@ -113,10 +127,11 @@ docker compose \
     distributed_tff_example_configuration          = {
         "fltenant1": {
             is_coordinator = true
-            worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
-            worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
         }
     }
+
+    distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+    distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
     ```
 
     Where:
@@ -127,3 +142,13 @@ docker compose \
         that exposes the second worker workloads.
 
 1. Run `terraform apply`.
+
+## Troubleshooting
+
+- If `istio-ingress` or `istio-egress` Pods fail to run because GKE cannot
+    download their container images, see
+    [Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
+    for details about the potential root cause. If this happens, wait for the
+    cluster to complete the initialiazation, and delete the deployment
+    that has this issue. Anthos Config Sync will deploy it again with the
+    correct container image identifiers.

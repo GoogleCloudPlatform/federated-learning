@@ -18,6 +18,9 @@ kind: ServiceEntry
 metadata:
   name: metadata-google-internal
   namespace: istio-system
+  labels:
+    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
+    service.istio.io/canonical-name: metadata.google.internal
 spec:
   hosts:
     - metadata.google.internal
@@ -40,29 +43,13 @@ kind: ServiceEntry
 metadata:
   name: private-googleapis-com
   namespace: istio-system
+  labels:
+    # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
+    service.istio.io/canonical-name: googleapis.com
 spec:
   hosts:
-    - "*.googleapis.com"
-  ports:
-    - number: 80
-      name: http
-      protocol: HTTP
-    - number: 443
-      name: tls
-      protocol: TLS
-  location: MESH_EXTERNAL
-...
----
-# Add example external hosts to the service registry
-apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
-metadata:
-  name: external-web-hosts
-  namespace: istio-system
-spec:
-  hosts:
-    - example.com
-    - httpbin.org
+    - private.googleapis.com
+    - storage.googleapis.com
   ports:
     - number: 80
       name: http

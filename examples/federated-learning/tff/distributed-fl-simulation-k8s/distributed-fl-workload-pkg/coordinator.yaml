@@ -35,7 +35,7 @@ spec:
           image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
           args:
             - "./training_procedure.py"
-            - "tff-worker-1.example.com"  # kpt-set: ${tff-worker-1-address}
-            - "tff-worker-2.example.com"  # kpt-set: ${tff-worker-2-address}
+            - "tff-worker-1.example.com"  # kpt-set: ${tff-worker-1-hostname}
+            - "tff-worker-2.example.com"  # kpt-set: ${tff-worker-2-hostname}
       serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
 ...

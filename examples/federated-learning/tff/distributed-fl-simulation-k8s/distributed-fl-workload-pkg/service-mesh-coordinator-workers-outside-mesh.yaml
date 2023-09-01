@@ -16,91 +16,121 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: external-tff-example-worker-1
-  namespace: istio-egress
+  name: tff-worker-1
+  namespace: ns  # kpt-set: ${namespace}
   labels:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
     service.istio.io/canonical-name: tff-worker-1
 spec:
-  endpoints:
-    - address: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-address}
   hosts:
-    - tff-worker-1.example.com
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
   ports:
     - number: 8000
       name: grpc
       protocol: GRPC
-  resolution: STATIC
+  resolution: DNS
   location: MESH_EXTERNAL
 ...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: external-tff-example-worker-2
-  namespace: istio-egress
+  name: tff-worker-2
+  namespace: ns  # kpt-set: ${namespace}
   labels:
     # Show this service and its telemetry in the Anthos Service Mesh page of the Google Cloud console
     service.istio.io/canonical-name: tff-worker-2
 spec:
-  endpoints:
-    - address: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-address}
   hosts:
-    - tff-worker-2.example.com
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
   ports:
     - number: 8000
       name: grpc
       protocol: GRPC
-  resolution: STATIC
+  resolution: DNS
   location: MESH_EXTERNAL
 ...
 ---
-# Route from the egress gateway to the first worker services that we added to the
-# service registry
+# # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: worker-1-through-egress-gateway
-  namespace: istio-egress
+  name: distributed-tff-example-worker-1-through-egress-gateway
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker-1.example.com
+    - tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
   gateways:
     - istio-egress/egress-gateway
+    - mesh
   http:
+    - match:
+        - gateways:
+            - mesh
+          port: 8000
+      route:
+        - destination:
+            host: istio-egressgateway.istio-egress.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
     - match:
         - gateways:
             - istio-egress/egress-gateway
           port: 80
       route:
         - destination:
-            host: tff-worker-1.example.com
+            host: tff-worker-1.example.com  # kpt-set: ${tff-worker-1-hostname}
             port:
               number: 8000
           weight: 100
 ...
 ---
-# Route from the egress gateway to the second worker services that we added to the
-# service registry
+# # Direct traffic from the sidecars to the egress gateway and from the egress gateway to the external service
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: worker-2-through-egress-gateway
-  namespace: istio-egress
+  name: distributed-tff-example-worker-2-through-egress-gateway
+  namespace: ns  # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker-1
+    - tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
   gateways:
     - istio-egress/egress-gateway
+    - mesh
   http:
+    - match:
+        - gateways:
+            - mesh
+          port: 8000
+      route:
+        - destination:
+            host: istio-egressgateway.istio-egress.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
     - match:
         - gateways:
             - istio-egress/egress-gateway
           port: 80
       route:
         - destination:
-            host: tff-worker-2.example.com
+            host: tff-worker-2.example.com  # kpt-set: ${tff-worker-2-hostname}
             port:
               number: 8000
           weight: 100
+...
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-from-ns-to-egress-gateway  # kpt-set: allow-ingress-from-${namespace}-to-egress-gateway
+  namespace: istio-egress
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - ns  # kpt-set: ${namespace}
 ...
