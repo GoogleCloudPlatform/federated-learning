@@ -72,14 +72,23 @@ docker compose \
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process, and the
     workers to be up and running, and the load balancers to have IP addresses assigned.
-1. Configure the coordinator by adding the following element to the
-    `distributed_tff_example_configuration` map:
+1. Configure the coordinator by adding the `fltenant3` element to the
+    `distributed_tff_example_configuration` map. The other elements of the map
+    are the same that you added in previous steps:
 
     ```hcl
-    "fltenant3": {
-        is_coordinator = true
-        worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
-        worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
+    distributed_tff_example_configuration          = {
+        "fltenant1": {
+            emnist_partition_file_name = "emnist_part_1.sqlite"
+        },
+        "fltenant2": {
+            emnist_partition_file_name = "emnist_part_2.sqlite"
+        },
+        "fltenant3": {
+            is_coordinator = true
+            worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
+            worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
+        }
     }
 
     distributed_tff_example_coordinator_namespace = "fltenant3"

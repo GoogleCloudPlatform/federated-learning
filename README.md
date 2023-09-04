@@ -189,3 +189,17 @@ terraform apply -target module.gke
 
 Then, you can try running `terraform apply` again, without any resource
 targeting.
+
+### Errors when adding the GKE cluster to the Fleet
+
+If Terraform reports errors about the format of the fleet membership
+configuration, it may mean that the Fleet API initialization didn't complete
+when Terraform tried to add the GKE cluster to the fleet. Example:
+
+```hcl
+Error creating FeatureMembership: googleapi: Error 400: InvalidValueError for
+field membership_specs["projects/<project number>/locations/global/memberships/<cluster name>"].feature_spec:
+does not match a current membership in this project. Keys should be in the form: projects/<project number>/locations/{l}/memberships/{m}
+```
+
+If this error occurs, try running `terraform apply` again.
