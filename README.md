@@ -230,7 +230,7 @@ If this error occurs, try running `terraform apply` again.
 ### Errors when pulling container images
 
 If `istio-ingress` or `istio-egress` pods fail to run because GKE cannot
-download their container images, see
+download their container images and GKE reports `ImagePullBackOff` errors, see
 [Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
 for details about the potential root cause.
 
