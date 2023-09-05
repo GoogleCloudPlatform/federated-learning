@@ -18,8 +18,8 @@ This blueprint provisions cloud resources on Google Cloud. After the initial pro
 you can extended the infrastructure to [Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
 
 This blueprint is aimed at cloud platform administrator and data scientists that
-aim to provision and configure a secure environment to run potentially untrusted
-workloads in their Google Cloud environment.
+need to provision and configure a secure environment to run potentially
+untrusted workloads in their Google Cloud environment.
 
 ## Getting started
 
@@ -149,7 +149,7 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   ```
 
   If you don't provide all the necessary inputs, Terraform will exit with an
-  error, and will provide information about the  missing inputs. For example,
+  error, and will provide information about the missing inputs. For example,
   you can create a Terraform variables initialization file and set inputs there.
   For more information about providing these inputs, see
   [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
