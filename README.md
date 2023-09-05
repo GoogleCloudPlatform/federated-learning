@@ -8,14 +8,18 @@ For more information about the architecture of this blueprint, refer to
 
 This blueprint uses a GKE cluster as the compute infrastructure to host
 containerized apps distributed by a third party. These apps are considered as
-untrusuted or semi-trusted workloads within the cluster. Therefore, the cluster
+untrusuted workloads within the cluster. Therefore, the cluster
 is configured according to security best practices to isolate and constrain the
 workloads from other workloads and from the cluster control plane. The blueprint
-uses [Anthos](https://cloud.google.com/anthos) features to automate and optimise
-the configuration and security of the cluster.
+uses [Anthos](https://cloud.google.com/anthos) features to configure and secure
+the cluster.
 
 This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
 you can extended the infrastructure to [Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
+
+This blueprint is aimed at cloud platform administrator and data scientists that
+aim to provision and configure a secure environment to run potentially untrusted
+workloads in their Google Cloud environment.
 
 ## Getting started
 
@@ -32,6 +36,7 @@ for anything other than experimentation.
 
 This repository has the following key directories:
 
+- `examples`: contains examples that build on top of this blueprint.
 - `terraform`: contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
 - `configsync`: contains the cluster-level resources and configurations that are applied to your GKE cluster.
 - `tenant-config-pkg`: a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
@@ -40,8 +45,11 @@ This repository has the following key directories:
 
 The blueprint uses a [multi-tenant](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview) architecture.
 
-The workloads provided by third parties are treated as a tenant within the cluster. These tenant workloads are grouped in dedicated namespaces, and isolated on dedicated cluster nodes.
-This way, you can apply security controls and policies to the nodes and namespace that host the tenant workloads.
+The workloads provided by third parties are treated as a tenant within the
+cluster. Each tenant has its own dedicated Kubernetes namepsace and node pool.
+Tenant workloads are grouped in their dedicated namespaces, and run in isolation
+in their dedicated node pools. The blueprint applies security controls and
+policies to the nodes and namespaces that host these workloads.
 
 ### Infrastructure
 
@@ -133,19 +141,34 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
   terraform init
   ```
 
+1. Initialize the following Terraform variables:
+
+  ```hcl
+  project_id          = # Google Cloud project ID where to provision resources with the blueprint.
+  acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
+  ```
+
+  If you don't provide all the necessary inputs, Terraform will exit with an
+  error, and will provide information about the  missing inputs. For example,
+  you can create a Terraform variables initialization file and set inputs there.
+  For more information about providing these inputs, see
+  [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+
 1. Review the proposed changes, and apply them:
 
   ```sh
   terraform apply
   ```
 
-  The first time you run `terraform apply` will fail because you need to provide
-  the necessary inputs. Terraform will provide information about the
-  missing inputs. For example, you can create a `terraform.tfvars` file and set
-  inputs there. For more information about providing these inputs, see
-  [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
-
   The provisioning process may take about 15 minutes to complete.
+
+1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
+
+After the process completes, the GKE cluster is ready to host untrusted workloads.
+To familiarize with the environment that you provisioned, you can also deploy
+the following examples in the GKE cluster:
+
+- [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
 
 ### Add another tenant
 
@@ -196,10 +219,21 @@ If Terraform reports errors about the format of the fleet membership
 configuration, it may mean that the Fleet API initialization didn't complete
 when Terraform tried to add the GKE cluster to the fleet. Example:
 
-```hcl
+```plain text
 Error creating FeatureMembership: googleapi: Error 400: InvalidValueError for
 field membership_specs["projects/<project number>/locations/global/memberships/<cluster name>"].feature_spec:
 does not match a current membership in this project. Keys should be in the form: projects/<project number>/locations/{l}/memberships/{m}
 ```
 
 If this error occurs, try running `terraform apply` again.
+
+### Errors when pulling container images
+
+If `istio-ingress` or `istio-egress` pods fail to run because GKE cannot
+download their container images, see
+[Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
+for details about the potential root cause.
+
+If this happens, wait for the cluster to complete the initialiazation, and
+delete the deployment that has this issue. Config Sync will deploy it again with
+the correct container image identifiers.

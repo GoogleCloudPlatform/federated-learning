@@ -1,12 +1,29 @@
 # Image classification tutorial example
 
-In this directory, you can find an example of the
-[High-Performance Simulation with Kubernetes](https://www.tensorflow.org/federated/tutorials/high_performance_simulation_with_kubernetes)
-tutorial.
+In this directory, you can find an example running a TensorFlow Federated
+training process in different runtime environments. This example deploys two
+kinds of workloads:
+
+- `coordinator`: coordinates the training effort, and collects the result of the
+    training from workers.
+- `workers` that waits for instructions from the coordinator, runs the assigned
+    model training, and sends training results back to the coordinator.
+
+In the current implementation:
+
+- Workers wait to be assigned a training job by the coordinator, complete
+    training jobs, and send training results back to the coordinator.
+- The coordinator sends training jobs to workers, collects training results from
+    workers, and reports relevant output. Once the training effort completes,
+    the coordinator stops, and runs again after a few seconds, in a loop.
 
 This example builds on top of the infrastructure that the
 [blueprint provides](../../../../README.md), and follows the best practices the
 blueprint establishes.
+
+This example is based on the
+[High-Performance TensorFlow Federated Simulation with Kubernetes](https://www.tensorflow.org/federated/tutorials/high_performance_simulation_with_kubernetes)
+tutorial.
 
 ## Prerequisites
 
@@ -16,11 +33,8 @@ blueprint establishes.
 
 ## How to run
 
-You can run this example in three different runtime environments:
+You can run this example in different runtime environments:
 
-- Two workers and a coordinator running in different containers on the same
-    host. For example, a developer can follow this approach for fast
-    development iterations.
 - Two workers and a coordinator running in different containers, each in a
     dedicated Kubernetes Namespace, in the same Google Kubernetes Engine (GKE)
     cluster. For example, a cloud platform administrator can follow this
@@ -32,24 +46,6 @@ You can run this example in three different runtime environments:
     GKE clusters. For example, a cloud platform administrator can follow this
     approach to deploy the workload in an environment that more closely
     resembles a production one.
-
-### Containers running on the same host
-
-Prerequisities:
-
-- The ones listed [above](#prerequisites)
-- Docker Compose (tested with version 1.29.2)
-
-To run this example, build the container images and run containers:
-
-```sh
-docker compose \
-    --file compose.yaml \
-    up \
-    --abort-on-container-exit \
-    --build \
-    --exit-code-from tff-client
-```
 
 ### Containers running in different namespaces, in the same GKE cluster
 
@@ -95,10 +91,17 @@ docker compose \
     ```
 
 1. Run `terraform apply`.
+1. Wait for GKE to report the coordinator and the workers as `Ready` in the
+    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
 
 ### Containers running in different GKE clusters
 
-1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
+1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+    to provision and configure the environment for the first worker in a dedicated Google Cloud project.
+1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+    to provision and configure the environment for the second worker in a dedicated Google Cloud project.
+1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+    to provision and configure the environment for the coordinator in a dedicated Google Cloud project.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
     the resources for the first worker.
 1. Initialize the following Terraform variables for the first worker:
@@ -151,13 +154,47 @@ docker compose \
         that exposes the second worker workloads.
 
 1. Run `terraform apply`.
+1. Wait for GKE to report the coordinator and the workers as `Ready` in the
+    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+    in their respective GKE clusters.
 
-## Troubleshooting
+## Expected output
 
-- If `istio-ingress` or `istio-egress` Pods fail to run because GKE cannot
-    download their container images, see
-    [Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
-    for details about the potential root cause. If this happens, wait for the
-    cluster to complete the initialiazation, and delete the deployment
-    that has this issue. Anthos Config Sync will deploy it again with the
-    correct container image identifiers.
+After deploying the workers and the coordinator, you can inspect the logs that
+the coordinator produces to ensure that it connected to workers, and that workers
+are running the training. The coordinator output log is similar to the following:
+
+```plain text
+round  1, metrics=OrderedDict([('sparse_categorical_accuracy', 0.10557769), ('loss', 12.475689), ('num_examples', 5020), ('num_batches', 5020)])
+round  2, metrics=OrderedDict([('sparse_categorical_accuracy', 0.11940298), ('loss', 10.497084), ('num_examples', 5360), ('num_batches', 5360)])
+round  3, metrics=OrderedDict([('sparse_categorical_accuracy', 0.16223507), ('loss', 7.569645), ('num_examples', 5190), ('num_batches', 5190)])
+round  4, metrics=OrderedDict([('sparse_categorical_accuracy', 0.2648384), ('loss', 6.0947175), ('num_examples', 5105), ('num_batches', 5105)])
+round  5, metrics=OrderedDict([('sparse_categorical_accuracy', 0.29003084), ('loss', 6.2815433), ('num_examples', 4865), ('num_batches', 4865)])
+round  6, metrics=OrderedDict([('sparse_categorical_accuracy', 0.40237388), ('loss', 4.630901), ('num_examples', 5055), ('num_batches', 5055)])
+round  7, metrics=OrderedDict([('sparse_categorical_accuracy', 0.4288425), ('loss', 4.2358975), ('num_examples', 5270), ('num_batches', 5270)])
+round  8, metrics=OrderedDict([('sparse_categorical_accuracy', 0.46349892), ('loss', 4.3829923), ('num_examples', 4630), ('num_batches', 4630)])
+round  9, metrics=OrderedDict([('sparse_categorical_accuracy', 0.492094), ('loss', 3.8121278), ('num_examples', 4680), ('num_batches', 4680)])
+round 10, metrics=OrderedDict([('sparse_categorical_accuracy', 0.5872674), ('loss', 3.058461), ('num_examples', 5105), ('num_batches', 5105)])
+```
+
+## Development environment
+
+If you want to configure a development environment for this example workload,
+you can configure two workers and a coordinator running in different containers
+on the same host.
+
+Prerequisities:
+
+- The ones listed [above](#prerequisites)
+- Docker Compose (tested with version 1.29.2)
+
+To run this example, build the container images and run containers:
+
+```sh
+docker compose \
+    --file compose.yaml \
+    up \
+    --abort-on-container-exit \
+    --build \
+    --exit-code-from tff-client
+```
