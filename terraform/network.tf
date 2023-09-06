@@ -140,7 +140,7 @@ resource "google_compute_address" "nat_ip" {
 
 module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
-  version = "5.1.0"
+  version = "6.0.0"
 
   name    = "fl-router"
   network = module.fedlearn-vpc.network_id
