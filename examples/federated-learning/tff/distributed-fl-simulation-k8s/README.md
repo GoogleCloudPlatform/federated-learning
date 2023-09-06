@@ -66,8 +66,9 @@ You can run this example in different runtime environments:
     }
     ```
 
-1. Run `terraform apply`, and wait for Terraform to complete the provisioning process, and the
-    workers to be up and running, and the load balancers to have IP addresses assigned.
+1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.
+1. Open the [GKE Worklods Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+    and wait for the workers Deployments and Services to be ready.
 1. Configure the coordinator by adding the `fltenant3` element to the
     `distributed_tff_example_configuration` map. The other elements of the map
     are the same that you added in previous steps:
@@ -130,7 +131,8 @@ You can run this example in different runtime environments:
     ```
 
 1. Run `terraform apply`.
-1. Wait for the workers Deployments and Services to be ready.
+1. Open the [GKE Worklods Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+    and wait for the workers Deployments and Services to be ready.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
     the resources for the second worker.
 1. Initialize the following Terraform variables for the coordinator:
