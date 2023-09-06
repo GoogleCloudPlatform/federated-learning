@@ -21,10 +21,11 @@ ACM_REPOSITORY_PATH="${1}"
 ACM_REPOSITORY_URL="${2}"
 ACM_BRANCH="${3}"
 
-if [ -e "${ACM_REPOSITORY_PATH}" ]; then
-  echo "${ACM_REPOSITORY_PATH} already exists. Skipping creation."
+mkdir -vp "${ACM_REPOSITORY_PATH}"
+
+if [ -e "${ACM_REPOSITORY_PATH}/.git" ]; then
+  echo "${ACM_REPOSITORY_PATH} already exists and is already initialized. Skipping creation."
 else
-  mkdir -vp "${ACM_REPOSITORY_PATH}"
   git clone "${ACM_REPOSITORY_URL}" "${ACM_REPOSITORY_PATH}"
 fi
 
