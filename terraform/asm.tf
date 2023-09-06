@@ -31,7 +31,9 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
   provider = google-beta
 }
 
-# Wait for the ControlPlaneRevision custom resource to be ready
+# Wait for the ControlPlaneRevision custom resource to be ready.
+# Add an explicit "retry until the resource is created" until
+# https://github.com/kubernetes/kubernetes/issues/83242 is implemented.
 module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
   version = "3.1.2"
@@ -48,7 +50,9 @@ module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
 }
 
 # Wait for the ASM control plane revision to be ready so we can safely deploy resources that depend
-# on ASM mutating webhooks
+# on ASM mutating webhooks.
+# Add an explicit "retry until the resource is created" until
+# https://github.com/kubernetes/kubernetes/issues/83242 is implemented.
 module "kubectl_asm_wait_for_controlplanerevision" {
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
   version = "3.1.2"
