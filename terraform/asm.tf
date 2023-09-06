@@ -39,7 +39,7 @@ module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
   project_id              = data.google_project.project.project_id
   cluster_name            = module.gke.name
   cluster_location        = module.gke.location
-  kubectl_create_command  = "kubectl wait crd/controlplanerevisions.mesh.cloud.google.com --for condition=established --timeout=60m --all-namespaces"
+  kubectl_create_command  = "while ! kubectl wait crd/controlplanerevisions.mesh.cloud.google.com --for condition=established --timeout=60m --all-namespaces ; do sleep 5 done"
   kubectl_destroy_command = ""
 
   module_depends_on = [
@@ -56,7 +56,7 @@ module "kubectl_asm_wait_for_controlplanerevision" {
   project_id              = data.google_project.project.project_id
   cluster_name            = module.gke.name
   cluster_location        = module.gke.location
-  kubectl_create_command  = "kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled"
+  kubectl_create_command  = "while ! kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled ; do sleep 5 done"
   kubectl_destroy_command = ""
 
   module_depends_on = [
