@@ -30,3 +30,16 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
   }
   provider = google-beta
 }
+
+# Wait for the ASM control plane revision to be ready so we can safely deploy resources that depend
+# on ASM mutating webhooks
+module "kubectl_asm_wait_for_controlplanerevision" {
+  source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
+  version = "3.1.2"
+
+  project_id              = data.google_project.project.project_id
+  cluster_name            = module.gke.name
+  cluster_location        = module.gke.location
+  kubectl_create_command  = "kubectl -n istio-system wait ControlPlaneRevision --all --for condition=Reconciled"
+  kubectl_destroy_command = ""
+}
