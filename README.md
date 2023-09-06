@@ -195,9 +195,9 @@ Where `node_name` is the Compute Engine instance name to connect to.
 
 This section describes common issues and troubleshooting steps.
 
-### I/O timeouts during Terraform plan or apply
+### I/O timeouts when Terraform plan or apply
 
-If Terraform reports errors when running `plan` or `apply` because it can't get
+If Terraform reports errors when you run `plan` or `apply` because it can't get
 the status of a resource inside a GKE cluster, and it also reports that it needs
 to update the `cidr_block` of the `master_authorized_networks` block of that
 cluster, it might be that the instance that runs Terraform is not part of any
@@ -212,6 +212,11 @@ terraform apply -target module.gke
 
 Then, you can try running `terraform apply` again, without any resource
 targeting.
+
+### Network address assignment errors when Terraform runs
+
+If Terraform reports `connect: cannot assign requested address` errors when
+you run Terraform, try running the command again.
 
 ### Errors when adding the GKE cluster to the Fleet
 

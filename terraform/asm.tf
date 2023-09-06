@@ -31,11 +31,8 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
   provider = google-beta
 }
 
-# Wait for the ControlPlaneRevision custom resource to be ready and
-# wait for the ASM control plane revision to be ready so we can safely deploy resources that depend
-# on ASM mutating webhooks.
-# Use a single module for two commands to avoid errors when building the plan
-module "kubectl_asm_wait_for_controlplanerevision" {
+# Wait for the ControlPlaneRevision custom resource to be ready
+module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
   version = "3.1.2"
 
@@ -47,5 +44,22 @@ module "kubectl_asm_wait_for_controlplanerevision" {
 
   depends_on = [
     google_gke_hub_feature_membership.mesh_feature_membership
+  ]
+}
+
+# Wait for the ASM control plane revision to be ready so we can safely deploy resources that depend
+# on ASM mutating webhooks
+module "kubectl_asm_wait_for_controlplanerevision" {
+  source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
+  version = "3.1.2"
+
+  project_id              = data.google_project.project.project_id
+  cluster_name            = module.gke.name
+  cluster_location        = module.gke.location
+  kubectl_create_command  = "kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled"
+  kubectl_destroy_command = ""
+
+  depends_on = [
+    module.kubectl_asm_wait_for_controlplanerevision_custom_resource_definition.wait
   ]
 }
