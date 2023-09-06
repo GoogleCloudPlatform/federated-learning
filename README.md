@@ -129,38 +129,38 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 1. Clone this repository
 1. Change into the directory that contains the Terraform code:
 
-  ```sh
-  cd [REPOSITORY]/terraform
-  ```
+    ```sh
+    cd [REPOSITORY]/terraform
+    ```
 
-  Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
+    Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
 
 1. Initialize Terraform:
 
-  ```sh
-  terraform init
-  ```
+    ```sh
+    terraform init
+    ```
 
 1. Initialize the following Terraform variables:
 
-  ```hcl
-  project_id          = # Google Cloud project ID where to provision resources with the blueprint.
-  acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
-  ```
+    ```hcl
+    project_id          = # Google Cloud project ID where to provision resources with the blueprint.
+    acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
+    ```
 
-  If you don't provide all the necessary inputs, Terraform will exit with an
-  error, and will provide information about the missing inputs. For example,
-  you can create a Terraform variables initialization file and set inputs there.
-  For more information about providing these inputs, see
-  [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+    If you don't provide all the necessary inputs, Terraform will exit with an
+    error, and will provide information about the missing inputs. For example,
+    you can create a Terraform variables initialization file and set inputs there.
+    For more information about providing these inputs, see
+    [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
 
 1. Review the proposed changes, and apply them:
 
-  ```sh
-  terraform apply
-  ```
+    ```sh
+    terraform apply
+    ```
 
-  The provisioning process may take about 15 minutes to complete.
+    The provisioning process may take about 15 minutes to complete.
 
 1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
