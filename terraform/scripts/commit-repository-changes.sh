@@ -23,8 +23,9 @@ REPOSITORY_BRANCH="${2}"
 if [ -n "$(git -C "${REPOSITORY_DIRECTORY_PATH}" status --porcelain=v1)" ]; then
   git -C "${REPOSITORY_DIRECTORY_PATH}" add .
   git -C "${REPOSITORY_DIRECTORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-  git -C "${REPOSITORY_DIRECTORY_PATH}" push -u origin "${REPOSITORY_BRANCH}"
 else
   echo "There are no changes to commit."
 fi
+
+# Push in any case
+git -C "${REPOSITORY_DIRECTORY_PATH}" push -u origin "${REPOSITORY_BRANCH}"
