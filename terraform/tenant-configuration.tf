@@ -203,7 +203,7 @@ resource "null_resource" "commit_acm_config_sync_configuration" {
   }
 
   depends_on = [
-    # Wait for ASM to be ready because we rely on ASM injection to be ready
+    # Wait for ASM to be ready because we rely on ASM mutating webhooks
     module.kubectl_asm_wait_for_controlplanerevision,
 
     null_resource.copy_mesh_wide_distributed_tff_example_content,
