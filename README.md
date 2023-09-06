@@ -164,13 +164,15 @@ The blueprint configures a dedicated namespace for tenant apps and resources:
 
 1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
-After the process completes, the GKE cluster is ready to host untrusted workloads.
+### Next steps
+
+After deploying the blueprint completes, the GKE cluster is ready to host untrusted workloads.
 To familiarize with the environment that you provisioned, you can also deploy
 the following examples in the GKE cluster:
 
 - [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
 
-### Add another tenant
+## Add another tenant
 
 This blueprint dynamically provisions a runtime environment for each tenant you
 configure.
@@ -195,7 +197,7 @@ Where `node_name` is the Compute Engine instance name to connect to.
 
 This section describes common issues and troubleshooting steps.
 
-### I/O timeouts when Terraform plan or apply
+### I/O timeouts when running Terraform plan or apply
 
 If Terraform reports errors when you run `plan` or `apply` because it can't get
 the status of a resource inside a GKE cluster, and it also reports that it needs
@@ -213,7 +215,7 @@ terraform apply -target module.gke
 Then, you can try running `terraform apply` again, without any resource
 targeting.
 
-### Network address assignment errors when Terraform runs
+### Network address assignment errors when running Terraform
 
 If Terraform reports `connect: cannot assign requested address` errors when
 you run Terraform, try running the command again.
