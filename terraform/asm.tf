@@ -42,8 +42,4 @@ module "kubectl_asm_wait_for_controlplanerevision" {
   cluster_location        = module.gke.location
   kubectl_create_command  = "kubectl -n istio-system wait ControlPlaneRevision --all --for condition=Reconciled"
   kubectl_destroy_command = ""
-
-  timeouts {
-    create = "60m"
-  }
 }
