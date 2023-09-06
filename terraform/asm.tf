@@ -42,7 +42,7 @@ module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
   kubectl_create_command  = "kubectl wait crd/controlplanerevisions.mesh.cloud.google.com --for condition=established --timeout=60m --all-namespaces"
   kubectl_destroy_command = ""
 
-  depends_on = [
+  module_depends_on = [
     google_gke_hub_feature_membership.mesh_feature_membership
   ]
 }
@@ -59,7 +59,7 @@ module "kubectl_asm_wait_for_controlplanerevision" {
   kubectl_create_command  = "kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled"
   kubectl_destroy_command = ""
 
-  depends_on = [
+  module_depends_on = [
     module.kubectl_asm_wait_for_controlplanerevision_custom_resource_definition.wait
   ]
 }
