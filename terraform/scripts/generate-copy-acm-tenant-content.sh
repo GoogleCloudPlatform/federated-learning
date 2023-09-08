@@ -86,7 +86,7 @@ if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
       "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker-ingress-gateway.yaml"
 
     if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "false" ]; then
-      rm -v "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-workers-outside-mesh.yaml"
+      rm -v "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator-workers-outside-mesh.yaml"
     fi
   fi
 
