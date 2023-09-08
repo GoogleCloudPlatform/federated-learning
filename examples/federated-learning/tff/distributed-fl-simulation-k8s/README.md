@@ -67,7 +67,7 @@ You can run this example in different runtime environments:
     ```
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.
-1. Open the [GKE Worklods Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
     and wait for the workers Deployments and Services to be ready.
 1. Configure the coordinator by adding the `fltenant3` element to the
     `distributed_tff_example_configuration` map. The other elements of the map
@@ -131,7 +131,7 @@ You can run this example in different runtime environments:
     ```
 
 1. Run `terraform apply`.
-1. Open the [GKE Worklods Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
     and wait for the workers Deployments and Services to be ready.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
     the resources for the second worker.
