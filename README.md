@@ -329,7 +329,7 @@ is a
 [dynamic admission controller](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 for Kubernetes that enforces
 [CustomResourceDefinition-based (CRD-based)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/)
- policies that are executed by the
+policies that are executed by the
 [Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
 
 [Admission controllers](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)
