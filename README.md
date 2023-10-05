@@ -3,36 +3,37 @@
 This repository contains a blueprint that creates and secures a
 [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
 (GKE) cluster that is ready to host custom apps distributed by a third party.
-For more information about the architecture of this blueprint, refer to
-[Preparing a GKE cluster for third-party tenants](https://cloud.google.com/architecture/preparing-gke-cluster-apps-distributed-third-party).
 
-This blueprint uses a GKE cluster as the compute infrastructure to host
-containerized apps distributed by a third party. These apps are considered as
-untrusuted workloads within the cluster. Therefore, the cluster
-is configured according to security best practices to isolate and constrain the
-workloads from other workloads and from the cluster control plane. The blueprint
-uses [Anthos](https://cloud.google.com/anthos) features to configure and secure
-the cluster.
+This blueprint suggests controls that you can use to help configure and secure
+GKE clusters that host custom apps distributed by third-party tenants. These
+custom apps are considered as untrusuted workloads within the cluster.
+Therefore, the cluster is configured according to security best practices to
+isolate and constrain the workloads from other workloads and from the cluster
+control plane.
 
 This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
-you can extended the infrastructure to [Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
+you can extended the infrastructure to
+[Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
 
 This blueprint is aimed at cloud platform administrator and data scientists that
 need to provision and configure a secure environment to run potentially
 untrusted workloads in their Google Cloud environment.
 
-## Getting started
+This blueprint assumes that you are familiar with GKE and
+[Kubernetes](https://kubernetes.io/).
+
+## Get started
 
 To deploy this blueprint you need:
 
-- A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled
-- An account with the [Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) on the project
+- A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled.
+- An account with the [Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) on the project.
 
 You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
 but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
 for anything other than experimentation.
 
-## Understanding the repository structure
+## Understand the repository structure
 
 This repository has the following key directories:
 
@@ -43,85 +44,61 @@ This repository has the following key directories:
 
 ## Architecture
 
-The blueprint uses a [multi-tenant](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview) architecture.
+The following diagram describes the architecture that you create with this
+blueprint:
 
-The workloads provided by third parties are treated as a tenant within the
-cluster. Each tenant has its own dedicated Kubernetes namepsace and node pool.
-Tenant workloads are grouped in their dedicated namespaces, and run in isolation
-in their dedicated node pools. The blueprint applies security controls and
-policies to the nodes and namespaces that host these workloads.
-
-### Infrastructure
-
-The following diagram describes the infrastructure created by the blueprint
 ![alt_text](./assets/infra.png "Infrastructure overview")
 
-The infrastructure provisioned by this blueprint includes:
+As shown in the preceding diagram, the blueprint helps you to create and
+configure the following infrastructure components:
 
-- A [VPC network](https://cloud.google.com/vpc/docs/vpc) and subnet.
-- A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept). The blueprint helps you create GKE clusters that implement recommended security settings, such as those described in the [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster). For example, the blueprint helps you:
+- A [Virtual Private Cloud (VPC) network](https://cloud.google.com/vpc/docs/vpc) and subnet.
+- A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept) that helps you:
+  - Isolate cluster nodes from the internet.
   - Limit exposure of your cluster nodes and control plane to the internet by creating a private GKE cluster with [authorised networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
-  - Use shielded nodes that use a hardened node image with the containerd runtime.
+  - Use shielded cluster nodes that use a hardened node image with the containerd runtime.
   - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
   - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
-- Two GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
-  - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads
-  are scheduled onto the tenant nodes.
+- Dedicated GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
+  - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads are scheduled onto the tenant nodes.
   - Other cluster resources are hosted in the main node pool.
 - [VPC Firewall rules](https://cloud.google.com/vpc/docs/firewalls)
   - Baseline rules that apply to all nodes in the cluster.
-  - Additional rules that apply only to the nodes in the tenant node pool (targeted using the node Service Account below). These firewall rules limit egress from the tenant nodes.
+  - Additional rules that apply only to the nodes in the tenant node pool. These firewall rules limit ingress to and egress from tenant nodes.
 - [Cloud NAT](https://cloud.google.com/nat/docs/overview) to allow egress to the internet
 - [Cloud DNS](https://cloud.google.com/dns/docs/overview) records to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet.
-- [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts) used by the cluster.
-  - A dedicated Service Account used by the nodes in the tenant node pool
-  - A dedicated Service Account for use by tenant apps to use with Workload Identity.
+- [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts):
+  - Dedicated service account for the nodes in the tenant node pool.
+  - Dedicated service account for tenant apps to use with Workload Identity.
 - Support for using [Google Groups for Kubernetes RBAC](https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac).
 - A [Cloud Source Repository](https://cloud.google.com/source-repositories/docs) to store configuration descriptors.
 - An [Artifact Registry](https://cloud.google.com/artifact-registry/docs) repository to store container images.
 
 ### Applications
 
-The following diagram describes the apps and resources within the GKE cluster
+The following diagram shows the cluster-level resources that you create and configure with the blueprint.
+
 ![alt_text](./assets/apps.png "Cluster resources and applications")
 
-The cluster includes:
+As shown in the preceding diagram, in the blueprint, you use the following to create and configure the cluster-level resources:
 
-- [Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview), which keeps cluster configuration in sync with config defined in a Git repository.
+- Anthos Config Management [Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview), to sync cluster configuration and policies from a Git repository.
   - When you provision the resources using this blueprint, the tooling initializes a Git repository for Config Sync to consume, and automatically renders the relevant templates and commits changes.
   - The tooling automatically commits any modification to templates in the Config Sync repository on each [run of the provisioning process](#deploy-the-blueprint).
-- [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller) enforces policies ('constraints') for your clusters. These policies act as 'guardrails' and prevent any changes to your cluster that violate security, operational, or compliance controls.
-  - Example policies enforced by the blueprint include:
-    - Selected constraints [similar to PodSecurityPolicy](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security)
-    - Selected constraints from the [template library](https://cloud.google.com/anthos-config-management/docs/reference/constraint-template-library), including:
-      - Prevent creation of external services (Ingress, NodePort/LoadBalancer services)
-      - Allow pods to pull container images only from a named set of repositories
-  - See the resources in the [configsync/policycontroller](configsync/policycontroller) directory for details of the constraints applied by this blueprint.
-- [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview) (ASM) is powered by Istio and enables managed, observable, and secure communication across your services. The blueprint includes service mesh configuration that is applied to the cluster using Config Sync. The following points describe how this blueprint configures the service mesh.
-  - An Egress Gateway that acts a forward-proxy at the edge of the mesh in the `istio-egress` namespace.
-  - The root istio namespace (istio-system) is configured with
-    - PeerAuthentication resource to allow only STRICT mTLS communications between services in the mesh
-    - AuthorizationPolicies that by default deny all communication between services in the mesh.
-  - Tenant namespaces are configured for automatic sidecar proxy injection.
-  - The mesh does not include an Ingress Gateway by default.
+- Anthos Config Management [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller) enforces policies ('constraints') to enforce policies on resources in the cluster.
+- [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview) to control and help secure network traffic.
+- A dedicated namespace and node pools for tenant apps and resources. Custom apps are treated as a tenant within the cluster.
+- Policies and controls applied to the tenant namespace:
+  - Allow egress only to known hosts.
+  - Allow requests that originate from within the same namespace.
+  - By default, deny all ingress and egress traffic to and from pods. This acts as baseline 'deny all' rule.
+  - Allow traffic between pods in the namespace.
+  - Allow egress to required cluster resources such as: Kubernetes DNS, the service mesh control plane, and the GKE metadata server.
+  - Allow egress to Google APIs only using Private Google Access.
+  - Allow running host tenant pods on nodes in the dedicated tenant node pool exclusively.
+  - Use a dedicated Kubernetes service account that is linked to a Cloud Identity and Access Management service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).
 
-The blueprint configures a dedicated namespace for tenant apps and resources:
-
-- The tenant namespace is part of the service mesh. Pods in the namespace receive sidecar proxy containers. The namespace-level mesh resources include:
-  - Sidecar resource that allows egress only to known hosts (`outboundTrafficPolicy: REGISTRY_ONLY`).
-  - AuthorizationPolicy that defines the allowed communication paths within the namespace. The blueprint only allows requests that originate from within the same namespace. This
-  policy is added to the root policy in the istio-system namespace
-- The tenant namespace has [network policies](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) to limit traffic to and from pods in the namespace. For example, the network policy:
-  - By default, denies all ingress and egress traffic to and from the pods. This acts as baseline 'deny all' rule.
-  - Allows traffic between pods in the namespace.
-  - Allows egress to required cluster resources like kube-dns, service mesh control plane and the GKE metadata server.
-  - Allows egress to Google APIs (via Private Google Access).
-- The pods in the tenant namespace are hosted exclusively on nodes in the dedicated tenant node pool.
-  - Any pod deployed to the tenant workspace automatically receives a toleration and nodeAffinity to ensure that it is scheudled only a tenant node.
-  - The toleration and node affinity are automatically applied using [Policy Controller mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation)
-- The apps in the tenant namespace use a dedicated Kubernetes service account that is linked to a Google Cloud service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). This way you can grant appropriate IAM roles to interact with any required Google APIs.
-- The blueprint includes a [sample RBAC ClusterRole](configsync/rbac.yaml) that grants users permissions to interact with limited resource types. The tenant namespace includes a [sample RoleBinding](tenant-config-pkg/rbac.yaml) that grants the role to an example user.
-  - Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
+Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
 
 ## Deploy the blueprint
 
@@ -246,3 +223,249 @@ Pods in the
 If this happens, wait for the cluster to complete the initialiazation, and
 delete the Deployment that has this issue. Config Sync will deploy it again with
 the correct container image identifiers.
+
+## Understanding the security controls that you need
+
+This section discusses the controls that you apply with the blueprint to help
+you secure your GKE cluster.
+
+### Enhanced security of GKE clusters
+
+*Creating clusters according to security best practices.*
+
+The blueprint helps you create a GKE cluster which
+implements the following security settings:
+
+- Limit exposure of your cluster nodes and control plane to the internet
+    by creating a
+    [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
+    with
+    [authorized networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
+- Use
+    [shielded nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
+    that use a hardened node image with the
+    [`containerd`](https://cloud.google.com/kubernetes-engine/docs/concepts/using-containerd)
+    runtime.
+- Increased isolation of tenant workloads using
+    [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
+- [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets)
+    at the application layer.
+
+For more information about GKE security settings, refer to
+[Hardening your cluster's security](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
+
+### VPC firewall rules: Restricting traffic between virtual machines
+
+[VPC firewall rules](https://cloud.google.com/vpc/docs/firewalls)
+govern which traffic is allowed to or from Compute Engine VMs. The rules let
+you filter traffic at VM granularity, depending on
+[Layer 4](https://wikipedia.org/wiki/Transport_layer)
+attributes.
+
+You create a GKE cluster with the
+[default GKE cluster firewall rules](https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules#cluster-fws).
+These firewall rules enable communication between the cluster nodes and
+GKE control plane, and between nodes and Pods in the
+cluster.
+
+You apply additional firewall rules to the nodes in the tenant node pool. These
+firewall rules restrict egress traffic from the tenant nodes. This approach lets
+you increase the isolation of the tenant nodes. By default, all egress traffic
+from the tenant nodes is denied. Any required egress must be explicitly
+configured. For example, you use the blueprint to create firewall rules to allow
+egress from the tenant nodes to the GKE control plane, and
+to Google APIs using
+[Private Google Access](https://cloud.google.com/vpc/docs/private-google-access).
+The firewall rules are targeted to the tenant nodes using the tenant node pool
+[service account](https://cloud.google.com/vpc/docs/firewalls#service-accounts-vs-tags).
+
+<<_shared/_anthos_snippets/_anthos-blueprints-snippets-namespaces.md>>
+
+The blueprint helps you create a dedicated namespace to host the third-party
+apps. The namespace and its resources are treated as a tenant within
+your cluster. You apply policies and controls to the namespace to limit the
+scope of resources in the namespace.
+
+### Network policies: Enforcing network traffic flow within clusters
+
+[Network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+enforce Layer 4 network traffic flows by using Pod-level firewall rules. Network
+policies are
+[scoped to a namespace](https://cloud.google.com/anthos-config-management/docs/how-to/configs#network-policy-config).
+
+In the blueprint, you apply network policies to the tenant namespace that
+hosts the third-party apps. By default, the network policy denies all traffic to
+and from pods in the namespace. Any required traffic must be explicitly
+allowlisted. For example, the network policies in the blueprint explicitly
+allow traffic to required cluster services, such as the cluster internal DNS and
+the Anthos Service Mesh control plane.
+
+### Config Sync: Applying configurations to your GKE clusters
+
+[Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview)
+keeps your GKE clusters in sync with configs stored in a
+Git
+[repository](https://cloud.google.com/anthos-config-management/docs/how-to/repo).
+The Git repository acts as the single source of truth for your cluster
+configuration and policies. Config Sync is declarative. It continuously
+checks cluster state and applies the state declared in the configuration file in
+order to enforce policies, which helps to prevent
+[configuration drift](https://cloud.google.com/anthos-config-management/docs/how-to/prevent-config-drift).
+
+You install Config Sync into your GKE cluster. You
+configure Config Sync to sync cluster configurations and policies from the
+GitHub repository associated with the blueprint. The synced resources include
+the following:
+
+- Cluster-level Anthos Service Mesh configuration
+- Cluster-level security policies
+- Tenant namespace-level configuration and policy including network
+    policies, service accounts, RBAC rules, and Anthos Service Mesh configuration
+
+### Policy Controller: Enforcing compliance with policies
+
+[Anthos Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller)
+is a
+[dynamic admission controller](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+for Kubernetes that enforces
+[CustomResourceDefinition-based (CRD-based)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/)
+policies that are executed by the
+[Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
+
+[Admission controllers](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)
+are Kubernetes plugins that intercept requests to the Kubernetes API server
+before an object is persisted, but after the request is authenticated and
+authorized. You can use admission controllers to limit how a cluster is used.
+
+You install Policy Controller into your GKE cluster. The
+blueprint includes example policies to help secure your cluster. You
+automatically apply the policies to your cluster using Config Sync. You
+apply the following policies:
+
+- Selected policies to help
+    [enforce Pod security](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security).
+    For example, you apply policies that prevent pods
+    [running privileged containers](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#prevent-privileged-containers)
+    and that require a
+    [read-only root file system](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#require-readonly-rootfs).
+- Policies from the Policy Controller
+    [template library](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library).
+    For example, you apply a policy that
+    [disallows services with type NodePort](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library#k8sblocknodeport).
+
+### Anthos Service Mesh: Managing secure communications between services
+
+[Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)
+helps you monitor and manage an
+[Istio](https://istio.io/docs/concepts/what-is-istio/)-based
+service mesh. A service mesh is an infrastructure layer that helps create managed,
+observable, and secure communication across your services.
+
+Anthos Service Mesh helps simplify the management of secure communications
+across services in the following ways:
+
+- Managing authentication and encryption of traffic
+    ([supported protocols](https://cloud.google.com/service-mesh/docs/supported-features#protocol_support)
+    within the cluster using
+    [mutual Transport Layer Communication (mTLS)](https://cloud.google.com/service-mesh/docs/security-overview#mutual_tls)).
+    Anthos Service Mesh manages the provisioning and rotation of mTLS keys and
+    certificates for Anthos workloads without disrupting
+    communications. Regularly rotating mTLS keys is a security best practice
+    that helps reduce exposure in the event of an attack.
+- Letting you configure network security policies based on service
+    identity rather than on the IP address of a peers on the network. Anthos Service Mesh
+    is used to configure identity-aware access control (firewall) policies that
+    let you create security policies that are independent of the network location
+    of the workload. This approach simplifies the process of setting up
+    service-to-service communications policies.
+- Letting you configure policies that permit access from certain clients.
+
+The blueprint guides you to install Anthos Service Mesh in your cluster. You
+configure the tenant namespace for
+[automatic sidecar proxy injection](https://cloud.google.com/service-mesh/docs/proxy-injection).
+This approach ensures that apps in the tenant namespace are part of the mesh.
+You automatically configure Anthos Service Mesh using Config Sync. You
+configure the mesh to do the following:
+
+- Enforce
+    [mTLS communication](https://cloud.google.com/service-mesh/docs/security/configuring-mtls#enforcing_mesh-wide_mtls)
+    between services in the mesh.
+- Limit outbound traffic from the mesh to only known hosts.
+- Limit
+    [authorized communication](https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview)
+    between services in the mesh. For example, apps in the tenant namespace are
+    only allowed to communicate with apps in the same namespace, or with a
+    set of known external hosts.
+- Route all outbound traffic through a mesh gateway where you can apply
+    further traffic controls.
+
+### Node taints and affinities: Controlling workload scheduling
+
+[Node taints](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+and
+[node affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+are Kubernetes mechanisms that let you influence how pods are scheduled onto
+cluster nodes.
+
+Tainted nodes repel pods. Kubernetes will not schedule a Pod onto a tainted
+node unless the Pod has a *toleration* for the taint. You can use node taints to
+reserve nodes for use only by certain workloads or tenants. Taints and
+tolerations are often used in multi-tenant clusters. See the
+[dedicated nodes with taints and tolerations](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview#dedicated_nodes_with_taints_and_tolerations)
+documentation for more information.
+
+Node affinity lets you constrain pods to nodes with particular labels. If a pod
+has a node affinity requirement, Kubernetes will not schedule the Pod onto a
+node unless the node has a label that matches the affinity requirement. You can
+use node affinity to ensure that pods are scheduled onto appropriate nodes.
+
+You can use node taints and node affinity together to ensure tenant workload
+pods are scheduled exclusively onto nodes reserved for the tenant.
+
+The blueprint helps you control the scheduling of the tenant apps in the
+following ways:
+
+- Creating a GKE node pool dedicated to the tenant.
+    Each node in the pool has a taint related to the tenant name.
+- Automatically applying the appropriate toleration and node affinity to
+    any Pod targeting the tenant namespace. You apply the toleration and
+    affinity using
+    [PolicyController mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation).
+
+### Least privilege: Limiting access to cluster and project resources
+
+It is a security best practice to adopt a principle of least privilege for your
+Google Cloud projects and resources like GKE clusters. This
+way, the apps that run inside your cluster, and the developers and operators
+that use the cluster, have only the minimum set of permissions required.
+
+The blueprint helps you use least privilege service accounts in the following
+ways:
+
+- Each GKE node pool receives its own service
+    account. For example, the nodes in the tenant node pool use a service
+    account dedicated to those nodes. The node service accounts are configured
+    with the
+    [minimum required permissions](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
+- The cluster uses
+    [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+    to associate Kubernetes service accounts with Google service accounts. This
+    way, the tenant apps can be granted limited access to any required Google
+    APIs without downloading and storing a service account key. For example,
+    you can grant the service account permissions to read data from a
+    Cloud Storage bucket.
+
+The blueprint helps you
+[restrict access to cluster resources](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_namespaces_and_rbac_to_restrict_access_to_cluster_resources)
+in the following ways:
+
+- You create a sample Kubernetes RBAC role with limited permissions to
+    manage apps. You can grant this role to the users and groups who operate
+    the apps in the tenant namespace. This way, those users only have
+    permissions to modify app resources in the tenant namespace. They do not
+    have permissions to modify cluster-level resources or sensitive security
+    settings like Anthos Service Mesh policies.
+
+## References
+
+- [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
