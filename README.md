@@ -47,7 +47,7 @@ This repository has the following key directories:
 The following diagram describes the architecture that you create with this
 blueprint:
 
-![alt_text](./assets/infra.png "Infrastructure overview")
+![alt_text](./assets/infra.svg "Infrastructure overview")
 
 As shown in the preceding diagram, the blueprint helps you to create and
 configure the following infrastructure components:
@@ -78,7 +78,7 @@ configure the following infrastructure components:
 
 The following diagram shows the cluster-level resources that you create and configure with the blueprint.
 
-![alt_text](./assets/apps.png "Cluster resources and applications")
+![alt_text](./assets/apps.svg "Cluster resources and applications")
 
 As shown in the preceding diagram, in the blueprint, you use the following to create and configure the cluster-level resources:
 
