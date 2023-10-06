@@ -51,6 +51,11 @@ jobs:
           || steps.metadata.outputs.dependency-names == 'hashicorp/external'
           || steps.metadata.outputs.dependency-names == 'hashicorp/google-beta'
           || steps.metadata.outputs.dependency-names == 'hashicorp/google'
+          || steps.metadata.outputs.dependency-names == 'hashicorp/kubernetes'
+          || steps.metadata.outputs.dependency-names == 'hashicorp/terraform'
           || steps.metadata.outputs.dependency-names == 'super-linter/super-linter'
+          || steps.metadata.outputs.dependency-names == 'terraform-google-modules/cloud-dns/google'
+          || steps.metadata.outputs.dependency-names == 'terraform-google-modules/cloud-router/google'
+          || steps.metadata.outputs.dependency-names == 'terraform-google-modules/network/google'
         run: gh pr merge --auto --squash --delete-branch "${PR_URL}"
 ...
