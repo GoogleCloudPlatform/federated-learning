@@ -1,8 +1,11 @@
-# Blueprint: Preparing a GKE cluster for apps distributed by a third party
+# Federated Learning on Google Cloud
 
 This repository contains a blueprint that creates and secures a
 [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
 (GKE) cluster that is ready to host custom apps distributed by a third party.
+
+You can use this blueprint to implement Federated Learning (FL) use cases on
+Google Cloud.
 
 This blueprint suggests controls that you can use to help configure and secure
 GKE clusters that host custom apps distributed by third-party tenants. These
