@@ -8,4 +8,5 @@ WORKDIR /usr/src/app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD tb-gcp-uploader --tensorboard_resource_name $TB_NAME --logdir=$LOGDIR  --experiment_name=$EXPERIMENT_NAME --one_shot=True
+CMD [ "tb-gcp-uploader" ]
+ENTRYPOINT [ "--tensorboard_resource_name", "$TB_NAME", "--logdir=$LOGDIR", "--experiment_name=$EXPERIMENT_NAME", "--one_shot=True" ]
