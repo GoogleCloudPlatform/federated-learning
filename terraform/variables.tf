@@ -109,8 +109,8 @@ variable "cluster_secrets_keyname" {
 
 variable "enable_confidential_nodes" {
   description = "Enable Confidential Nodes"
-  default = false
-  type = bool
+  default     = false
+  type        = bool
 }
 
 variable "acm_version" {
@@ -177,5 +177,16 @@ variable "distributed_tff_example_worker_1_address" {
 variable "distributed_tff_example_worker_2_address" {
   default     = ""
   description = "Address of the second worker of the distributed TensorFlow Federated example. Set this when the worker is outside the coordinator mesh."
+  type        = string
+}
+
+variable "cross-device" {
+  description = "Enable cross device infrastructure deployment"
+  type        = bool
+  default     = false
+}
+
+variable "spanner_instance_config" {
+  description = "Configuration of Spanner instance"
   type        = string
 }

@@ -11,3 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+module "gke-workload-identity" {
+  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  name       = "${var.environment}-gke-wi"
+  namespace  = "default"
+  project_id = var.project_id
+  roles = [
+    "roles/spanner.admin",
+    "roles/logging.logWriter",
+    "roles/iam.serviceAccountTokenCreator",
+    "roles/storage.objectAdmin",
+    "roles/pubsub.admin"
+  ]
+}
