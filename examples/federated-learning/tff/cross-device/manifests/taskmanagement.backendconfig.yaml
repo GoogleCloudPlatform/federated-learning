@@ -1,8 +1,0 @@
-apiVersion: cloud.google.com/v1
-kind: BackendConfig
-metadata:
-  name: demo-env-taskmanagement-backend-config
-  namespace: default
-spec:
-  healthCheck:
-    requestPath: /healthz
