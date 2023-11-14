@@ -22,18 +22,18 @@ module "buckets" {
   names      = ["m-0", "a-0", "g-0"]
   force_destroy = {
     m-0 = var.model_bucket_force_destroy,
-    a-0 = var.aggregated_gradient_bucket_force_destroy,
+    a-0 = var.aggregated_gradient_bucket_force_destroy
     g-0 = var.client_gradient_bucket_force_destroy
   }
   versioning = {
     m-0 = var.model_bucket_versioning
-    a-0 = var.aggregated_gradient_bucket_force_destroy,
+    a-0 = var.aggregated_gradient_bucket_versioning
     g-0 = var.client_gradient_bucket_versioning
   }
   public_access_prevention = "enforced"
   bucket_policy_only = {
-    m-0 = true,
-    a-0 = true,
+    m-0 = true
+    a-0 = true
     g-0 = true
   }
   lifecycle_rules = [{
