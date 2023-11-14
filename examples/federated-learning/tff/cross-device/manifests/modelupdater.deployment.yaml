@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-env-modelupdater #kpt
+  labels:
+    app: modelupdater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: modelupdater
+  template:
+    metadata:
+      labels:
+        app: modelupdater
+    spec:
+      serviceAccountName: demo-env-gke-wi #kpt
+      containers:
+      - name: demo-env-modelupdater #kpt
+        image: europe-west1-docker.pkg.dev/lgu-demos/federated-learning-cross-device/modelupdater@sha256:e3254cc6ffbd18cea9753dc6dc03403fd3eb1e2cb01a64e25b0d6db557fcc578 #kpt
+        env:
+          - name: "FCP_OPTS"
+            value: "--project_id 'lgu-demos' --spanner_instance 'fcp-task-demo-env' --task_database_name 'fcp-task-db-demo-env' --client_gradient_bucket_template 'fcp-demo-env-g-%d' --aggregated_gradient_bucket_template 'fcp-demo-env-a-%d' --model_bucket_template 'fcp-demo-env-m-%d' --download_plan_token_duration 900 --download_checkpoint_token_duration 900 --upload_gradient_token_duration 900 --modelupdater_pubsub_subscription 'modelupdater-demo-env-subscription'" #kpt
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          capabilities:
+            drop:
+              - "NET_RAW"
+        resources:
+          requests:
+            cpu: "2500m"
+            memory: "16Gi"
+            ephemeral-storage: "1Gi"
+      securityContext:
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
+      tolerations:
+        - effect: "NoSchedule"
+          key: "kubernetes.io/arch"
+          operator: "Equal"
+          value: "amd64"
