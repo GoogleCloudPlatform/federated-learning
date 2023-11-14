@@ -107,6 +107,12 @@ variable "cluster_secrets_keyname" {
   type        = string
 }
 
+variable "enable_confidential_nodes" {
+  description = "Enable Confidential Nodes"
+  default = false
+  type = bool
+}
+
 variable "acm_version" {
   description = "Anthos Config Management version"
   default     = ""
