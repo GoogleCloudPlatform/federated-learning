@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Super-Linter
-        uses: super-linter/super-linter@v5.4.3
+        uses: super-linter/super-linter@v5.6.1
         env:
           DISABLE_ERRORS: false
           ERROR_ON_MISSING_EXEC_BIT: true
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         id: init

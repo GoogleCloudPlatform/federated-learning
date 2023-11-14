@@ -14,7 +14,7 @@
 
 module "service_accounts" {
   source     = "terraform-google-modules/service-accounts/google"
-  version    = "4.2.1"
+  version    = "4.2.2"
   project_id = data.google_project.project.project_id
 
   grant_billing_role = false
