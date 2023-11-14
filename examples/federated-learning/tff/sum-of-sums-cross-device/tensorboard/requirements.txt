@@ -1,1 +1,0 @@
-google-cloud-aiplatform[tensorboard]==1.36.0
