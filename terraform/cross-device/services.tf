@@ -31,27 +31,8 @@ module "project-services" {
   project_id                  = var.project_id
   disable_services_on_destroy = false
   activate_apis = [
-    "anthos.googleapis.com",
-    "anthosconfigmanagement.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "cloudbilling.googleapis.com",
-    "cloudkms.googleapis.com",
-    "cloudtrace.googleapis.com",
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "dns.googleapis.com",
-    "gkeconnect.googleapis.com",
-    "gkehub.googleapis.com",
-    "iam.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "logging.googleapis.com",
-    "mesh.googleapis.com",
-    "meshca.googleapis.com",
-    "meshconfig.googleapis.com",
-    "meshtelemetry.googleapis.com",
-    "monitoring.googleapis.com",
-    "sourcerepo.googleapis.com",
-    "stackdriver.googleapis.com"
+    "pubsub.googleapis.com",
+    "spanner.googleapis.com"
   ]
 
   depends_on = [

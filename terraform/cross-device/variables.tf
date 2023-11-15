@@ -19,47 +19,47 @@ variable "environment" {
 }
 
 variable "project_id" {
-  description = "GCP Project ID in which this module will be created."
+  description = "Google Cloud Project ID in which this module will be created."
   type        = string
 }
 
 variable "region" {
-  description = "Region where all services will be created."
+  description = "Region where resources like buckets and pubsub topics will be created."
   type        = string
 }
 
 variable "model_bucket_force_destroy" {
-  description = "Whether to force destroy the bucket even if it is not empty."
+  description = "Enable to force destroy the model bucket even if it is not empty."
   type        = bool
   default     = false
 }
 
 variable "model_bucket_versioning" {
-  description = "Enable bucket versioning."
+  description = "Enable model bucket versioning."
   type        = bool
   default     = false
 }
 
 variable "client_gradient_bucket_force_destroy" {
-  description = "Whether to force destroy the bucket even if it is not empty."
+  description = "Enable to force destroy the client gradient bucket even if it is not empty."
   type        = bool
   default     = false
 }
 
 variable "client_gradient_bucket_versioning" {
-  description = "Enable bucket versioning."
+  description = "Enable client gradient bucket versioning."
   type        = bool
   default     = false
 }
 
 variable "aggregated_gradient_bucket_force_destroy" {
-  description = "Whether to force destroy the bucket even if it is not empty."
+  description = "Enable to force destroy the aggregated gradient bucket even if it is not empty."
   type        = bool
   default     = false
 }
 
 variable "aggregated_gradient_bucket_versioning" {
-  description = "Enable bucket versioning."
+  description = "Enable aggregated gradient bucket versioning."
   type        = bool
   default     = false
 }
@@ -74,6 +74,7 @@ variable "spanner_database_retention_period" {
 variable "spanner_instance_config" {
   description = "Multi region config value for the Spanner Instance. Example: 'nam10' for North America."
   type        = string
+  default     = "regional-europe-west1"
 }
 
 variable "spanner_processing_units" {
