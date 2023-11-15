@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Note: display_name max length = 30
 resource "google_spanner_instance" "fcp_task_spanner_instance" {
   name             = "fcp-task-${var.environment}"
   display_name     = "fcp-task-${var.environment}"

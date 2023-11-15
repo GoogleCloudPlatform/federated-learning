@@ -13,18 +13,18 @@
 # limitations under the License.
 
 variable "environment" {
-  description = "value"
+  description = "Description for the environment, e.g. dev, staging, production."
   type        = string
   default     = "demo-dev"
 }
 
 variable "project_id" {
-  description = "value"
+  description = "GCP Project ID in which this module will be created."
   type        = string
 }
 
 variable "region" {
-  description = "value"
+  description = "Region where all services will be created."
   type        = string
 }
 
@@ -64,9 +64,6 @@ variable "aggregated_gradient_bucket_versioning" {
   default     = false
 }
 
-# https://cloud.google.com/spanner/docs/pitr
-# Must be between 1 hour and 7 days. Can be specified in days, hours, minutes, or seconds.
-# eg: 1d, 24h, 1440m, and 86400s are equivalent.
 variable "spanner_database_retention_period" {
   description = "Duration to maintain table versioning for point-in-time recovery."
   type        = string
@@ -75,8 +72,8 @@ variable "spanner_database_retention_period" {
 }
 
 variable "spanner_instance_config" {
-  type        = string
   description = "Multi region config value for the Spanner Instance. Example: 'nam10' for North America."
+  type        = string
 }
 
 variable "spanner_processing_units" {

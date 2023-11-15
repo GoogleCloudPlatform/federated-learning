@@ -68,7 +68,6 @@ module "gke" {
     auto_upgrade                = true
     enable_integrity_monitoring = true
     enable_secure_boot          = true
-    enable_shielded_nodes       = true
     image_type                  = "COS_CONTAINERD"
     machine_type                = tenant_name == local.main_tenant_name ? var.cluster_default_pool_machine_type : var.cluster_tenant_pool_machine_type
     max_count                   = tenant_name == local.main_tenant_name ? var.cluster_default_pool_max_nodes : var.cluster_tenant_pool_max_nodes
