@@ -22,6 +22,10 @@ COPY --from=terraform /bin/terraform /usr/bin/
 
 COPY ./requirements.txt /tmp/pip-tmp/devcontainer-requirements.txt
 
+# Tell pip how to find legacy releases
 RUN pip3 install --no-cache-dir --upgrade pip \
-    && pip3 --no-cache-dir install -r /tmp/pip-tmp/devcontainer-requirements.txt \
+    && pip3 \
+    --no-cache-dir install \
+    --find-links https://storage.googleapis.com/jax-releases/jax_releases.html \
+    --requirement /tmp/pip-tmp/devcontainer-requirements.txt \
     && rm -rf /tmp/pip-tmp
