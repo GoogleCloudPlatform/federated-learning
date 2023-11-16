@@ -20,20 +20,20 @@ module "buckets" {
   prefix     = "fcp-${var.environment}"
   names      = ["model-0", "aggregated-gradient-0", "client-gradient-0"]
   force_destroy = {
-    model-0 = var.model_bucket_force_destroy,
+    model-0               = var.model_bucket_force_destroy,
     aggregated-gradient-0 = var.aggregated_gradient_bucket_force_destroy
-    client-gradient-0 = var.client_gradient_bucket_force_destroy
+    client-gradient-0     = var.client_gradient_bucket_force_destroy
   }
   versioning = {
-    model-0 = var.model_bucket_versioning
+    model-0               = var.model_bucket_versioning
     aggregated-gradient-0 = var.aggregated_gradient_bucket_versioning
-    client-gradient-0 = var.client_gradient_bucket_versioning
+    client-gradient-0     = var.client_gradient_bucket_versioning
   }
   public_access_prevention = "enforced"
   bucket_policy_only = {
-    model-0 = true
+    model-0               = true
     aggregated-gradient-0 = true
-    client-gradient-0 = true
+    client-gradient-0     = true
   }
   lifecycle_rules = [{
     action = {

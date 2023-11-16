@@ -91,5 +91,5 @@ variable "spanner_database_deletion_protection" {
 
 variable "google_service_account" {
   description = "Google Cloud Service Account for Workload Identity"
-  type = string
+  type        = string
 }
