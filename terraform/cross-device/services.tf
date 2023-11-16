@@ -12,18 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "project-services-cloud-resource-manager" {
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "14.3.0"
-
-  project_id                  = var.project_id
-  disable_services_on_destroy = false
-  activate_apis = [
-    "cloudresourcemanager.googleapis.com"
-  ]
-}
-
-
 module "project-services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "14.3.0"
@@ -33,9 +21,5 @@ module "project-services" {
   activate_apis = [
     "pubsub.googleapis.com",
     "spanner.googleapis.com"
-  ]
-
-  depends_on = [
-    module.project-services-cloud-resource-manager
   ]
 }

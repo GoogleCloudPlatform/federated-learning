@@ -12,17 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "pubsub_aggregator_dl" {
+locals {
+  topics = {
+    aggregator_topic   = "aggregator-${var.environment}"
+    modelupdater_topic = "modelupdater-${var.environment}"
+  }
+}
+
+module "pubsub_dl" {
+  for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
   version              = "6.0.0"
   project_id           = data.google_project.project.project_id
-  topic                = "aggregator-${var.environment}-topic-dead-letter"
+  topic                = "${each.value}-topic-dead-letter"
   create_subscriptions = true
   create_topic         = true
 
   pull_subscriptions = [
     {
-      name                             = "aggregator-dlq-${var.environment}-subscription"
+      name                             = "${each.value}-dlq-subscription"
       topic_message_retention_duration = "604800s"
       retain_acked_messages            = true
       ack_deadline_seconds             = 600
@@ -33,62 +41,19 @@ module "pubsub_aggregator_dl" {
   ]
 }
 
-module "pubsub_aggregator" {
+module "pubsub" {
+  for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
   version              = "6.0.0"
   project_id           = data.google_project.project.project_id
-  topic                = "aggregator-${var.environment}-topic"
+  topic                = "${each.value}-topic"
   create_subscriptions = true
   create_topic         = true
 
   pull_subscriptions = [
     {
-      name                             = "aggregator-${var.environment}-subscription"
-      dead_letter_topic                = "projects/${var.project_id}/topics/aggregator-${var.environment}-topic-dead-letter"
-      topic_message_retention_duration = "604800s"
-      retain_acked_messages            = true
-      ack_deadline_seconds             = 600
-      max_delivery_attempts            = 10
-      enable_exactly_once_delivery     = true
-      service_account                  = "service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
-      expiration_policy                = ""
-    }
-  ]
-}
-
-module "pubsub_modelupdater_dl" {
-  source               = "terraform-google-modules/pubsub/google"
-  version              = "6.0.0"
-  project_id           = data.google_project.project.project_id
-  topic                = "modelupdater-${var.environment}-topic-dead-letter"
-  create_subscriptions = true
-  create_topic         = true
-
-  pull_subscriptions = [
-    {
-      name                             = "modelupdater-dlq-${var.environment}-subscription"
-      topic_message_retention_duration = "604800s"
-      retain_acked_messages            = true
-      ack_deadline_seconds             = 600
-      enable_exactly_once_delivery     = true
-      service_account                  = "service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
-      expiration_policy                = ""
-    }
-  ]
-}
-
-module "pubsub_modelupdater" {
-  source               = "terraform-google-modules/pubsub/google"
-  version              = "6.0.0"
-  project_id           = data.google_project.project.project_id
-  topic                = "modelupdater-${var.environment}-topic"
-  create_subscriptions = true
-  create_topic         = true
-
-  pull_subscriptions = [
-    {
-      name                             = "modelupdater-${var.environment}-subscription"
-      dead_letter_topic                = "projects/${var.project_id}/topics/modelupdater-${var.environment}-topic-dead-letter"
+      name                             = "${each.value}-subscription"
+      dead_letter_topic                = "${var.project_id}/topics/${each.value}-topic-dead-letter"
       topic_message_retention_duration = "604800s"
       retain_acked_messages            = true
       ack_deadline_seconds             = 600

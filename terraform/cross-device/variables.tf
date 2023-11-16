@@ -86,5 +86,10 @@ variable "spanner_processing_units" {
 variable "spanner_database_deletion_protection" {
   description = "Prevents destruction of the Spanner database."
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "google_service_account" {
+  description = "Google Cloud Service Account for Workload Identity"
+  type = string
 }

@@ -15,7 +15,7 @@
 module "gke-workload-identity" {
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   version    = "27.0.0"
-  name       = "${var.environment}-gke-wi"
+  name       = var.google_service_account
   namespace  = "default"
   project_id = data.google_project.project.project_id
   roles = [
