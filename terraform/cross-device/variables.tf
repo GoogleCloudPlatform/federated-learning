@@ -24,7 +24,7 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "Region where resources like buckets and pubsub topics will be created."
+  description = "Region where regional resources will be created."
   type        = string
 }
 
@@ -74,19 +74,16 @@ variable "spanner_database_retention_period" {
 variable "spanner_instance_config" {
   description = "Multi region config value for the Spanner Instance. Example: 'nam10' for North America."
   type        = string
-  default     = "regional-europe-west1"
 }
 
 variable "spanner_processing_units" {
   description = "Spanner's compute capacity. 1000 processing units = 1 node and must be set as a multiple of 100."
   type        = number
-  default     = 1000
 }
 
 variable "spanner_database_deletion_protection" {
   description = "Prevents destruction of the Spanner database."
   type        = bool
-  default     = false
 }
 
 variable "google_service_account" {

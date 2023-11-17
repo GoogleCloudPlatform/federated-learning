@@ -13,7 +13,7 @@
 # limitations under the License.
 
 locals {
-  file_contents = file("${path.module}/my_file.txt")
+  file_contents = file("${path.module}/spanner.ddl.sql")
   string_list   = split(local.file_contents, "\n")
 }
 
