@@ -155,9 +155,11 @@ data "google_project" "project" {
 data "google_client_config" "default" {}
 
 module "cross-device" {
-  source                  = "./cross-device"
-  count                   = var.cross-device ? 1 : 0
-  project_id              = data.google_project.project.id
-  region                  = var.region
-  spanner_instance_config = var.spanner_instance_config
+  source                   = "./cross-device"
+  count                    = var.cross-device ? 1 : 0
+  project_id               = data.google_project.project.id
+  region                   = var.region
+  spanner_instance_config  = var.spanner_instance_config
+  spanner_processing_units = var.spanner_processing_units
+  google_service_account   = local.tenant_apps_kubernetes_service_account_name
 }
