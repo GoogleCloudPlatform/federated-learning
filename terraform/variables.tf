@@ -197,9 +197,3 @@ variable "spanner_processing_units" {
   type        = number
   default     = 1000
 }
-
-variable "spanner_database_deletion_protection" {
-  description = "Prevents destruction of the Spanner database."
-  type        = bool
-  default     = false
-}
