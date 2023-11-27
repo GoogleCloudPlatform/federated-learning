@@ -87,7 +87,7 @@ variable "spanner_database_deletion_protection" {
   default     = false
 }
 
-variable "google_service_account" {
-  description = "Google Cloud Service Account for Workload Identity"
-  type        = string
+variable "list_nodepool_sa_iam_emails" {
+  description = "List of nodepool SA to add cross-device roles to."
+  type        = list(string)
 }
