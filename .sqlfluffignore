@@ -1,2 +1,2 @@
 # Ignore Spanner DDL file as SQlFluff can't handle GoogleSQL yet
-terraform/cross-device/spanner.ddl.sql
+terraform/cross-device/files/spanner.ddl.sql
