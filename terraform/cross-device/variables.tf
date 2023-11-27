@@ -87,7 +87,7 @@ variable "spanner_database_deletion_protection" {
   default     = false
 }
 
-variable "list_nodepool_sa_iam_emails" {
-  description = "List of nodepool SA to add cross-device roles to."
-  type        = list(string)
+variable "tenant_apps_sa_name" {
+  description = "Application SA to use for Workload Identity"
+  type        = string
 }

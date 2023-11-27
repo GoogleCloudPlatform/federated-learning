@@ -155,11 +155,11 @@ data "google_project" "project" {
 data "google_client_config" "default" {}
 
 module "cross-device" {
-  source                      = "./cross-device"
-  count                       = var.cross-device ? 1 : 0
-  project_id                  = data.google_project.project.id
-  region                      = var.region
-  spanner_instance_config     = var.spanner_instance_config
-  spanner_processing_units    = var.spanner_processing_units
-  list_nodepool_sa_iam_emails = local.list_nodepool_sa_iam_emails
+  count                    = var.cross-device ? 1 : 0
+  source                   = "./cross-device"
+  project_id               = data.google_project.project.id
+  region                   = var.region
+  spanner_instance_config  = var.spanner_instance_config
+  spanner_processing_units = var.spanner_processing_units
+  tenant_apps_sa_name      = format("%s-%s-apps-sa", var.cluster_name, "main")
 }
