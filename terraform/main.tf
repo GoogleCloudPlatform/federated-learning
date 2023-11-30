@@ -68,7 +68,6 @@ locals {
   # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
   list_nodepool_sa_iam_emails = [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"]
 
-  list_apps_sa_emails = [for tenant in local.tenants : module.service_accounts.service_accounts_map[tenant.tenant_apps_sa_name].email]
   list_apps_sa_iam_emails = {
     for tenant in local.tenants : tenant.tenant_name => [
       "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_apps_sa_name].email}"
