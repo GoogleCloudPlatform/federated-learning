@@ -202,3 +202,8 @@ variable "tenant_namespace" {
   description = "Namespace of SA where the cross-device workload will be deployed"
   type        = string
 }
+
+variable "tenant_namespace" {
+  description = "Namespace of SA where the workload will be deployed"
+  type        = string
+}

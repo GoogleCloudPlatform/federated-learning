@@ -14,7 +14,7 @@
 
 locals {
   file_contents = file("${path.module}/files/spanner.ddl.sql")
-  string_list   = split(local.file_contents, "\n")
+  string_list   = split("\n", local.file_contents)
 }
 
 resource "google_spanner_instance" "fcp_task_spanner_instance" {
