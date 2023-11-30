@@ -1,0 +1,10 @@
+---
+services:
+  fl-image-classification:
+    image: europe-docker.pkg.dev/lgu-demos/container-image-repository/fl-image-classification:latest
+    build:
+      context: ./container-image
+    container_name: fl-image-classification
+    ports:
+      - 8888:8888
+...
