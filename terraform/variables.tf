@@ -198,7 +198,8 @@ variable "spanner_processing_units" {
   default     = 1000
 }
 
-variable "tenant_namespace" {
+variable "cross_device_workloads_kubernetes_namespace" {
   description = "Namespace of SA where the cross-device workload will be deployed"
   type        = string
+  default     = "main"
 }
