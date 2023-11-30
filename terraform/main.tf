@@ -167,5 +167,5 @@ module "cross-device" {
   region                   = var.region
   spanner_instance_config  = var.spanner_instance_config
   spanner_processing_units = var.spanner_processing_units
-  list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.tenant_namespace]
+  list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
 }
