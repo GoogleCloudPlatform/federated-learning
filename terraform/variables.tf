@@ -197,3 +197,8 @@ variable "spanner_processing_units" {
   type        = number
   default     = 1000
 }
+
+variable "tenant_namespace" {
+  description = "Namespace of SA where the cross-device workload will be deployed"
+  type        = string
+}

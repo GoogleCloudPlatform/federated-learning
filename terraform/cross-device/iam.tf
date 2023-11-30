@@ -12,18 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "gke-workload-identity" {
-  source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version             = "27.0.0"
-  name                = var.tenant_apps_sa_name
-  namespace           = "default"
-  use_existing_gcp_sa = true
-  project_id          = data.google_project.project.project_id
-  roles = [
-    "roles/spanner.admin",
-    "roles/logging.logWriter",
-    "roles/iam.serviceAccountTokenCreator",
-    "roles/storage.objectAdmin",
-    "roles/pubsub.admin"
-  ]
+module "project-iam-bindings" {
+  source   = "terraform-google-modules/iam/google//modules/projects_iam"
+  version  = "7.6.0"
+  projects = [data.google_project.project.project_id]
+
+  bindings = {
+    "roles/spanner.admin"                  = var.list_apps_sa_iam_emails,
+    "roles/logging.logWriter"              = var.list_apps_sa_iam_emails,
+    "roles/iam.serviceAccountTokenCreator" = var.list_apps_sa_iam_emails,
+    "roles/storage.objectAdmin"            = var.list_apps_sa_iam_emails,
+    "roles/pubsub.admin"                   = var.list_apps_sa_iam_emails
+  }
 }

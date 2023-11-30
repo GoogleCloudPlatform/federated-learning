@@ -87,7 +87,7 @@ variable "spanner_database_deletion_protection" {
   default     = false
 }
 
-variable "tenant_apps_sa_name" {
-  description = "Application SA to use for Workload Identity"
-  type        = string
+variable "list_apps_sa_iam_emails" {
+  description = "List of SA to add roles to when deploying cross-device workload"
+  type        = list(string)
 }

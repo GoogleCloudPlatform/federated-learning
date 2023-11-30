@@ -68,6 +68,13 @@ locals {
   # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
   list_nodepool_sa_iam_emails = [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"]
 
+  list_apps_sa_emails = [for tenant in local.tenants : module.service_accounts.service_accounts_map[tenant.tenant_apps_sa_name].email]
+  list_apps_sa_iam_emails = {
+    for tenant in local.tenants : tenant.tenant_name => [
+      "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_apps_sa_name].email}"
+    ]
+  }
+
   list_sa_names = concat(
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
     [for tenant in local.tenants : tenant.tenant_apps_sa_name],
@@ -161,5 +168,5 @@ module "cross-device" {
   region                   = var.region
   spanner_instance_config  = var.spanner_instance_config
   spanner_processing_units = var.spanner_processing_units
-  tenant_apps_sa_name      = format("%s-%s-apps-sa", var.cluster_name, "main")
+  list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.tenant_namespace]
 }
