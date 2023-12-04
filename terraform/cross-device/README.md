@@ -30,7 +30,7 @@ It creates:
 To deploy this solution with end-to-end confidentiality:
 - Set the `cross_device` Terraform variable to `true`
 - Set the `enable_confidential_nodes` Terraform variable to `true` and `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
-- Set the `cross_device_workloads_kubernetes_namespace` Terraform variable with the name of the namespace in which you want to deploy the workloads
+- Set the `cross_device_workloads_kubernetes_namespace` Terraform variable to prepare the namespace for future deployments
 
 To ensure end-to-end confidentiality, you need to enable confidential nodes.
 
