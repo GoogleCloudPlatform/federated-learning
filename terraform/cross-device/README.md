@@ -8,10 +8,6 @@ This module is an example of an end to end demo for cross-device Federated Learn
 - `task-management`: this is a job that manages tasks
 - `task-scheduler`: this is a job that either runs periodically or is triggered by some events
 
-This example builds on top of the infrastructure that the
-[blueprint provides](../../../../README.md), and follows the best practices the
-blueprint establishes.
-
 ## Prerequisites
 
 - A POSIX-compliant shell
@@ -27,6 +23,10 @@ It creates:
 
 ### Deploy the blueprint
 
+This example builds on top of the infrastructure that the
+[blueprint provides](../../../../README.md), and follows the best practices the
+blueprint establishes.
+
 To deploy this solution with end-to-end confidentiality:
 - Set the `cross_device` Terraform variable to `true`
 - Set the `enable_confidential_nodes` Terraform variable to `true` and `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
@@ -34,8 +34,7 @@ To deploy this solution with end-to-end confidentiality:
 
 To ensure end-to-end confidentiality, you need to enable confidential nodes.
 
-However, it is also necessary to use VM families that support this feature, such as **N2D** or **C2D**.
-When using confidential nodes, set `enable_confidential_nodes` to `true` and `cluster_tenant_pool_machine_type` to `n2d-standard-8`. In addition, in order to have the minimum number of replicas required during deployment, you need at least 4 nodes.
+Also, in order to have the minimum number of replicas required during deployment, you need at least 4 nodes.
 
 You will then deploy the cross-device workloads in a namespace. You will need to set the `cross_device_workloads_kubernetes_namespace` variable with the name of the namespace in which you want to deploy the workloads.
 
