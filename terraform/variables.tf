@@ -108,7 +108,7 @@ variable "cluster_secrets_keyname" {
 }
 
 variable "enable_confidential_nodes" {
-  description = "Enable Confidential Nodes"
+  description = "Enable Confidential Nodes to ensure end-to-end confidentiality. It is also necessary to use VM families that support this feature, such as **N2D** or **C2D**"
   default     = false
   type        = bool
 }
@@ -180,7 +180,7 @@ variable "distributed_tff_example_worker_2_address" {
   type        = string
 }
 
-variable "cross-device" {
+variable "cross_device" {
   description = "Enable cross device infrastructure deployment"
   type        = bool
   default     = false

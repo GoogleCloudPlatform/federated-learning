@@ -1,12 +1,12 @@
 # Cross-device Federated Learning
 
 This module is an example of an end to end demo for cross-device Federated Learning. This example deploys 6 different workloads:
-- `aggregator`: this is an offline job that reads device gradients and calculates aggregated result with DP
-- `collector`: this is an offline job that runs periodically to query active task and encrypted gradients, resulting in deciding when to kick off aggregating
-- `modelupdater`: this is an offline job that listens to events and publishes results so that device can download
+- `aggregator`: this is a job that reads device gradients and calculates aggregated result with Differential Privacy
+- `collector`: this is a job that runs periodically to query active task and encrypted gradients, resulting in deciding when to kick off aggregating
+- `modelupdater`: this is a job that listens to events and publishes results so that device can download
 - `task-assignment`: this is a front end service that distributes training tasks to devices
-- `task-management`: this is an offline job that manages tasks
-- `task-scheduler`: this is an offline job that either runs periodically or is triggered by some events
+- `task-management`: this is a job that manages tasks
+- `task-scheduler`: this is a job that either runs periodically or is triggered by some events
 
 This example builds on top of the infrastructure that the
 [blueprint provides](../../../../README.md), and follows the best practices the
@@ -25,14 +25,19 @@ It creates:
 - Pubsub topics that act as buses for messages between microservices
 - Buckets for storing the trained models
 
-To deploy this solution, just set the `cross-device` flag to `true`.
+### Deploy the blueprint
+
+To deploy this solution with end-to-end confidentiality:
+- Set the `cross_device` Terraform variable to `true`
+- Set the `enable_confidential_nodes` Terraform variable to `true` and `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
+- Set the `cross_device_workloads_kubernetes_namespace` Terraform variable with the name of the namespace in which you want to deploy the workloads
 
 To ensure end-to-end confidentiality, you need to enable confidential nodes.
 
 However, it is also necessary to use VM families that support this feature, such as **N2D** or **C2D**.
 When using confidential nodes, set `enable_confidential_nodes` to `true` and `cluster_tenant_pool_machine_type` to `n2d-standard-8`. In addition, in order to have the minimum number of replicas required during deployment, you need at least 4 nodes.
 
-You will then deploy the cross-device workloads in a namespace. You will need to set the `tenant_namespace` variable with the name of the namespace in which you want to deploy the workloads.
+You will then deploy the cross-device workloads in a namespace. You will need to set the `cross_device_workloads_kubernetes_namespace` variable with the name of the namespace in which you want to deploy the workloads.
 
 ### Containers running in different namespaces, in the same GKE cluster
 
@@ -44,10 +49,7 @@ You will then deploy the cross-device workloads in a namespace. You will need to
         enable_confidential_nodes         = true
         cluster_tenant_pool_machine_type  = "n2d-standard-4"
         cluster_default_pool_machine_type = "n2d-standard-4"
-        cross-device                      = true
-        tenant_namespace                  = "main"
+        cross_device                      = true
     ```
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.
-1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
-    and wait for the workers Deployments and Services to be ready.

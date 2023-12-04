@@ -160,8 +160,8 @@ data "google_project" "project" {
 
 data "google_client_config" "default" {}
 
-module "cross-device" {
-  count                    = var.cross-device ? 1 : 0
+module "cross_device" {
+  count                    = var.cross_device ? 1 : 0
   source                   = "./cross-device"
   project_id               = data.google_project.project.id
   region                   = var.region
