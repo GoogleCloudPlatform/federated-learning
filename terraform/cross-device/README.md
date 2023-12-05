@@ -29,14 +29,10 @@ blueprint establishes.
 
 To deploy this solution with end-to-end confidentiality:
 - Set the `cross_device` Terraform variable to `true`
-- Set the `enable_confidential_nodes` Terraform variable to `true` and `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
+- Set the `enable_confidential_nodes` Terraform variable to `true`
+- Set the `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
 - Set the `cross_device_workloads_kubernetes_namespace` Terraform variable to prepare the namespace for future deployments
-
-To ensure end-to-end confidentiality, you need to enable confidential nodes.
-
-Also, in order to have the minimum number of replicas required during deployment, you need at least 4 nodes.
-
-You will then deploy the cross-device workloads in a namespace. You will need to set the `cross_device_workloads_kubernetes_namespace` variable with the name of the namespace in which you want to deploy the workloads.
+- Set the `cluster_default_pool_min_nodes` or `cluster_tenant_pool_min_nodes` to `4`
 
 ### Containers running in different namespaces, in the same GKE cluster
 
