@@ -8,18 +8,18 @@ This module is an example of an end to end demo for cross-device Federated Learn
 - `task-management`: this is a job that manages tasks
 - `task-scheduler`: this is a job that either runs periodically or is triggered by some events
 
-## Prerequisites
-
-- A POSIX-compliant shell
-- Git (tested with version 2.41)
-- Docker (tested with version 20.10.21)
-
 ## Infrastructure
 
 It creates:
 - A spanner instance for storing the status of training
 - Pubsub topics that act as buses for messages between microservices
 - Buckets for storing the trained models
+
+### Prerequisites
+
+- A POSIX-compliant shell
+- Git (tested with version 2.41)
+- Docker (tested with version 20.10.21)
 
 ### Deploy the blueprint
 
