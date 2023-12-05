@@ -1,9 +1,9 @@
-FROM jupyter/tensorflow-notebook
+FROM quay.io/jupyter/tensorflow-notebook:tensorflow-2.15.0
 
 WORKDIR "/home/jovyan"
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
