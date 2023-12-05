@@ -34,11 +34,11 @@ updates:
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
-  - directory: "/examples/federated-learning/tff/image-classification"
+  - directory: "/examples/federated-learning/tff/federated-learning-for-image-classification"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
-  - directory: "/examples/federated-learning/tff/image-classification"
+  - directory: "/examples/federated-learning/tff/federated-learning-for-image-classification"
     package-ecosystem: "pip"
     schedule:
       interval: "daily"

@@ -73,7 +73,7 @@ jobs:
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image
             # Don't run an instance of this because it needs instrumentation
             run: false
-          - name: image-classification
-            context-directory: examples/federated-learning/tff/image-classification
+          - name: federated-learning-for-image-classification
+            context-directory: examples/federated-learning/tff/federated-learning-for-image-classification/container-image
             run: true
 ...
