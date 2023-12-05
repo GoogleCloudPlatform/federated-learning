@@ -28,6 +28,7 @@ RUN pip install --no-cache-dir --upgrade pip
 
 RUN pip install \
     --no-cache-dir \
+    --find-links https://storage.googleapis.com/jax-releases/jax_releases.html \
     --requirement requirements.txt \
     && rm requirements.txt
 
