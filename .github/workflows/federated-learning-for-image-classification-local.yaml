@@ -13,14 +13,14 @@
 # limitations under the License.
 
 ---
-name: Run the distributed FL simulation example locally
+name: Run the FL for image classification example locally
 
 on:  # yamllint disable-line rule:truthy
   push: null
   pull_request: null
 
 jobs:
-  run-distributed-fl-example-locally:
+  run-fl-image-classification-locally:
     permissions:
       contents: read
     runs-on: ubuntu-latest
