@@ -107,6 +107,12 @@ variable "cluster_secrets_keyname" {
   type        = string
 }
 
+variable "enable_confidential_nodes" {
+  description = "Enable Confidential Nodes to ensure end-to-end confidentiality. It is also necessary to use VM families that support this feature, such as **N2D** or **C2D**"
+  default     = false
+  type        = bool
+}
+
 variable "acm_version" {
   description = "Anthos Config Management version"
   default     = ""
@@ -172,4 +178,28 @@ variable "distributed_tff_example_worker_2_address" {
   default     = ""
   description = "Address of the second worker of the distributed TensorFlow Federated example. Set this when the worker is outside the coordinator mesh."
   type        = string
+}
+
+variable "cross_device" {
+  description = "Enable cross device infrastructure deployment"
+  type        = bool
+  default     = false
+}
+
+variable "spanner_instance_config" {
+  description = "Multi region config value for the Spanner Instance. Example: 'nam10' for North America."
+  type        = string
+  default     = "regional-europe-west1"
+}
+
+variable "spanner_processing_units" {
+  description = "Spanner's compute capacity. 1000 processing units = 1 node and must be set as a multiple of 100."
+  type        = number
+  default     = 1000
+}
+
+variable "cross_device_workloads_kubernetes_namespace" {
+  description = "Namespace of SA where the cross-device workload will be deployed"
+  type        = string
+  default     = "main"
 }

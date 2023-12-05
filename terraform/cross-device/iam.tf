@@ -12,18 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
+module "project-iam-bindings" {
+  source   = "terraform-google-modules/iam/google//modules/projects_iam"
+  version  = "7.6.0"
+  projects = [data.google_project.project.project_id]
 
-provider "google-beta" {
-  project = var.project_id
-  region  = var.region
-}
-
-provider "kubernetes" {
-  host                   = "https://${module.gke.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+  bindings = {
+    "roles/spanner.admin"                  = var.list_apps_sa_iam_emails,
+    "roles/logging.logWriter"              = var.list_apps_sa_iam_emails,
+    "roles/iam.serviceAccountTokenCreator" = var.list_apps_sa_iam_emails,
+    "roles/storage.objectAdmin"            = var.list_apps_sa_iam_emails,
+    "roles/pubsub.admin"                   = var.list_apps_sa_iam_emails
+  }
 }

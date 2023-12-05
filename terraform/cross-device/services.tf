@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
+module "project-services" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "14.3.0"
 
-provider "google-beta" {
-  project = var.project_id
-  region  = var.region
-}
-
-provider "kubernetes" {
-  host                   = "https://${module.gke.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
+  activate_apis = [
+    "pubsub.googleapis.com",
+    "spanner.googleapis.com"
+  ]
 }

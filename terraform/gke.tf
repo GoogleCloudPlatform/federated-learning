@@ -21,6 +21,7 @@ module "gke" {
   create_service_account       = false
   datapath_provider            = "ADVANCED_DATAPATH"
   enable_binary_authorization  = true
+  enable_confidential_nodes    = var.enable_confidential_nodes
   enable_private_endpoint      = false
   enable_private_nodes         = true
   enable_shielded_nodes        = true
@@ -59,7 +60,7 @@ module "gke" {
     # Add the local IP of the workstation that applies the Terraform to authorized networks
     {
       display_name : "Local IP",
-      cidr_block : "${chomp(data.http.installation_workstation_ip.body)}/32"
+      cidr_block : "${chomp(data.http.installation_workstation_ip.response_body)}/32"
     }
   ]
 

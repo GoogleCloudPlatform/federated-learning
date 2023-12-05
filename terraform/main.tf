@@ -68,6 +68,12 @@ locals {
   # https://github.com/terraform-google-modules/terraform-google-service-accounts/issues/59
   list_nodepool_sa_iam_emails = [for tenant in local.tenants : "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_nodepool_sa_name].email}"]
 
+  list_apps_sa_iam_emails = {
+    for tenant in local.tenants : tenant.tenant_name => [
+      "serviceAccount:${module.service_accounts.service_accounts_map[tenant.tenant_apps_sa_name].email}"
+    ]
+  }
+
   list_sa_names = concat(
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
     [for tenant in local.tenants : tenant.tenant_apps_sa_name],
@@ -153,3 +159,13 @@ data "google_project" "project" {
 }
 
 data "google_client_config" "default" {}
+
+module "cross_device" {
+  count                    = var.cross_device ? 1 : 0
+  source                   = "./cross-device"
+  project_id               = data.google_project.project.id
+  region                   = var.region
+  spanner_instance_config  = var.spanner_instance_config
+  spanner_processing_units = var.spanner_processing_units
+  list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
+}
