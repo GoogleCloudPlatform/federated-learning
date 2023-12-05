@@ -1,0 +1,10 @@
+---
+services:
+  fl-image-classification:
+    image: fl-image-classification
+    build:
+      context: ./container-image
+    container_name: fl-image-classification
+    ports:
+      - 8888:8888
+...
