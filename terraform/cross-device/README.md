@@ -10,6 +10,11 @@ This module is an example of an end to end demo for cross-device Federated Learn
 
 ## Infrastructure
 
+The following diagram describes the architecture that you create with this
+blueprint:
+
+![alt_text](../../assets/cross-device.svg "Infrastructure overview")
+
 It creates:
 - A spanner instance for storing the status of training
 - Pubsub topics that act as buses for messages between microservices
