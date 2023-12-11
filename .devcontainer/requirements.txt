@@ -13,6 +13,6 @@
 # limitations under the License.
 
 black==23.11.0
-isort==5.12.0
+isort==5.13.0
 nest-asyncio==1.5.8
 tensorflow-federated==0.66.0
