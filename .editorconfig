@@ -30,7 +30,7 @@ indent_size = 2
 indent_size = unset
 
 # Don't try to format binary files
-[*.tfvars.enc]
+[*.{tfvars.enc,ipynb}]
 charset = unset
 end_of_line = unset
 insert_final_newline = unset
