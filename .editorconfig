@@ -29,8 +29,12 @@ indent_size = 2
 [LICENSE]
 indent_size = unset
 
+# Don't check for indentation on Jupyter notebooks
+[*.ipynb]
+indent_size = unset
+
 # Don't try to format binary files
-[*.{tfvars.enc,ipynb}]
+[*.tfvars.enc]
 charset = unset
 end_of_line = unset
 insert_final_newline = unset
