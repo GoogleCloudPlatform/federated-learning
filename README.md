@@ -152,6 +152,8 @@ the following examples in the GKE cluster:
 
 - [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
 
+You can also deploy a cross-device infrastructure by following [this README.md](./terraform/cross-device/README.md)
+
 ## Add another tenant
 
 This blueprint dynamically provisions a runtime environment for each tenant you

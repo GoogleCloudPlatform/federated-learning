@@ -15,6 +15,10 @@ It creates:
 - Pubsub topics that act as buses for messages between microservices
 - Buckets for storing the trained models
 
+The following diagram shows the resources that you create and configure with the blueprint.
+
+![alt_text](../../assets/cross-device.svg "Resources created by the blueprint")
+
 ### Prerequisites
 
 - A POSIX-compliant shell
@@ -26,6 +30,8 @@ It creates:
 This example builds on top of the infrastructure that the
 [blueprint provides](../../README.md), and follows the best practices the
 blueprint establishes.
+
+First, you need to deploy the infrastructure as explained in the [main README](../../README.md#deploy-the-blueprint). It will deploy the base infrastructure. Then, you can deploy the cross-device blueprint.
 
 To deploy this solution with end-to-end confidentiality:
 - Set the `cross_device` Terraform variable to `true`
