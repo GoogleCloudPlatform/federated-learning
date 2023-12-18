@@ -13,4 +13,4 @@
 # limitations under the License.
 
 nest-asyncio==1.5.8
-tensorflow-federated==0.48.0
+tensorflow-federated==0.67.0
