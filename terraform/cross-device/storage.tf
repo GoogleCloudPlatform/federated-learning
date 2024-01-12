@@ -13,12 +13,13 @@
 # limitations under the License.
 
 module "buckets" {
-  source     = "terraform-google-modules/cloud-storage/google"
-  version    = "5.0.0"
-  project_id = data.google_project.project.project_id
-  location   = var.region
-  prefix     = "fcp-${var.environment}-${random_id.bucket_prefix.hex}"
-  names      = ["model-0", "aggregated-gradient-0", "client-gradient-0"]
+  source           = "terraform-google-modules/cloud-storage/google"
+  version          = "5.0.0"
+  project_id       = data.google_project.project.project_id
+  location         = var.region
+  prefix           = "fcp-${var.environment}"
+  randomize_suffix = true
+  names            = ["model-0", "aggregated-gradient-0", "client-gradient-0"]
   force_destroy = {
     model-0               = var.model_bucket_force_destroy,
     aggregated-gradient-0 = var.aggregated_gradient_bucket_force_destroy
@@ -50,8 +51,4 @@ module "buckets" {
       days_since_noncurrent_time = 10
     }
   }]
-}
-
-resource "random_id" "bucket_prefix" {
-  byte_length = 4
 }
