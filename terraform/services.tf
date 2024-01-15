@@ -51,6 +51,7 @@ module "project-services" {
     "meshtelemetry.googleapis.com",
     "monitoring.googleapis.com",
     "sourcerepo.googleapis.com",
+    "spanner.googleapis.com",
     "stackdriver.googleapis.com"
   ]
 
