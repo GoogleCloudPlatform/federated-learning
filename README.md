@@ -152,6 +152,12 @@ the following examples in the GKE cluster:
 
 - [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
 
+Federated learning is typically split into Cross-silo and Cross-device federated learning. Cross-silo federated computation is where the participating members are organizations or companies, and the number of members is usually small (e.g., within a hundred).
+
+Cross-device computation is a type of federated computation where the participating members are end-user devices such as mobile phones and vehicles. The number of members can reach up to a scale of millions or even tens of millions.
+
+You can deploy a cross-device infrastructure by following [this README.md](./terraform/cross-device/README.md)
+
 ## Add another tenant
 
 This blueprint dynamically provisions a runtime environment for each tenant you
