@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-nest-asyncio==1.5.8
+nest-asyncio==1.5.9
 tensorflow-federated==0.48.0
