@@ -14,5 +14,5 @@
 
 black==23.12.1
 isort==5.13.2
-nest-asyncio==1.5.9
+nest-asyncio==1.6.0
 tensorflow-federated==0.67.0
