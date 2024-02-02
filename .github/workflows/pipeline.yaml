@@ -35,13 +35,11 @@ jobs:
       - name: Super-Linter
         uses: super-linter/super-linter@v6.0.0
         env:
-          DISABLE_ERRORS: false
-          ERROR_ON_MISSING_EXEC_BIT: true
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KUBERNETES_KUBECONFORM_OPTIONS: --strict --ignore-missing-schemas
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_JSCPD_ALL_CODEBASE: true
           VALIDATE_NATURAL_LANGUAGE: false
           # Disable Terrascan until https://github.com/tenable/terrascan/issues/1532 is resolved
           VALIDATE_TERRAFORM_TERRASCAN: false
