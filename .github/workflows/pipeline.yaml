@@ -46,7 +46,7 @@ jobs:
         uses: super-linter/super-linter@v6.1.1
         env:
           # Don't validate example Python files because we don't maintain them
-          FILTER_REGEX_EXCLUDE: ".*/examples/federated-learning/tff/**/*.py"
+          FILTER_REGEX_EXCLUDE: ".*/examples/federated-learning/tff/.*/*.py"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KUBERNETES_KUBECONFORM_OPTIONS: --strict --ignore-missing-schemas
           LINTER_RULES_PATH: .
