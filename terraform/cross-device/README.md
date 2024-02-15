@@ -1,10 +1,11 @@
 # Cross-device Federated Learning
 
-This module is an example of an end to end demo for cross-device Federated Learning. This example deploys 6 different workloads:
+This module is an example of an end-to-end demo for cross-device Federated Learning. This example deploys 6 different workloads:
+
 - `aggregator`: this is a job that reads device gradients and calculates aggregated result with Differential Privacy
 - `collector`: this is a job that runs periodically to query active task and encrypted gradients, resulting in deciding when to kick off aggregating
 - `modelupdater`: this is a job that listens to events and publishes results so that device can download
-- `task-assignment`: this is a front end service that distributes training tasks to devices
+- `task-assignment`: this is a frontend service that distributes training tasks to devices
 - `task-management`: this is a job that manages tasks
 - `task-scheduler`: this is a job that either runs periodically or is triggered by some events
 
@@ -15,6 +16,7 @@ The following diagram shows the resources that you create and configure with the
 ![alt_text](../../assets/cross-device.svg "Resources created by the blueprint")
 
 It creates:
+
 - A spanner instance for storing the status of training
 - Pubsub topics that act as buses for messages between microservices
 - Buckets for storing the trained models
@@ -36,6 +38,7 @@ blueprint establishes.
 To deploy the cross-device federated learning blueprint described in this document, you need to deploy the [Federated learning blueprint](../../README.md#deploy-the-blueprint) first. Then, you can deploy the cross-device federated learning blueprint described in this document.
 
 To deploy this solution with end-to-end confidentiality:
+
 - Set the `cross_device` Terraform variable to `true`
 - Set the `enable_confidential_nodes` Terraform variable to `true`
 - Set the `cluster_tenant_pool_machine_type` Terraform variable to `n2d-standard-8`
