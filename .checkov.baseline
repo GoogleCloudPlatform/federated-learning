@@ -1,0 +1,417 @@
+{
+    "failed_checks": [
+        {
+            "file": "/.github/workflows/build-container-images.yaml",
+            "findings": [
+                {
+                    "resource": "on(Build container images)",
+                    "check_ids": [
+                        "CKV2_GHA_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/.github/workflows/distributed-fl-simulation-k8s-local.yaml",
+            "findings": [
+                {
+                    "resource": "on(Run the distributed FL simulation example locally)",
+                    "check_ids": [
+                        "CKV2_GHA_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/configsync/rbac.yaml",
+            "findings": [
+                {
+                    "resource": "ClusterRole.default.developer-core",
+                    "check_ids": [
+                        "CKV_K8S_49"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/configsync/servicemesh/egress-gateway.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.istio-egress.istio-egressgateway",
+                    "check_ids": [
+                        "CKV_K8S_14",
+                        "CKV_K8S_20",
+                        "CKV_K8S_22",
+                        "CKV_K8S_23",
+                        "CKV_K8S_28",
+                        "CKV_K8S_29",
+                        "CKV_K8S_30",
+                        "CKV_K8S_31",
+                        "CKV_K8S_37",
+                        "CKV_K8S_38",
+                        "CKV_K8S_40",
+                        "CKV_K8S_43",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9"
+                    ]
+                },
+                {
+                    "resource": "RoleBinding.istio-egress.istio-egressgateway-sds",
+                    "check_ids": [
+                        "CKV2_K8S_5"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image/Dockerfile",
+            "findings": [
+                {
+                    "resource": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image/Dockerfile.",
+                    "check_ids": [
+                        "CKV_DOCKER_2",
+                        "CKV_DOCKER_3"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg/coordinator.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.ns.tff-coordinator",
+                    "check_ids": [
+                        "CKV_K8S_10",
+                        "CKV_K8S_11",
+                        "CKV_K8S_12",
+                        "CKV_K8S_13",
+                        "CKV_K8S_14",
+                        "CKV_K8S_20",
+                        "CKV_K8S_22",
+                        "CKV_K8S_23",
+                        "CKV_K8S_28",
+                        "CKV_K8S_29",
+                        "CKV_K8S_30",
+                        "CKV_K8S_31",
+                        "CKV_K8S_37",
+                        "CKV_K8S_38",
+                        "CKV_K8S_40",
+                        "CKV_K8S_43",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg/worker.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.ns.tff-worker",
+                    "check_ids": [
+                        "CKV_K8S_10",
+                        "CKV_K8S_11",
+                        "CKV_K8S_12",
+                        "CKV_K8S_13",
+                        "CKV_K8S_14",
+                        "CKV_K8S_20",
+                        "CKV_K8S_22",
+                        "CKV_K8S_23",
+                        "CKV_K8S_28",
+                        "CKV_K8S_29",
+                        "CKV_K8S_30",
+                        "CKV_K8S_31",
+                        "CKV_K8S_37",
+                        "CKV_K8S_38",
+                        "CKV_K8S_40",
+                        "CKV_K8S_43",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/mesh-wide/ingress-gateway.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.istio-ingress.istio-ingressgateway",
+                    "check_ids": [
+                        "CKV_K8S_14",
+                        "CKV_K8S_20",
+                        "CKV_K8S_22",
+                        "CKV_K8S_23",
+                        "CKV_K8S_28",
+                        "CKV_K8S_29",
+                        "CKV_K8S_30",
+                        "CKV_K8S_31",
+                        "CKV_K8S_37",
+                        "CKV_K8S_38",
+                        "CKV_K8S_40",
+                        "CKV_K8S_43",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9"
+                    ]
+                },
+                {
+                    "resource": "RoleBinding.istio-ingress.istio-ingressgateway",
+                    "check_ids": [
+                        "CKV2_K8S_5"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/image-classification/Dockerfile",
+            "findings": [
+                {
+                    "resource": "/examples/federated-learning/tff/image-classification/Dockerfile.",
+                    "check_ids": [
+                        "CKV_DOCKER_2",
+                        "CKV_DOCKER_3"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/acm.tf",
+            "findings": [
+                {
+                    "resource": "704b41fb88f830a874e6e4a4e43791e5621da5af",
+                    "check_ids": [
+                        "CKV_SECRET_6"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/artifact-registry.tf",
+            "findings": [
+                {
+                    "resource": "google_artifact_registry_repository.container_image_repository",
+                    "check_ids": [
+                        "CKV_GCP_84"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/asm.tf",
+            "findings": [
+                {
+                    "resource": "kubectl_asm_wait_for_controlplanerevision",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/cross-device/iam.tf",
+            "findings": [
+                {
+                    "resource": "module.cross_device.project-iam-bindings",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/cross-device/pubsub.tf",
+            "findings": [
+                {
+                    "resource": "module.cross_device.pubsub[\"aggregator_topic\"]",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "module.cross_device.pubsub[\"modelupdater_topic\"]",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "module.cross_device.pubsub_dl[\"aggregator_topic\"]",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "module.cross_device.pubsub_dl[\"modelupdater_topic\"]",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/cross-device/services.tf",
+            "findings": [
+                {
+                    "resource": "module.cross_device.project-services",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/cross-device/spanner.tf",
+            "findings": [
+                {
+                    "resource": "module.cross_device.google_spanner_database.fcp_task_spanner_database",
+                    "check_ids": [
+                        "CKV_GCP_119",
+                        "CKV_GCP_120",
+                        "CKV_GCP_93"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/cross-device/storage.tf",
+            "findings": [
+                {
+                    "resource": "module.cross_device.buckets",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/dns.tf",
+            "findings": [
+                {
+                    "resource": "cloud-dns-private-artifact-registry",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "cloud-dns-private-container-registry",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "cloud-dns-private-google-apis",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "distributed-tff-example-dns",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "source-repositories-private-artifact-registry",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/gke.tf",
+            "findings": [
+                {
+                    "resource": "gke",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/iam.tf",
+            "findings": [
+                {
+                    "resource": "cloud-source-repositories-workload-identity",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "fl-workload-identity",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "project-iam-bindings",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "service_accounts",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/kms.tf",
+            "findings": [
+                {
+                    "resource": "kms",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/network.tf",
+            "findings": [
+                {
+                    "resource": "cloud_router",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "distributed_tff_example_firewall_rules",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "fedlearn-vpc",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/services.tf",
+            "findings": [
+                {
+                    "resource": "project-services",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "project-services-cloud-resource-manager",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        }
+    ]
+}

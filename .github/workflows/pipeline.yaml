@@ -25,22 +25,32 @@ on: # yamllint disable-line rule:truthy
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: null
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
       - name: Super-Linter
-        uses: super-linter/super-linter@v5.7.2
+        uses: super-linter/super-linter@v6.1.1
         env:
-          DISABLE_ERRORS: false
-          ERROR_ON_MISSING_EXEC_BIT: true
+          # Don't validate example Python files because we don't maintain them
+          FILTER_REGEX_EXCLUDE: ".*/examples/federated-learning/tff/.*/*.py"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KUBERNETES_KUBECONFORM_OPTIONS: --strict --ignore-missing-schemas
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_JSCPD_ALL_CODEBASE: true
-          VALIDATE_NATURAL_LANGUAGE: false
           # Disable Terrascan until https://github.com/tenable/terrascan/issues/1532 is resolved
           VALIDATE_TERRAFORM_TERRASCAN: false
   ci:

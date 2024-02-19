@@ -25,6 +25,11 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
+      - name: Free disk space
+        shell: bash
+        run: |
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
