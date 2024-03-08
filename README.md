@@ -31,6 +31,9 @@ To deploy this blueprint you need:
 
 - A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled.
 - An account with the [Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) on the project.
+- The `serviceusage.googleapis.com` must be enabled on the project. For more
+  information about enabling APIs, see
+  [Enabling and disabling services](https://cloud.google.com/service-usage/docs/enable-disable)
 
 You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
 but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
@@ -154,7 +157,7 @@ the following examples in the GKE cluster:
 
 Federated learning is typically split into Cross-silo and Cross-device federated learning. Cross-silo federated computation is where the participating members are organizations or companies, and the number of members is usually small (e.g., within a hundred).
 
-Cross-device computation is a type of federated computation where the participating members are end-user devices such as mobile phones and vehicles. The number of members can reach up to a scale of millions or even tens of millions.
+Cross-device computation is a type of federated computation where the participating members are end user devices such as mobile phones and vehicles. The number of members can reach up to a scale of millions or even tens of millions.
 
 You can deploy a cross-device infrastructure by following [this README.md](./terraform/cross-device/README.md)
 
