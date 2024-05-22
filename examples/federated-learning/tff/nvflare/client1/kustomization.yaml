@@ -1,0 +1,14 @@
+---
+resources:
+  - ../base-client
+
+commonLabels:
+  run: nvflare-client1
+
+nameSuffix: "1"
+
+configMapGenerator:
+  - name: client-configmap
+    literals:
+      - site=site-1
+...
