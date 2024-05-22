@@ -12,21 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-bookworm
+data "google_project" "project" {
+  project_id = var.project_id
+}
 
-WORKDIR "/"
-COPY requirements.txt requirements.txt
-
-RUN pip install --no-cache-dir --upgrade pip
-
-RUN pip install \
-    --no-cache-dir \
-    --find-links https://storage.googleapis.com/jax-releases/jax_releases.html \
-    --requirement requirements.txt \
-    && rm requirements.txt
-
-ENV RUN_DIR="/root/worker"
-WORKDIR "${RUN_DIR}"
-COPY ./worker_service.py "${RUN_DIR}/"
-
-ENTRYPOINT [ "python3", "./worker_service.py" ]
+module "buckets" {
+  source           = "terraform-google-modules/cloud-storage/google"
+  version          = "5.0.0"
+  project_id       = data.google_project.project.project_id
+  location         = var.region
+  prefix           = "fcp-${var.environment}"
+  randomize_suffix = true
+  names            = [var.workspace_bucket_name]
+}

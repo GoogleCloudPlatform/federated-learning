@@ -1,0 +1,9 @@
+---
+resources:
+  - ../base-server
+
+commonLabels:
+  run: nvflare-server1
+
+nameSuffix: "1"
+...

@@ -49,7 +49,7 @@ You can run this example in different runtime environments:
 
 ### Containers running in different namespaces, in the same GKE cluster
 
-1. Provision infrastructure by following the instructions in the [main README](../../../../README.md).
+1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md).
 1. From Cloud Shell, change the working directory to the `terraform` directory.
 1. Initialize the following Terraform variables for the workers:
 
@@ -97,11 +97,11 @@ You can run this example in different runtime environments:
 
 ### Containers running in different GKE clusters
 
-1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
     to provision and configure the environment for the first worker in a dedicated Google Cloud project.
-1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
     to provision and configure the environment for the second worker in a dedicated Google Cloud project.
-1. Provision infrastructure by following the instructions in the [main README](../../../../README.md)
+1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
     to provision and configure the environment for the coordinator in a dedicated Google Cloud project.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
     the resources for the first worker.

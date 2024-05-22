@@ -1,0 +1,5 @@
+---
+resources:
+  - base-server-deployment.yml
+  - base-server-service.yml
+...

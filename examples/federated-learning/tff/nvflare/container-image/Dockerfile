@@ -1,0 +1,14 @@
+FROM nvflare/nvflare:2.4.1
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN groupadd -g ${GROUP_ID} nvflare
+RUN useradd -ms /bin/bash --uid ${USER_ID} --gid ${GROUP_ID} nvflare && chown -R nvflare /opt/NVFlare
+
+USER nvflare
+
+WORKDIR /opt/NVFlare
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
