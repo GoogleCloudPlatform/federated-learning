@@ -1,0 +1,5 @@
+---
+resources:
+  - pv-workspace.yml
+  - pvc-workspace.yml
+...

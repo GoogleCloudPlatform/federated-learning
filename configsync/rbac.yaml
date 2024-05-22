@@ -21,9 +21,16 @@ metadata:
   name: developer-core
 rules:
   - apiGroups: [""] # "" indicates the core API group
-    resources: ["pods", "services", "persistentvolumes", "persistentvolumeclaims", "secrets", "configmaps"]
+    resources:
+      [
+        "pods",
+        "services",
+        "persistentvolumes",
+        "persistentvolumeclaims",
+        "secrets",
+        "configmaps",
+      ]
     verbs: ["*"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["*"]
-...

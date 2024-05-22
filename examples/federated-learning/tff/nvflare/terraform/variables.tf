@@ -12,7 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-black==24.4.2
-isort==5.13.2
-nest-asyncio==1.6.0
-tensorflow-federated==0.67.0
+variable "environment" {
+  description = "Description for the environment, e.g. dev, staging, production."
+  type        = string
+  default     = "demo-dev"
+}
+
+variable "project_id" {
+  description = "Google Cloud Project ID in which this module will be created."
+  type        = string
+}
+
+variable "region" {
+  description = "Region where regional resources will be created."
+  type        = string
+}
+
+variable "workspace_bucket_name" {
+  description = "Bucket name that will contain nvflare workspace."
+  type        = string
+  default     = "nvflare-storage"
+}

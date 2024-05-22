@@ -19,7 +19,7 @@
 apiVersion: mutations.gatekeeper.sh/v1alpha1
 kind: Assign
 metadata:
-  name: mutator-add-nodeaffinity  # kpt-set: mutator-add-nodeaffinity-${tenant-name}
+  name: mutator-add-nodeaffinity # kpt-set: mutator-add-nodeaffinity-${tenant-name}
 spec:
   applyTo:
     - groups: [""]
@@ -27,7 +27,7 @@ spec:
       versions: ["v1"]
   match:
     namespaces:
-      - "ns"  # kpt-set: ${tenant-name}
+      - "ns" # kpt-set: ${tenant-name}
   location: "spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms"
   parameters:
     assign:
@@ -36,8 +36,7 @@ spec:
             - key: "tenant"
               operator: In
               values:
-                - "ns"  # kpt-set: ${tenant-name}
-...
+                - "ns" # kpt-set: ${tenant-name}
 ---
 # Adds a toleration to all pods in a specific namespace
 apiVersion: mutations.gatekeeper.sh/v1alpha1
@@ -51,13 +50,12 @@ spec:
       versions: ["v1"]
   match:
     namespaces:
-      - "ns"  # kpt-set: ${tenant-name}
+      - "ns" # kpt-set: ${tenant-name}
   location: "spec.tolerations"
   parameters:
     assign:
       value:
         - key: "tenant"
           operator: "Equal"
-          value: "ns"  # kpt-set: ${tenant-name}
+          value: "ns" # kpt-set: ${tenant-name}
           effect: "NoExecute"
-...

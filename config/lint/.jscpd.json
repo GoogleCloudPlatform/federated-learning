@@ -1,12 +1,6 @@
 {
   "threshold": 0,
-  "reporters": [
-    "consoleFull"
-  ],
-  "ignore": [
-    "**/configsync/**",
-    "**/examples/**",
-    "**/tenants/**"
-  ],
+  "reporters": ["consoleFull"],
+  "ignore": ["**/configsync/**", "**/examples/**", "**/tenants/**"],
   "absolute": true
 }

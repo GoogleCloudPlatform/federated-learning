@@ -12,21 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-bookworm
+module "storage_bucket_iam_bindings" {
+  source          = "terraform-google-modules/iam/google//modules/storage_buckets_iam"
+  version         = "7.7.1"
+  storage_buckets = [var.workspace_bucket_name]
 
-WORKDIR "/"
-COPY requirements.txt requirements.txt
-
-RUN pip install --no-cache-dir --upgrade pip
-
-RUN pip install \
-    --no-cache-dir \
-    --find-links https://storage.googleapis.com/jax-releases/jax_releases.html \
-    --requirement requirements.txt \
-    && rm requirements.txt
-
-ENV RUN_DIR="/root/worker"
-WORKDIR "${RUN_DIR}"
-COPY ./worker_service.py "${RUN_DIR}/"
-
-ENTRYPOINT [ "python3", "./worker_service.py" ]
+  bindings = {
+    "roles/storage.objectUser" = [
+      "principal://iam.googleapis.com/projects/${data.google_project.project.number}/locations/global/workloadIdentityPools/${data.google_project.project.project_id}.svc.id.goog/subject/ns/default/sa/default",
+    ]
+  }
+}

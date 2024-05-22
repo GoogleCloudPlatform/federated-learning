@@ -46,15 +46,15 @@ To deploy this solution with end-to-end confidentiality:
 
 ### Containers running in different namespaces, in the same GKE cluster
 
-1. Provision infrastructure by following the instructions in the [main README](../../README.md).
+1. Provision infrastructure by following the instructions in the [main readme](../../README.md).
 1. From Cloud Shell, change the working directory to the `terraform` directory.
 1. Initialize the following Terraform variables:
 
-    ```hcl
-        enable_confidential_nodes         = true
-        cluster_tenant_pool_machine_type  = "n2d-standard-4"
-        cluster_default_pool_machine_type = "n2d-standard-4"
-        cross_device                      = true
-    ```
+   ```hcl
+       enable_confidential_nodes         = true
+       cluster_tenant_pool_machine_type  = "n2d-standard-4"
+       cluster_default_pool_machine_type = "n2d-standard-4"
+       cross_device                      = true
+   ```
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.

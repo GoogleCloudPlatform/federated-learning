@@ -18,14 +18,8 @@ services:
     image: tff-runtime:latest
     build:
       context: ./container-image
-    command:
-      [
-        "./training_procedure.py",
-        "tff-worker-1",
-        "tff-worker-2"
-      ]
+    command: ["./training_procedure.py", "tff-worker-1", "tff-worker-2"]
     depends_on:
       - tff-worker-1
       - tff-worker-2
     container_name: tff-client
-...

@@ -1,23 +1,26 @@
 {
   "name": "Python 3",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "image": "ghcr.io/super-linter/super-linter:v7.0.0",
   "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.wordWrap": "off",
+        "prettier.resolveGlobalModules": true
+      },
       "extensions": [
         "DavidAnson.vscode-markdownlint",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
         "HashiCorp.terraform",
         "ms-azuretools.vscode-docker",
         "ms-python.isort",
         "ms-python.python",
-        "ms-python.vscode-pylance"
+        "ms-python.vscode-pylance",
+        "mkhl.shfmt",
+        "timonwong.shellcheck"
       ]
     }
   },
-  "remoteUser": "vscode",
-  "runArgs": [
-    "--rm"
-  ]
+  "runArgs": ["--rm", "--env-file", ".devcontainer/devcontainer.env"]
 }

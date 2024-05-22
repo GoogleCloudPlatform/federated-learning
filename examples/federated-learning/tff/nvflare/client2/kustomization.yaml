@@ -1,0 +1,17 @@
+---
+resources:
+  - ../base-deployment
+
+labels:
+  - pairs:
+      run: nvflare-client2
+    includeSelectors: true
+
+nameSuffix: -client2
+
+configMapGenerator:
+  - name: configmap
+    namespace: nvflare
+    literals:
+      - site=site-2
+...

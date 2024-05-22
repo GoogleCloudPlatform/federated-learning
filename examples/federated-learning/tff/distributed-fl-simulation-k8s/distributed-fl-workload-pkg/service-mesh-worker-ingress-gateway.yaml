@@ -17,7 +17,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: tff-worker-ingress-gateway
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   hosts:
     - "*"
@@ -26,7 +26,6 @@ spec:
   http:
     - route:
         - destination:
-            host: tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+            host: tff-worker.ns.svc.cluster.local # kpt-set: tff-worker.${namespace}.svc.cluster.local
             port:
               number: 8000
-...

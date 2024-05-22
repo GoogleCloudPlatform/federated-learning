@@ -25,4 +25,3 @@ subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: someuser@example.com # kpt-set: ${tenant-developer}
-...

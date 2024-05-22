@@ -18,7 +18,7 @@ name: Build container images
 env:
   CONTAINER_IMAGE_REGISTRY: ghcr.io
 
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push: null
   pull_request: null
 
@@ -30,6 +30,13 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
+      - name: Free Disk space
+        shell: bash
+        run: |
+          sudo rm -rf /usr/local/lib/android || true
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/.ghcup || true
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
@@ -66,14 +73,11 @@ jobs:
     strategy:
       matrix:
         container-images:
-          - name: devcontainer
-            context-directory: .devcontainer
-            run: true
           - name: distributed-fl-simulation-k8s
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image
             # Don't run an instance of this because it needs instrumentation
             run: false
-          - name: image-classification
-            context-directory: examples/federated-learning/tff/image-classification
+          - name: nvflare
+            context-directory: examples/federated-learning/tff/nvflare/container-image
             run: true
 ...

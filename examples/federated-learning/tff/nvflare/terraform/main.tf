@@ -12,4 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-tensorflow-federated==0.67.0
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
+module "buckets" {
+  source           = "terraform-google-modules/cloud-storage/google"
+  version          = "5.0.0"
+  project_id       = data.google_project.project.project_id
+  location         = var.region
+  prefix           = "fcp-${var.environment}"
+  randomize_suffix = true
+  names            = [var.workspace_bucket_name]
+}

@@ -22,4 +22,3 @@ metadata:
 spec:
   mtls:
     mode: STRICT
-...

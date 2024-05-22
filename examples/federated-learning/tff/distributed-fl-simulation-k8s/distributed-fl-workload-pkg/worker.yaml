@@ -19,7 +19,7 @@ metadata:
   labels:
     app: tff-example-app
   name: tff-worker
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   selector:
     app: tff-worker
@@ -27,7 +27,6 @@ spec:
     - port: 8000
       targetPort: 8000
       name: grpc
-...
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -35,7 +34,7 @@ metadata:
   labels:
     app: tff-example-app
   name: tff-worker
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   replicas: 1
   selector:
@@ -48,16 +47,15 @@ spec:
     spec:
       containers:
         - name: tff-worker
-          image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
+          image: tff-runtime:latest # kpt-set: ${tff-runtime-container-image-id}
           args:
             - "./worker_service.py"
           env:
             - name: EMNIST_PARTITION_FILE_NAME
-              value: emnist_part_1.sqlite  # kpt-set: ${tff-workload-emnist-partition-file-name}
+              value: emnist_part_1.sqlite # kpt-set: ${tff-workload-emnist-partition-file-name}
           ports:
             - containerPort: 8000
-      serviceAccountName: tff-worker-service-account  # kpt-set: ${tff-pod-service-account-name}
-...
+      serviceAccountName: tff-worker-service-account # kpt-set: ${tff-pod-service-account-name}
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -73,7 +71,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: ns # kpt-set: ${namespace}
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -89,7 +86,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-ingress # kpt-set: ${coordinator-namespace}
-...
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -109,4 +105,3 @@ spec:
   selector:
     matchLabels:
       app: tff-worker
-...

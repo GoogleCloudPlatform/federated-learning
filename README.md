@@ -112,38 +112,38 @@ Users and teams managing tenant apps should not have permissions to change clust
 1. Clone this repository
 1. Change into the directory that contains the Terraform code:
 
-    ```sh
-    cd [REPOSITORY]/terraform
-    ```
+   ```sh
+   cd [REPOSITORY]/terraform
+   ```
 
-    Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
+   Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
 
 1. Initialize Terraform:
 
-    ```sh
-    terraform init
-    ```
+   ```sh
+   terraform init
+   ```
 
 1. Initialize the following Terraform variables:
 
-    ```hcl
-    project_id          = # Google Cloud project ID where to provision resources with the blueprint.
-    acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
-    ```
+   ```hcl
+   project_id          = # Google Cloud project ID where to provision resources with the blueprint.
+   acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
+   ```
 
-    If you don't provide all the necessary inputs, Terraform will exit with an
-    error, and will provide information about the missing inputs. For example,
-    you can create a Terraform variables initialization file and set inputs there.
-    For more information about providing these inputs, see
-    [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+   If you don't provide all the necessary inputs, Terraform will exit with an
+   error, and will provide information about the missing inputs. For example,
+   you can create a Terraform variables initialization file and set inputs there.
+   For more information about providing these inputs, see
+   [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
 
 1. Review the proposed changes, and apply them:
 
-    ```sh
-    terraform apply
-    ```
+   ```sh
+   terraform apply
+   ```
 
-    The provisioning process may take about 15 minutes to complete.
+   The provisioning process may take about 15 minutes to complete.
 
 1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
@@ -243,25 +243,25 @@ you secure your GKE cluster.
 
 ### Enhanced security of GKE clusters
 
-*Creating clusters according to security best practices.*
+_Creating clusters according to security best practices._
 
 The blueprint helps you create a GKE cluster which
 implements the following security settings:
 
 - Limit exposure of your cluster nodes and control plane to the internet
-    by creating a
-    [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
-    with
-    [authorized networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
+  by creating a
+  [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
+  with
+  [authorized networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
 - Use
-    [shielded nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
-    that use a hardened node image with the
-    [`containerd`](https://cloud.google.com/kubernetes-engine/docs/concepts/using-containerd)
-    runtime.
+  [shielded nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
+  that use a hardened node image with the
+  [`containerd`](https://cloud.google.com/kubernetes-engine/docs/concepts/using-containerd)
+  runtime.
 - Increased isolation of tenant workloads using
-    [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
+  [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
 - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets)
-    at the application layer.
+  at the application layer.
 
 For more information about GKE security settings, refer to
 [Hardening your cluster's security](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
@@ -291,7 +291,7 @@ to Google APIs using
 The firewall rules are targeted to the tenant nodes using the tenant node pool
 [service account](https://cloud.google.com/vpc/docs/firewalls#service-accounts-vs-tags).
 
-<<_shared/_anthos_snippets/_anthos-blueprints-snippets-namespaces.md>>
+<<\_shared/\_anthos_snippets/\_anthos-blueprints-snippets-namespaces.md>>
 
 The blueprint helps you create a dedicated namespace to host the third-party
 apps. The namespace and its resources are treated as a tenant within
@@ -332,7 +332,7 @@ the following:
 - Cluster-level Anthos Service Mesh configuration
 - Cluster-level security policies
 - Tenant namespace-level configuration and policy including network
-    policies, service accounts, RBAC rules, and Anthos Service Mesh configuration
+  policies, service accounts, RBAC rules, and Anthos Service Mesh configuration
 
 ### Policy Controller: Enforcing compliance with policies
 
@@ -355,15 +355,15 @@ automatically apply the policies to your cluster using Config Sync. You
 apply the following policies:
 
 - Selected policies to help
-    [enforce Pod security](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security).
-    For example, you apply policies that prevent pods
-    [running privileged containers](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#prevent-privileged-containers)
-    and that require a
-    [read-only root file system](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#require-readonly-rootfs).
+  [enforce Pod security](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security).
+  For example, you apply policies that prevent pods
+  [running privileged containers](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#prevent-privileged-containers)
+  and that require a
+  [read-only root file system](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#require-readonly-rootfs).
 - Policies from the Policy Controller
-    [template library](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library).
-    For example, you apply a policy that
-    [disallows services with type NodePort](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library#k8sblocknodeport).
+  [template library](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library).
+  For example, you apply a policy that
+  [disallows services with type NodePort](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library#k8sblocknodeport).
 
 ### Anthos Service Mesh: Managing secure communications between services
 
@@ -377,19 +377,19 @@ Anthos Service Mesh helps simplify the management of secure communications
 across services in the following ways:
 
 - Managing authentication and encryption of traffic
-    ([supported protocols](https://cloud.google.com/service-mesh/docs/supported-features#protocol_support)
-    within the cluster using
-    [mutual Transport Layer Communication (mTLS)](https://cloud.google.com/service-mesh/docs/security-overview#mutual_tls)).
-    Anthos Service Mesh manages the provisioning and rotation of mTLS keys and
-    certificates for Anthos workloads without disrupting
-    communications. Regularly rotating mTLS keys is a security best practice
-    that helps reduce exposure in the event of an attack.
+  ([supported protocols](https://cloud.google.com/service-mesh/docs/supported-features#protocol_support)
+  within the cluster using
+  [mutual Transport Layer Communication (mTLS)](https://cloud.google.com/service-mesh/docs/security-overview#mutual_tls)).
+  Anthos Service Mesh manages the provisioning and rotation of mTLS keys and
+  certificates for Anthos workloads without disrupting
+  communications. Regularly rotating mTLS keys is a security best practice
+  that helps reduce exposure in the event of an attack.
 - Letting you configure network security policies based on service
-    identity rather than on the IP address of a peers on the network. Anthos Service Mesh
-    is used to configure identity-aware access control (firewall) policies that
-    let you create security policies that are independent of the network location
-    of the workload. This approach simplifies the process of setting up
-    service-to-service communications policies.
+  identity rather than on the IP address of a peers on the network. Anthos Service Mesh
+  is used to configure identity-aware access control (firewall) policies that
+  let you create security policies that are independent of the network location
+  of the workload. This approach simplifies the process of setting up
+  service-to-service communications policies.
 - Letting you configure policies that permit access from certain clients.
 
 The blueprint guides you to install Anthos Service Mesh in your cluster. You
@@ -400,16 +400,16 @@ You automatically configure Anthos Service Mesh using Config Sync. You
 configure the mesh to do the following:
 
 - Enforce
-    [mTLS communication](https://cloud.google.com/service-mesh/docs/security/configuring-mtls#enforcing_mesh-wide_mtls)
-    between services in the mesh.
+  [mTLS communication](https://cloud.google.com/service-mesh/docs/security/configuring-mtls#enforcing_mesh-wide_mtls)
+  between services in the mesh.
 - Limit outbound traffic from the mesh to only known hosts.
 - Limit
-    [authorized communication](https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview)
-    between services in the mesh. For example, apps in the tenant namespace are
-    only allowed to communicate with apps in the same namespace, or with a
-    set of known external hosts.
+  [authorized communication](https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview)
+  between services in the mesh. For example, apps in the tenant namespace are
+  only allowed to communicate with apps in the same namespace, or with a
+  set of known external hosts.
 - Route all outbound traffic through a mesh gateway where you can apply
-    further traffic controls.
+  further traffic controls.
 
 ### Node taints and affinities: Controlling workload scheduling
 
@@ -420,7 +420,7 @@ are Kubernetes mechanisms that let you influence how pods are scheduled onto
 cluster nodes.
 
 Tainted nodes repel pods. Kubernetes will not schedule a Pod onto a tainted
-node unless the Pod has a *toleration* for the taint. You can use node taints to
+node unless the Pod has a _toleration_ for the taint. You can use node taints to
 reserve nodes for use only by certain workloads or tenants. Taints and
 tolerations are often used in multi-tenant clusters. See the
 [dedicated nodes with taints and tolerations](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview#dedicated_nodes_with_taints_and_tolerations)
@@ -438,11 +438,11 @@ The blueprint helps you control the scheduling of the tenant apps in the
 following ways:
 
 - Creating a GKE node pool dedicated to the tenant.
-    Each node in the pool has a taint related to the tenant name.
+  Each node in the pool has a taint related to the tenant name.
 - Automatically applying the appropriate toleration and node affinity to
-    any Pod targeting the tenant namespace. You apply the toleration and
-    affinity using
-    [PolicyController mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation).
+  any Pod targeting the tenant namespace. You apply the toleration and
+  affinity using
+  [PolicyController mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation).
 
 ### Least privilege: Limiting access to cluster and project resources
 
@@ -455,28 +455,28 @@ The blueprint helps you use least privilege service accounts in the following
 ways:
 
 - Each GKE node pool receives its own service
-    account. For example, the nodes in the tenant node pool use a service
-    account dedicated to those nodes. The node service accounts are configured
-    with the
-    [minimum required permissions](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
+  account. For example, the nodes in the tenant node pool use a service
+  account dedicated to those nodes. The node service accounts are configured
+  with the
+  [minimum required permissions](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
 - The cluster uses
-    [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
-    to associate Kubernetes service accounts with Google service accounts. This
-    way, the tenant apps can be granted limited access to any required Google
-    APIs without downloading and storing a service account key. For example,
-    you can grant the service account permissions to read data from a
-    Cloud Storage bucket.
+  [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+  to associate Kubernetes service accounts with Google service accounts. This
+  way, the tenant apps can be granted limited access to any required Google
+  APIs without downloading and storing a service account key. For example,
+  you can grant the service account permissions to read data from a
+  Cloud Storage bucket.
 
 The blueprint helps you
 [restrict access to cluster resources](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_namespaces_and_rbac_to_restrict_access_to_cluster_resources)
 in the following ways:
 
 - You create a sample Kubernetes RBAC role with limited permissions to
-    manage apps. You can grant this role to the users and groups who operate
-    the apps in the tenant namespace. This way, those users only have
-    permissions to modify app resources in the tenant namespace. They do not
-    have permissions to modify cluster-level resources or sensitive security
-    settings like Anthos Service Mesh policies.
+  manage apps. You can grant this role to the users and groups who operate
+  the apps in the tenant namespace. This way, those users only have
+  permissions to modify app resources in the tenant namespace. They do not
+  have permissions to modify cluster-level resources or sensitive security
+  settings like Anthos Service Mesh policies.
 
 ## References
 
