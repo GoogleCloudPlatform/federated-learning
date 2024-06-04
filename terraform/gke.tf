@@ -14,7 +14,7 @@
 
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "27.0.0"
+  version = "28.0.0"
 
   add_cluster_firewall_rules   = true
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
@@ -26,6 +26,7 @@ module "gke" {
   enable_private_nodes         = true
   enable_shielded_nodes        = true
   grant_registry_access        = true
+  gcs_fuse_csi_driver          = true
   http_load_balancing          = false
   ip_range_pods                = "pods"
   ip_range_services            = "services"
