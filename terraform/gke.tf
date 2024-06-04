@@ -26,6 +26,7 @@ module "gke" {
   enable_private_nodes         = true
   enable_shielded_nodes        = true
   grant_registry_access        = true
+  gcs_fuse_csi_driver          = true
   http_load_balancing          = false
   ip_range_pods                = "pods"
   ip_range_services            = "services"
