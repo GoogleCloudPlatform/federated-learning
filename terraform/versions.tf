@@ -13,6 +13,11 @@
 # limitations under the License.
 
 terraform {
+
+  provider_meta "google" {
+    module_name = "cloud-solutions/federated-learning-v2.0.1" # x-release-please-version
+  }
+
   required_version = ">=1.0"
   required_providers {
     google = {
