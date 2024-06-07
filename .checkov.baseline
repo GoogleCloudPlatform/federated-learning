@@ -309,7 +309,7 @@
                     ]
                 },
                 {
-                    "resource": "distributed-tff-example-dns",
+                    "resource": "distributed-tff-example-dns[0]",
                     "check_ids": [
                         "CKV_TF_1"
                     ]
@@ -383,7 +383,7 @@
                     ]
                 },
                 {
-                    "resource": "distributed_tff_example_firewall_rules",
+                    "resource": "distributed_tff_example_firewall_rules[0]",
                     "check_ids": [
                         "CKV_TF_1"
                     ]
