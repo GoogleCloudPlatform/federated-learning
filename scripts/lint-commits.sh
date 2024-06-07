@@ -24,7 +24,7 @@ docker run \
   -v "$(pwd):/source-repository" \
   "${CD_CONTAINER_URL}" \
   commitlint \
-  --config .github/commitlint.config.js \
+  --config config/lint/commitlint.config.js \
   --cwd /source-repository \
   --from ${FROM_INTERVAL_COMMITLINT} \
   --to ${TO_INTERVAL_COMMITLINT} \

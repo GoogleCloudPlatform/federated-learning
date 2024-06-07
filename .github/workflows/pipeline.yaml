@@ -30,6 +30,12 @@ permissions:
 
 jobs:
   lint:
+    concurrency:
+      # Ref: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+      # github.head_ref: head_ref or source branch of the pull request
+      # github.ref: ref of the branch that triggered the workflow
+      group: ${{ github.workflow }}-lint-${{ github.head_ref || github.ref }}-${{ github.event_name }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,17 +48,13 @@ jobs:
           # super-linter needs the full git history to get the
           # list of files that changed across commits
           fetch-depth: 0
+      - name: Load super-linter configuration
+        run: cat config/lint/super-linter.env >> "$GITHUB_ENV"
       - name: Super-Linter
         uses: super-linter/super-linter@v6.6.0
         env:
-          # Don't validate example Python files because we don't maintain them
-          FILTER_REGEX_EXCLUDE: ".*/examples/federated-learning/tff/.*/*.py"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          KUBERNETES_KUBECONFORM_OPTIONS: --strict --ignore-missing-schemas
-          LINTER_RULES_PATH: .
-          VALIDATE_ALL_CODEBASE: true
-          # Disable Terrascan until https://github.com/tenable/terrascan/issues/1532 is resolved
-          VALIDATE_TERRAFORM_TERRASCAN: false
+
   ci:
     runs-on: ubuntu-latest
 
