@@ -28,7 +28,7 @@ module "service_accounts" {
 
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
-  version  = "7.6.0"
+  version  = "7.7.1"
   projects = [data.google_project.project.project_id]
   mode     = "authoritative"
 
