@@ -15,34 +15,62 @@
 ---
 updates:
   - directory: "/"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "github-actions"
     schedule:
       interval: "daily"
   - directory: "/.devcontainer"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
   - directory: "/.devcontainer"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
+  - directory: "/container-images/ci-tooling"
+    commit-message:
+      prefix: "chore(deps)"
+    package-ecosystem: "docker"
+    schedule:
+      interval: "daily"
+  - directory: "/container-images/ci-tooling"
+    commit-message:
+      prefix: "chore(deps)"
+    package-ecosystem: "npm"
+    schedule:
+      interval: "daily"
   - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
   - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
   - directory: "/examples/federated-learning/tff/image-classification"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
   - directory: "/examples/federated-learning/tff/image-classification"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "pip"
     schedule:
       interval: "daily"
   - directory: "/terraform"
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "terraform"
     schedule:
       interval: "daily"
