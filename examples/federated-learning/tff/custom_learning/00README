@@ -1,0 +1,5 @@
+Here are two custom federated learning notebooks. 
+
+1. fl-on-simple-dataset.ipynb --> Has a simple federated learning code that creates 2 or 3 clients with synthetic data and creates a federated learning training and saving the model weights 
+
+2. fl-on-emnist-dataset.ipynb --> Builds a federated data model over the emist dataset over the NUM_ClIENTS defined as part of the code. The model weights also are saved
