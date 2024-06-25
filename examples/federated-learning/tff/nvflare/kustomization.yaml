@@ -1,0 +1,12 @@
+---
+resources:
+  - base-storage
+  - server1
+  - client1
+  - client2
+
+images:
+  - name: nvflare-tensorflow
+    newName: europe-west1-docker.pkg.dev/lgu-demos/nvflare/nvflare-tensorflow
+    newTag: 1.0.0
+...

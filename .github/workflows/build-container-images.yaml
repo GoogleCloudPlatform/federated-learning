@@ -76,4 +76,7 @@ jobs:
           - name: image-classification
             context-directory: examples/federated-learning/tff/image-classification
             run: true
+          - name: nvflare
+            context-directory: examples/federated-learning/tff/nvflare/container-image
+            run: true
 ...
