@@ -46,7 +46,7 @@ To deploy this solution with end-to-end confidentiality:
 
 ### Containers running in different namespaces, in the same GKE cluster
 
-1. Provision infrastructure by following the instructions in the [main README](../../README.md).
+1. Provision infrastructure by following the instructions in the [main readme](../../README.md).
 1. From Cloud Shell, change the working directory to the `terraform` directory.
 1. Initialize the following Terraform variables:
 
