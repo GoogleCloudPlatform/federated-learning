@@ -162,18 +162,6 @@
             ]
         },
         {
-            "file": "/examples/federated-learning/tff/image-classification/Dockerfile",
-            "findings": [
-                {
-                    "resource": "/examples/federated-learning/tff/image-classification/Dockerfile.",
-                    "check_ids": [
-                        "CKV_DOCKER_2",
-                        "CKV_DOCKER_3"
-                    ]
-                }
-            ]
-        },
-        {
             "file": "/terraform/acm.tf",
             "findings": [
                 {
