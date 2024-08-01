@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nvflare-client
+  labels:
+    run: nvflare-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nvflare-client
+  template:
+    metadata:
+      labels:
+        run: nvflare-client
+      annotations:
+        gke-gcsfuse/volumes: "true"
+    spec:
+      containers:
+        - name: nvflare
+          image: nvflare-tensorflow
+          imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - /usr/local/bin/python3
+          args:
+            - -u
+            - -m
+            - nvflare.private.fed.app.client.client_train
+            - -m
+            - /workspace/nvfl/workspace/example_project/prod_00/$(SITE)
+            - -s
+            - fed_client.json
+            - --set
+            - secure_train=true
+            - uid=$(SITE)
+            - config_folder=config
+            - org=nvidia
+          resources:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          volumeMounts:
+            - name: nvfl
+              mountPath: /workspace/nvfl/
+          env:
+            - name: SITE
+              valueFrom:
+                configMapKeyRef:
+                  name: client-configmap
+                  key: site
+      volumes:
+        - name: nvfl
+          persistentVolumeClaim:
+            claimName: nvflare-pv-claim
+      securityContext:
+        fsGroup: 1000
+...

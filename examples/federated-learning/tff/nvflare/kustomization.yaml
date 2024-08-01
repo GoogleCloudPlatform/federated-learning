@@ -1,0 +1,12 @@
+---
+resources:
+  - base-storage
+  - server1
+  - client1
+  - client2
+
+images:
+  - name: nvflare-tensorflow
+    newName: ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/nvflare-tensorflow
+    newTag: 1.0.0
+...
