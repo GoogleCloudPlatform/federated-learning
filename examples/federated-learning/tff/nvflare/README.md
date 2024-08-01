@@ -21,6 +21,11 @@ Here is a high-level diagram:
 
 ![alt_text](../../../../assets/nvflare.svg "Infrastructure overview")
 
+As shown in the preceding diagram, the blueprint helps you to create and configure the following infrastructure components:
+- A persistent volume to store the Nvflare workspace
+- Two pods that are the clients that will be connected to the server in the nvidia-client1 and nvidia-client2 namespaces respectively
+- One pod that is the the server that will aggregate all the results from the computation in the nvflare-infra namespace
+
 ## 1. Create custom image
 For this demo to work, you have to create a custom image with TensorFlow and Nvflare installed. To create the image and push it on Artifact Registry, go to the `docker-image` and build the image:
 
