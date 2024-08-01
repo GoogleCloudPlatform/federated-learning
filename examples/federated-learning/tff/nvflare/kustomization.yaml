@@ -7,6 +7,6 @@ resources:
 
 images:
   - name: nvflare-tensorflow
-    newName: europe-west1-docker.pkg.dev/lgu-demos/nvflare/nvflare-tensorflow
+    newName: ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/nvflare-tensorflow
     newTag: 1.0.0
 ...
