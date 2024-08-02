@@ -51,7 +51,7 @@ jobs:
       - name: Load super-linter configuration
         run: cat config/lint/super-linter.env >> "$GITHUB_ENV"
       - name: Super-Linter
-        uses: super-linter/super-linter@v6.7.0
+        uses: super-linter/super-linter@v6.8.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
