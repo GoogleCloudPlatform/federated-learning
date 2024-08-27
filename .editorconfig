@@ -23,6 +23,12 @@ spaces_around_brackets = false
 [*.{hcl.tpl,json,lock.hcl,js,md,sh,tf,tfvars,yml,yaml}]
 indent_size = 2
 
+[*.md]
+
+# Indentation in Markdown files might not be constant, or a multiple of 2.
+# Prettier takes care of formatting Markdown files.
+indent_size = unset
+
 [Kptfile]
 indent_size = 2
 

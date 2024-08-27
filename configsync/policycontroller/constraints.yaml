@@ -26,7 +26,6 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Service"]
-...
 ---
 # Prevent the creation of known resources that expose workloads to external IPs.
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -43,7 +42,6 @@ spec:
       - apiGroups: ["networking.istio.io"]
         kinds: ["Gateway"]
     excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system"]
-...
 ---
 # In tenant namespaces, only allow images to be pulled from
 # a named set of repositories
@@ -66,7 +64,6 @@ spec:
       - "eu.gcr.io/"
       - "us-docker.pkg.dev/"
       - "europe-docker.pkg.dev/"
-...
 ---
 # ASM/Istio DestinationRules must enable TLS
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -78,4 +75,3 @@ spec:
     kinds:
       - apiGroups: ["networking.istio.io"]
         kinds: ["DestinationRule"]
-...

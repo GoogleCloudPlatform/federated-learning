@@ -29,8 +29,7 @@ spec:
         name: http2
         protocol: HTTP2
       hosts:
-        - '*'
-...
+        - "*"
 ---
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
@@ -48,7 +47,6 @@ spec:
   portLevelMtls:
     80:
       mode: DISABLE
-...
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -58,4 +56,3 @@ metadata:
 spec:
   rules:
     - {}
-...

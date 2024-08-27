@@ -21,4 +21,3 @@ metadata:
     # Allow Anthos Service Mesh to manage the workloads in the namespace
     # Ref: https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel#injection_labels
     istio.io/rev: asm-managed
-...

@@ -19,7 +19,7 @@ metadata:
   labels:
     app: tff-example-app
   name: tff-coordinator
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   replicas: 1
   selector:
@@ -32,10 +32,9 @@ spec:
     spec:
       containers:
         - name: tff-coordinator
-          image: tff-runtime:latest  # kpt-set: ${tff-runtime-container-image-id}
+          image: tff-runtime:latest # kpt-set: ${tff-runtime-container-image-id}
           args:
             - "./training_procedure.py"
-            - "tff-worker-1.example.com"  # kpt-set: ${tff-worker-1-hostname}
-            - "tff-worker-2.example.com"  # kpt-set: ${tff-worker-2-hostname}
-      serviceAccountName: tff-coordinator-service-account  # kpt-set: ${tff-pod-service-account-name}
-...
+            - "tff-worker-1.example.com" # kpt-set: ${tff-worker-1-hostname}
+            - "tff-worker-2.example.com" # kpt-set: ${tff-worker-2-hostname}
+      serviceAccountName: tff-coordinator-service-account # kpt-set: ${tff-pod-service-account-name}

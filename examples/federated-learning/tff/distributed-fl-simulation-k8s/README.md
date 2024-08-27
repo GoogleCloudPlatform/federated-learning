@@ -5,17 +5,17 @@ training process in different runtime environments. This example deploys two
 kinds of workloads:
 
 - `coordinator`: coordinates the training effort, and collects the result of the
-    training from workers.
+  training from workers.
 - `workers` that waits for instructions from the coordinator, runs the assigned
-    model training, and sends training results back to the coordinator.
+  model training, and sends training results back to the coordinator.
 
 In the current implementation:
 
 - Workers wait to be assigned a training job by the coordinator, complete
-    training jobs, and send training results back to the coordinator.
+  training jobs, and send training results back to the coordinator.
 - The coordinator sends training jobs to workers, collects training results from
-    workers, and reports relevant output. Once the training effort completes,
-    the coordinator stops, and runs again after a few seconds, in a loop.
+  workers, and reports relevant output. Once the training effort completes,
+  the coordinator stops, and runs again after a few seconds, in a loop.
 
 This example builds on top of the infrastructure that the
 [blueprint provides](../../../../README.md), and follows the best practices the
@@ -36,16 +36,16 @@ tutorial.
 You can run this example in different runtime environments:
 
 - Two workers and a coordinator running in different containers, each in a
-    dedicated Kubernetes Namespace, in the same Google Kubernetes Engine (GKE)
-    cluster. For example, a cloud platform administrator can follow this
-    approach to validate how the workload behaves in a GKE cluster across
-    different namespaces to simulate a distributed federated learning
-    environment, without having to provision and configure different Kubernetes
-    clusters.
+  dedicated Kubernetes Namespace, in the same Google Kubernetes Engine (GKE)
+  cluster. For example, a cloud platform administrator can follow this
+  approach to validate how the workload behaves in a GKE cluster across
+  different namespaces to simulate a distributed federated learning
+  environment, without having to provision and configure different Kubernetes
+  clusters.
 - Two workers and a coordinator running in different containers in different
-    GKE clusters. For example, a cloud platform administrator can follow this
-    approach to deploy the workload in an environment that more closely
-    resembles a production one.
+  GKE clusters. For example, a cloud platform administrator can follow this
+  approach to deploy the workload in an environment that more closely
+  resembles a production one.
 
 ### Containers running in different namespaces, in the same GKE cluster
 
@@ -53,112 +53,112 @@ You can run this example in different runtime environments:
 1. From Cloud Shell, change the working directory to the `terraform` directory.
 1. Initialize the following Terraform variables for the workers:
 
-    ```hcl
-    tenant_names = ["fltenant1", "fltenant2", "fltenant3"]
+   ```hcl
+   tenant_names = ["fltenant1", "fltenant2", "fltenant3"]
 
-    distributed_tff_example_configuration          = {
-        "fltenant1": {
-            emnist_partition_file_name = "emnist_part_1.sqlite"
-        },
-        "fltenant2": {
-            emnist_partition_file_name = "emnist_part_2.sqlite"
-        }
-    }
-    ```
+   distributed_tff_example_configuration          = {
+       "fltenant1": {
+           emnist_partition_file_name = "emnist_part_1.sqlite"
+       },
+       "fltenant2": {
+           emnist_partition_file_name = "emnist_part_2.sqlite"
+       }
+   }
+   ```
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.
 1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
-    and wait for the workers Deployments and Services to be ready.
+   and wait for the workers Deployments and Services to be ready.
 1. Configure the coordinator by adding the `fltenant3` element to the
-    `distributed_tff_example_configuration` map. The other elements of the map
-    are the same that you added in previous steps:
+   `distributed_tff_example_configuration` map. The other elements of the map
+   are the same that you added in previous steps:
 
-    ```hcl
-    distributed_tff_example_configuration          = {
-        "fltenant1": {
-            emnist_partition_file_name = "emnist_part_1.sqlite"
-        },
-        "fltenant2": {
-            emnist_partition_file_name = "emnist_part_2.sqlite"
-        },
-        "fltenant3": {
-            is_coordinator = true
-            worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
-            worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
-        }
-    }
+   ```hcl
+   distributed_tff_example_configuration          = {
+       "fltenant1": {
+           emnist_partition_file_name = "emnist_part_1.sqlite"
+       },
+       "fltenant2": {
+           emnist_partition_file_name = "emnist_part_2.sqlite"
+       },
+       "fltenant3": {
+           is_coordinator = true
+           worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
+           worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
+       }
+   }
 
-    distributed_tff_example_coordinator_namespace = "fltenant3"
-    ```
+   distributed_tff_example_coordinator_namespace = "fltenant3"
+   ```
 
 1. Run `terraform apply`.
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
-    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
+   [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
 
 ### Containers running in different GKE clusters
 
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
-    to provision and configure the environment for the first worker in a dedicated Google Cloud project.
+   to provision and configure the environment for the first worker in a dedicated Google Cloud project.
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
-    to provision and configure the environment for the second worker in a dedicated Google Cloud project.
+   to provision and configure the environment for the second worker in a dedicated Google Cloud project.
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
-    to provision and configure the environment for the coordinator in a dedicated Google Cloud project.
+   to provision and configure the environment for the coordinator in a dedicated Google Cloud project.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
-    the resources for the first worker.
+   the resources for the first worker.
 1. Initialize the following Terraform variables for the first worker:
 
-    ```hcl
-    distributed_tff_example_deploy_ingress_gateway = true
-    distributed_tff_example_configuration          = {
-        "fltenant1": {
-            emnist_partition_file_name = "emnist_part_1.sqlite"
-        }
-    }
-    ```
+   ```hcl
+   distributed_tff_example_deploy_ingress_gateway = true
+   distributed_tff_example_configuration          = {
+       "fltenant1": {
+           emnist_partition_file_name = "emnist_part_1.sqlite"
+       }
+   }
+   ```
 
 1. Run `terraform apply`.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
-    the resources for the second worker.
+   the resources for the second worker.
 1. Initialize the following Terraform variables for the second worker:
 
-    ```hcl
-    distributed_tff_example_deploy_ingress_gateway = true
-    distributed_tff_example_configuration          = {
-        "fltenant1": {
-            emnist_partition_file_name = "emnist_part_2.sqlite"
-        }
-    }
-    ```
+   ```hcl
+   distributed_tff_example_deploy_ingress_gateway = true
+   distributed_tff_example_configuration          = {
+       "fltenant1": {
+           emnist_partition_file_name = "emnist_part_2.sqlite"
+       }
+   }
+   ```
 
 1. Run `terraform apply`.
 1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
-    and wait for the workers Deployments and Services to be ready.
+   and wait for the workers Deployments and Services to be ready.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
-    the resources for the second worker.
+   the resources for the second worker.
 1. Initialize the following Terraform variables for the coordinator:
 
-    ```hcl
-    distributed_tff_example_configuration          = {
-        "fltenant1": {
-            is_coordinator = true
-        }
-    }
+   ```hcl
+   distributed_tff_example_configuration          = {
+       "fltenant1": {
+           is_coordinator = true
+       }
+   }
 
-    distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
-    distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
-    ```
+   distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
+   distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
+   ```
 
-    Where:
+   Where:
 
-    - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-        that exposes the first worker workloads.
-    - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
-        that exposes the second worker workloads.
+   - `<WORKER_1_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+     that exposes the first worker workloads.
+   - `<WORKER_2_SERVICE_IP_ADDRESS>` is the IP address of the load balancer
+     that exposes the second worker workloads.
 
 1. Run `terraform apply`.
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
-    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
-    in their respective GKE clusters.
+   [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+   in their respective GKE clusters.
 
 ## Expected output
 

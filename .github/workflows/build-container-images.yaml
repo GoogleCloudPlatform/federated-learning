@@ -18,7 +18,7 @@ name: Build container images
 env:
   CONTAINER_IMAGE_REGISTRY: ghcr.io
 
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push: null
   pull_request: null
 
@@ -70,4 +70,3 @@ jobs:
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image
             # Don't run an instance of this because it needs instrumentation
             run: false
-...

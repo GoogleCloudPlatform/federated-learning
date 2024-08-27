@@ -27,4 +27,3 @@ spec:
           simple: ROUND_ROBIN
         tls:
           mode: ISTIO_MUTUAL
-...

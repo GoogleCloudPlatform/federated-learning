@@ -1,7 +1,7 @@
 ---
 name: Release
 
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push:
     branches:
       - main
@@ -27,4 +27,3 @@ jobs:
           config-file: .github/release-please/release-please-config.json
           manifest-file: .github/release-please/.release-please-manifest.json
           token: ${{ secrets.GITHUB_TOKEN }}
-...

@@ -27,8 +27,8 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
-...
+    excludedNamespaces:
+      ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
 ---
 # prevent hostPath volumes
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -41,10 +41,10 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
+    excludedNamespaces:
+      ["istio-egress", "istio-ingress", "istio-system", "kube-system"]
   parameters:
     allowedHostPaths: []
-...
 ---
 # prevent privilege escalation
 # Applied in tenant namespaces only
@@ -61,7 +61,6 @@ spec:
     namespaceSelector:
       matchLabels:
         tenant-ns: "true"
-...
 ---
 # Require read only filesystem
 # Applied in tenant namespaces only
@@ -78,4 +77,3 @@ spec:
     namespaceSelector:
       matchLabels:
         tenant-ns: "true"
-...

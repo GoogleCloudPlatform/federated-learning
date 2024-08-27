@@ -7,4 +7,3 @@ baseline: config/lint/.checkov.baseline
 
 # Report skipped baseline checks in the output
 output-baseline-as-skipped: true
-...

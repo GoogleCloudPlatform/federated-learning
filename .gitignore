@@ -1,0 +1,6 @@
+# Super-linter output
+super-linter-output
+super-linter.log
+
+# GitHub Actions leftovers
+github_conf

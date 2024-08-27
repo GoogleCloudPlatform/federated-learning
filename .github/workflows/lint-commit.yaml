@@ -1,7 +1,7 @@
 ---
 name: Lint commit
 
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push: null
   pull_request: null
   merge_group: null
@@ -72,4 +72,3 @@ jobs:
       - name: Validate commits
         run: |
           scripts/lint-commits.sh
-...
