@@ -66,9 +66,6 @@ jobs:
     strategy:
       matrix:
         container-images:
-          - name: devcontainer
-            context-directory: .devcontainer
-            run: true
           - name: distributed-fl-simulation-k8s
             context-directory: examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image
             # Don't run an instance of this because it needs instrumentation
