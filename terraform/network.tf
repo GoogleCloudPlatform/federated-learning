@@ -18,6 +18,8 @@ locals {
 
   fedlearn_pods_ip_range     = "10.20.0.0/14"
   fedlearn_services_ip_range = "10.24.0.0/20"
+
+  target_vpcs = "projects/${data.google_project.project.project_id}/global/networks/fedlearn-network"
 }
 
 module "fedlearn-vpc" {
@@ -125,7 +127,9 @@ module "fedlearn-fw-policies" {
 
   project_id  = data.google_project.project.project_id
   policy_name = "network-firewall-policies-federated-learning"
-  target_vpcs = [module.fedlearn-vpc.network_id]
+  # Target VPCs are dynamically calculated and cannot be known before applying the VPC first
+  # We are calculating the targeted VPC name before to apply the Terraform script at once
+  target_vpcs = [local.target_vpcs]
 
   rules = [
     {

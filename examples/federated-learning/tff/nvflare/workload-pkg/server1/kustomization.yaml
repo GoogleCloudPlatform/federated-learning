@@ -1,0 +1,17 @@
+---
+resources:
+  - ../base-deployment
+  - ../base-service
+
+labels:
+  - pairs:
+      run: nvflare-server1
+    includeSelectors: true
+
+nameSuffix: -server1
+
+configMapGenerator:
+  - name: configmap
+    namespace: nvflare
+    literals:
+      - site=server1

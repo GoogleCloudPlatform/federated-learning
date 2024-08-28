@@ -201,6 +201,12 @@ variable "cross_device" {
   default     = false
 }
 
+variable "nvflare" {
+  description = "Enable nvflare infrastructure deployment"
+  type        = bool
+  default     = false
+}
+
 variable "spanner_instance_config" {
   description = "Multi region config value for the Spanner Instance. Example: 'nam10' for North America."
   type        = string
@@ -217,4 +223,15 @@ variable "cross_device_workloads_kubernetes_namespace" {
   description = "Namespace of SA where the cross-device workload will be deployed"
   type        = string
   default     = "main"
+}
+
+variable "nvflare_namespace" {
+  description = "Namespace of SA where the cross-device workload will be deployed"
+  type        = string
+  default     = "fltenant1"
+}
+
+variable "workspace_bucket_name" {
+  description = "Bucket name that will contain nvflare workspace"
+  type        = string
 }

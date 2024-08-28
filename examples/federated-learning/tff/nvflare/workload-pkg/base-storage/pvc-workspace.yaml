@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nvflare-pv-claim
+  labels:
+    app: nvflare
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: nvflare-pv
+  storageClassName: nvflare-storage-class

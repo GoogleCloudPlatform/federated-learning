@@ -26,3 +26,38 @@ output "container_image_repository_name" {
   description = "Container image repository name."
   value       = local.container_image_repository_name
 }
+
+output "nvflare_workspace_bucket_name" {
+  description = "Nvflare bucket name"
+  value       = var.nvflare == true ? module.nvflare[0].workspace_bucket_name : null
+}
+
+output "acm_repository_path" {
+  description = "Path to the Config Management repository on the local machine"
+  value       = var.acm_repository_path
+}
+
+output "acm_config_sync_configuration_destination_directory_path" {
+  description = "Path to the configuration directory in the Config Sync repository"
+  value       = local.acm_config_sync_destination_directory_path
+}
+
+output "acm_config_sync_tenants_configuration_destination_directory_path" {
+  description = "Path to the tenants configuration directory in the Config Sync repository"
+  value       = local.acm_config_sync_tenants_configuration_destination_directory_path
+}
+
+output "cluster_name" {
+  description = "Name of the cluster deployed"
+  value       = module.gke.name
+}
+
+output "cluster_location" {
+  description = "Location of the cluster deployed"
+  value       = module.gke.location
+}
+
+output "nvflare_namespace" {
+  description = "Name of the namespace where the NVFlare example is deployed"
+  value       = var.nvflare ? var.nvflare_namespace : null
+}
