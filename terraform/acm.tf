@@ -30,12 +30,12 @@ resource "google_gke_hub_feature_membership" "acm_feature_member" {
     version = var.acm_version
     config_sync {
       git {
-        gcp_service_account_email = local.source_repository_service_account_email
-        sync_repo                 = google_sourcerepo_repository.configsync-repository.url
-        sync_branch               = var.acm_branch
-        policy_dir                = var.acm_dir
-        secret_type               = "gcpserviceaccount"
+        sync_repo   = var.acm_repository_url
+        sync_branch = var.acm_branch
+        policy_dir  = var.acm_dir
+        secret_type = var.acm_secret_type
       }
+      prevent_drift = true
       source_format = "unstructured"
     }
 

@@ -34,6 +34,7 @@ To deploy this blueprint you need:
 - The `serviceusage.googleapis.com` must be enabled on the project. For more
   information about enabling APIs, see
   [Enabling and disabling services](https://cloud.google.com/service-usage/docs/enable-disable)
+- A Git repository to store the environment configuration.
 
 You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
 but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
@@ -128,8 +129,13 @@ Users and teams managing tenant apps should not have permissions to change clust
 
    ```hcl
    project_id          = # Google Cloud project ID where to provision resources with the blueprint.
-   acm_repository_path = # Path on the host running Terraform to store the GKE descriptors to configure the cluster
+   acm_repository_path = # Path on the host running Terraform to store environment configuration
+   acm_repository_url  = # URL of the repository to store environment configuration
+   acm_secret_type     = # Secret type to authenticate with the Config Sync Git repository
    ```
+
+   For more information about setting `acm_secret_type`, see
+   [Grant access to Git](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret).
 
    If you don't provide all the necessary inputs, Terraform will exit with an
    error, and will provide information about the missing inputs. For example,
@@ -144,6 +150,9 @@ Users and teams managing tenant apps should not have permissions to change clust
    ```
 
    The provisioning process may take about 15 minutes to complete.
+
+1. [Grant the Config Sync agent access to the Git repository](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret)
+   where the environment configuration will be stored.
 
 1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
