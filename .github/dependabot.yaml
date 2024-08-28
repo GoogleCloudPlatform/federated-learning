@@ -20,18 +20,6 @@ updates:
     package-ecosystem: "github-actions"
     schedule:
       interval: "daily"
-  - directory: "/.devcontainer"
-    commit-message:
-      prefix: "chore(deps)"
-    package-ecosystem: "docker"
-    schedule:
-      interval: "daily"
-  - directory: "/.devcontainer"
-    commit-message:
-      prefix: "chore(deps)"
-    package-ecosystem: "pip"
-    schedule:
-      interval: "daily"
   - directory: "/container-images/ci-tooling"
     commit-message:
       prefix: "chore(deps)"
