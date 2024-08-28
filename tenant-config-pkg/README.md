@@ -10,7 +10,7 @@ for a tenant within the untrusted workloads cluster. The package contains cluste
 - service account, with a Workload Identity annotation
 - service mesh resources, such as AuthorizationPolicy
 - config for Policy Controller Mutuations that automatically apply labels/tolerations etc to Pods
-in the tenant namespace
+  in the tenant namespace
 
 ### Available setters
 
@@ -18,8 +18,8 @@ The pkg has placeholder values that you can replace with tenant-specific values,
 for that tenant. Available setters are:
 
 - tenant-name: the name of the tenant, which is also used as the name of the namespace dedicated to
-the tenant.
+  the tenant.
 - gcp-service-account: the Service Account used by apps within the tenant namespace. Mapped to a Kubernetes
-service account using Workload Identity
+  service account using Workload Identity
 - tenant-developer: email address of user/group that operates the tenant apps within the tenant namespace.
-Used to bind to a ClusterRole with limited permissions.
+  Used to bind to a ClusterRole with limited permissions.

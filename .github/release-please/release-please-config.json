@@ -30,9 +30,7 @@
     ".": {
       "changelog-path": "CHANGELOG.md",
       "release-type": "simple",
-      "extra-files": [
-        "terraform/versions.tf"
-      ]
+      "extra-files": ["terraform/versions.tf"]
     }
   }
 }

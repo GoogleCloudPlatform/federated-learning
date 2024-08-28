@@ -17,25 +17,23 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: tff-worker
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
   hosts:
-    - tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+    - tff-worker.ns.svc.cluster.local # kpt-set: tff-worker.${namespace}.svc.cluster.local
   gateways:
     - mesh
   http:
     - route:
         - destination:
-            host: tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
+            host: tff-worker.ns.svc.cluster.local # kpt-set: tff-worker.${namespace}.svc.cluster.local
             port:
               number: 8000
-...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: tff-worker
-  namespace: ns  # kpt-set: ${namespace}
+  namespace: ns # kpt-set: ${namespace}
 spec:
-  host: tff-worker.ns.svc.cluster.local  # kpt-set: tff-worker.${namespace}.svc.cluster.local
-...
+  host: tff-worker.ns.svc.cluster.local # kpt-set: tff-worker.${namespace}.svc.cluster.local

@@ -1,7 +1,7 @@
 ---
 name: Release
 
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   pull_request: null
 
 # Don't grant any access by default
@@ -24,4 +24,3 @@ jobs:
       - name: Generate a preview of the release notes
         run: |
           scripts/release-please-dry-run.sh
-...

@@ -22,7 +22,6 @@ metadata:
     # Allow Anthos Service Mesh to manage the workloads in the namespace
     # Ref: https://cloud.google.com/service-mesh/docs/managed/select-a-release-channel#injection_labels
     istio.io/rev: asm-managed
-...
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -43,7 +42,6 @@ spec:
         target:
           type: Utilization
           averageUtilization: 80
-...
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -90,7 +88,6 @@ spec:
                     operator: In
                     values:
                       - "main-pool"
-...
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -103,7 +100,6 @@ spec:
     matchLabels:
       app: istio-ingressgateway
       istio: ingressgateway
-...
 ---
 # Role and RoleBinding allow the gateway to access certificates
 apiVersion: rbac.authorization.k8s.io/v1
@@ -115,7 +111,6 @@ rules:
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["get", "watch", "list"]
-...
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -129,7 +124,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-ingressgateway
-...
 ---
 apiVersion: v1
 kind: Service
@@ -152,14 +146,12 @@ spec:
     istio: ingressgateway
     app: istio-ingressgateway
   type: LoadBalancer
-...
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-ingressgateway
   namespace: istio-ingress
-...
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -178,7 +170,6 @@ spec:
         protocol: GRPC
       hosts:
         - "*"
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -190,7 +181,6 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -212,7 +202,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-ingress
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -238,7 +227,6 @@ spec:
       ports:
         - protocol: TCP
           port: 988
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -254,7 +242,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-system
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -270,7 +257,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-egress
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -291,7 +277,6 @@ spec:
           protocol: UDP
         - port: 53
           protocol: TCP
-...
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -306,7 +291,6 @@ spec:
     - to:
         - ipBlock:
             cidr: 199.36.153.8/30
-...
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -323,7 +307,6 @@ spec:
     - ports:
         - protocol: TCP
           port: 8000
-...
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -344,4 +327,3 @@ spec:
               - POST
             ports:
               - "8000"
-...
