@@ -19,7 +19,7 @@ resource "null_resource" "init_acm_repository" {
     create_command      = <<-EOT
       "${local.init_local_acm_repository_script_path}" \
         "${var.acm_repository_path}" \
-        "${google_sourcerepo_repository.configsync-repository.url}" \
+        "${var.acm_repository_url}" \
         "${var.acm_branch}"
     EOT
 

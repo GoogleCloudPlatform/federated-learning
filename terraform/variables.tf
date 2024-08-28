@@ -114,20 +114,30 @@ variable "enable_confidential_nodes" {
 }
 
 variable "acm_version" {
-  description = "Anthos Config Management version"
+  description = "Config Management version"
   default     = ""
   type        = string
 }
 
 variable "acm_branch" {
   default     = "main"
-  description = "The Git branch Anthos Config Management will sync to"
+  description = "The Git branch in the repository that Config Sync will sync with"
   type        = string
 }
 
 variable "acm_dir" {
   default     = "configsync"
-  description = "The directory in the repository that Anthos Config Management will sync to"
+  description = "The directory in the repository that Config Sync will sync with"
+  type        = string
+}
+
+variable "acm_repository_url" {
+  description = "The URL of the repository that Config Sync will sync with"
+  type        = string
+}
+
+variable "acm_secret_type" {
+  description = "Secret type to authenticate with the Config Sync Git repository. Ref: https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret"
   type        = string
 }
 
