@@ -201,6 +201,17 @@
             ]
         },
         {
+            "file": "/terraform/network.tf",
+            "findings": [
+                {
+                    "resource": "fedlearn-fw-policies",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
             "file": "/terraform/cross-device/iam.tf",
             "findings": [
                 {
