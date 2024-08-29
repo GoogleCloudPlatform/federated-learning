@@ -5,5 +5,26 @@ super-linter.log
 # GitHub Actions leftovers
 github_conf
 
-# Terraform
-terraform/.terraform
+# Terraform gitgnore
+# Ref: https://github.com/github/gitignore/blob/main/Terraform.gitignore
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore transient lock info files created by terraform apply
+.terraform.tfstate.lock.info
