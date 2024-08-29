@@ -141,6 +141,11 @@ variable "acm_secret_type" {
   type        = string
 }
 
+variable "acm_source_repository_fqdns" {
+  description = "FQDNs of source repository for Config Sync to allow in the Network Firewall Policy"
+  type        = list(string)
+}
+
 # We can't validate if this directory exists because the fileexists function
 # doesn't support directories (yet?)
 # Ref: https://github.com/hashicorp/terraform/issues/33394

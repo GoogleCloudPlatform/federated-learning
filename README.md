@@ -128,10 +128,11 @@ Users and teams managing tenant apps should not have permissions to change clust
 1. Initialize the following Terraform variables:
 
    ```hcl
-   project_id          = # Google Cloud project ID where to provision resources with the blueprint.
-   acm_repository_path = # Path on the host running Terraform to store environment configuration
-   acm_repository_url  = # URL of the repository to store environment configuration
-   acm_secret_type     = # Secret type to authenticate with the Config Sync Git repository
+   project_id                  = # Google Cloud project ID where to provision resources with the blueprint.
+   acm_repository_path         = # Path on the host running Terraform to store environment configuration
+   acm_repository_url          = # URL of the repository to store environment configuration
+   acm_secret_type             = # Secret type to authenticate with the Config Sync Git repository
+   acm_source_repository_fqdns = # FQDNs of source repository for Config Sync to allow in the Network Firewall Policy
    ```
 
    For more information about setting `acm_secret_type`, see

@@ -30,20 +30,6 @@ module "fedlearn-vpc" {
 
   firewall_rules = [
     {
-      description             = "Default deny egress from node pools"
-      direction               = "EGRESS"
-      name                    = "node-pools-deny-egress"
-      priority                = 65535
-      ranges                  = ["0.0.0.0/0"]
-      target_service_accounts = local.list_nodepool_sa_emails
-
-      deny = [
-        {
-          protocol = "all"
-        }
-      ]
-    },
-    {
       description             = "Allow egress from node pools to cluster nodes, pods and services"
       direction               = "EGRESS"
       name                    = "node-pools-allow-egress-nodes-pods-services"
@@ -130,6 +116,46 @@ module "fedlearn-vpc" {
 
   depends_on = [
     module.project-services
+  ]
+}
+
+module "fedlearn-fw-policies" {
+  source  = "terraform-google-modules/network/google//modules/network-firewall-policy"
+  version = "9.0.0"
+
+  project_id  = data.google_project.project.project_id
+  policy_name = "network-firewall-policies-federated-learning"
+  target_vpcs = [module.fedlearn-vpc.network_id]
+
+  rules = [
+    {
+      priority                = 1000
+      direction               = "EGRESS"
+      action                  = "allow"
+      rule_name               = "node-pools-allow-egress-configsync-source-repository"
+      description             = "Allow egress from node pools to Config Sync source repository"
+      target_service_accounts = local.list_nodepool_sa_emails
+      match = {
+        dest_fqdns = var.acm_source_repository_fqdns # Allow FQDN for Config Sync source repository
+        layer4_configs = [
+          {
+            ip_protocol = "tcp"
+            ports       = ["22", "443"] # Allow both SSH and HTTPS access
+          }
+        ]
+      }
+    },
+    {
+      priority                = 65535
+      direction               = "EGRESS"
+      action                  = "deny"
+      rule_name               = "node-pools-deny-egress"
+      description             = "Default deny egress from node pools" # Required to add the deny rule in the network firewall policies as they are evaluated after the classical ones
+      target_service_accounts = local.list_nodepool_sa_emails
+      match = {
+        dest_ip_ranges = ["0.0.0.0/0"]
+      }
+    }
   ]
 }
 
