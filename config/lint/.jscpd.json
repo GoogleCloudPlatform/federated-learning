@@ -1,6 +1,11 @@
 {
   "threshold": 0,
   "reporters": ["consoleFull"],
-  "ignore": ["**/configsync/**", "**/examples/**", "**/tenants/**"],
+  "ignore": [
+    "**/.terraform",
+    "**/configsync/**",
+    "**/examples/**",
+    "**/tenants/**"
+  ],
   "absolute": true
 }
