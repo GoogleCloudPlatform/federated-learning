@@ -92,6 +92,7 @@ You can run this example in different runtime environments:
    ```
 
 1. Run `terraform apply`.
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
 
@@ -131,6 +132,7 @@ You can run this example in different runtime environments:
    ```
 
 1. Run `terraform apply`.
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
 1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
    and wait for the workers Deployments and Services to be ready.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
@@ -156,9 +158,37 @@ You can run this example in different runtime environments:
      that exposes the second worker workloads.
 
 1. Run `terraform apply`.
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
    in their respective GKE clusters.
+
+### Build the example container image, and push it to the container image registry
+
+1. Build the example container image locally on your host:
+
+   ```sh
+   DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_REPOSITORY_HOSTNAME="$(terraform output -raw container_image_repository_fully_qualified_hostname)"
+   DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+
+   docker build \
+     --file "examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile" \
+     --tag "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}" \
+     "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
+   ```
+
+1. Authenticate Docker with the Artifact Registry repository:
+
+   ```sh
+   gcloud auth configure-docker \
+       "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}"
+   ```
+
+1. Push the container image to the Artifact Registry repository:
+
+   ```sh
+   docker image push "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}"
+   ```
 
 ## Expected output
 

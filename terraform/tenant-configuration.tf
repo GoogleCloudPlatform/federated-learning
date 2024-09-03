@@ -83,7 +83,7 @@ resource "null_resource" "tenant_configuration" {
         "${var.distributed_tff_example_coordinator_namespace}" \
         "${!each.value.distributed_tff_example_is_coordinator && var.distributed_tff_example_deploy_ingress_gateway}" \
         "${local.distributed_tff_example_are_workers_outside_the_coordinator_mesh}" \
-        "${each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : "${local.distributed_tff_example_localized_untagged_container_image_id}:latest"}"
+        "${each.value.distributed_tff_example_deploy ? "${local.container_image_repository_fully_qualified_hostname}/${local.container_image_repository_name}/tff-runtime:0.0.1" : "${local.container_image_repository_fully_qualified_hostname}/${local.container_image_repository_name}/tff-runtime:0.0.1"}"
     EOT
     create_script_hash  = md5(file(local.generate_and_copy_acm_tenant_content_script_path))
     destroy_command     = <<-EOT
@@ -92,10 +92,9 @@ resource "null_resource" "tenant_configuration" {
     EOT
     destroy_script_hash = md5(file(local.delete_acm_tenant_content_script_path))
 
-    source_contents_hash                                         = local.acm_config_sync_tenant_configuration_package_source_content_hash
-    distributed_tff_example_package_source_contents_hash         = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
-    distributed_tff_example_container_image_id                   = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_localized_container_image_id : ""
-    distributed_tff_example_container_image_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_container_image_source_descriptors_content_hash : ""
+    source_contents_hash                                 = local.acm_config_sync_tenant_configuration_package_source_content_hash
+    distributed_tff_example_package_source_contents_hash = each.value.distributed_tff_example_deploy ? local.distributed_tff_example_package_source_content_hash : ""
+    distributed_tff_example_container_image_id           = each.value.distributed_tff_example_deploy ? "${local.container_image_repository_fully_qualified_hostname}/${local.container_image_repository_name}/tff-runtime:0.0.1" : ""
 
     # Always run this. We check if something needs to be done in the creation script
     timestamp = timestamp()
@@ -114,31 +113,6 @@ resource "null_resource" "tenant_configuration" {
   depends_on = [
     null_resource.copy_common_acm_content
   ]
-}
-
-resource "null_resource" "build_push_distributed_tff_example_container_image" {
-  count = local.deploy_distributed_tff_example_any_tenant ? 1 : 0
-
-  triggers = {
-    create_command     = <<-EOT
-      "${local.build_push_distributed_tff_example_container_image_script_path}" \
-        "${local.distributed_tff_example_container_image_source_directory_path}" \
-        "${local.ditributed_tff_example_container_image_repository_hostname}" \
-        "${local.distributed_tff_example_localized_container_image_id}"
-    EOT
-    create_script_hash = md5(file(local.build_push_distributed_tff_example_container_image_script_path))
-
-    source_contents_hash = local.distributed_tff_example_container_image_source_descriptors_content_hash
-    container_image_id   = local.distributed_tff_example_localized_container_image_id
-
-    # Always run this. We check if something needs to be done in the creation script
-    timestamp = timestamp()
-  }
-
-  provisioner "local-exec" {
-    when    = create
-    command = self.triggers.create_command
-  }
 }
 
 resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {

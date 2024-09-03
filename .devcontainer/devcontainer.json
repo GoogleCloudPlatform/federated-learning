@@ -1,12 +1,20 @@
 {
   "name": "Python 3",
-  "image": "ghcr.io/super-linter/super-linter:v7.0.0",
+  "image": "ghcr.io/super-linter/super-linter:v7.1.0",
   "customizations": {
     "vscode": {
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
         "editor.wordWrap": "off",
-        "prettier.resolveGlobalModules": true
+        "prettier.resolveGlobalModules": true,
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform"
+        },
+        "[terraform-vars]": {
+          "editor.defaultFormatter": "hashicorp.terraform"
+        }
       },
       "extensions": [
         "DavidAnson.vscode-markdownlint",
