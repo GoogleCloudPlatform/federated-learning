@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "storage_bucket_iam_bindings" {
-  source          = "terraform-google-modules/iam/google//modules/storage_buckets_iam"
-  version         = "7.7.1"
-  storage_buckets = ["fcp-${var.workspace_bucket_name}"]
-
-  bindings = {
-    "roles/storage.objectUser" = var.list_apps_sa_iam_emails
+terraform {
+  required_version = ">=1.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 4.69.1, < 6.0.0"
+    }
   }
 }

@@ -29,30 +29,8 @@ locals {
       tenant_nodepool_sa_name                     = format("%s-%s-nodes-sa", var.cluster_name, name)
       tenant_apps_sa_name                         = format("%s-%s-apps-sa", var.cluster_name, name)
       tenant_apps_kubernetes_service_account_name = local.tenant_apps_kubernetes_service_account_name
-
-      # We can't use this variable in the following lines because we're still defining this object
-      distributed_tff_example_deploy                            = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? true : false
-      distributed_tff_example_is_coordinator                    = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].is_coordinator : false
-      distributed_tff_example_worker_1_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_1_hostname : ""
-      distributed_tff_example_worker_2_hostname                 = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].worker_2_hostname : ""
-      distributed_tff_example_worker_emnist_partition_file_name = var.distributed_tff_example_configuration != null && contains(keys(var.distributed_tff_example_configuration), name) ? var.distributed_tff_example_configuration[name].emnist_partition_file_name : ""
     }
   }
-
-  deploy_distributed_tff_example_flags      = [for tenant in local.tenants : tenant.distributed_tff_example_deploy]
-  deploy_distributed_tff_example_any_tenant = anytrue(local.deploy_distributed_tff_example_flags) # Useful to know if we deployed the distributed TensorFlow Federated example in any namespace
-
-  distributed_tff_example_is_there_a_coordinator_flags = [for tenant in local.tenants : tenant.distributed_tff_example_is_coordinator]
-  distributed_tff_example_is_there_a_coordinator       = anytrue(local.distributed_tff_example_is_there_a_coordinator_flags) # Useful to know if we deployed a coordinator for the distributed TensorFlow Federated example in any namespace
-
-  # If the coordinator namespace is set to istio-ingress, we assume that workers are outside the service mesh (example: in another cluster)
-  distributed_tff_example_are_workers_outside_the_coordinator_mesh = var.distributed_tff_example_coordinator_namespace == "istio-ingress" ? true : false
-
-  distributed_tff_example_external_domain        = "tensorflow-federated.example.com"
-  distributed_tff_example_worker_1_hostname      = "tff-worker-1"
-  distributed_tff_example_worker_2_hostname      = "tff-worker-2"
-  distributed_tff_example_worker_1_external_fqdn = "${local.distributed_tff_example_worker_1_hostname}.${local.distributed_tff_example_external_domain}"
-  distributed_tff_example_worker_2_external_fqdn = "${local.distributed_tff_example_worker_2_hostname}.${local.distributed_tff_example_external_domain}"
 
   tenant_apps_kubernetes_service_account_name = "ksa"
 
@@ -93,16 +71,6 @@ locals {
   acm_config_sync_tenant_configuration_source_fileset              = [for f in fileset(local.acm_config_sync_tenant_configuration_package_source_directory_path, "**") : "${local.acm_config_sync_tenant_configuration_package_source_directory_path}/${f}"]
   acm_config_sync_tenant_configuration_package_source_content_hash = sha512(join("", [for f in local.acm_config_sync_tenant_configuration_source_fileset : filesha512(f)]))
 
-  distributed_tff_example_source_directory_path         = abspath("${path.module}/../examples/federated-learning/tff/distributed-fl-simulation-k8s")
-  distributed_tff_example_package_source_directory_path = "${local.distributed_tff_example_source_directory_path}/distributed-fl-workload-pkg"
-  distributed_tff_example_package_source_fileset        = [for f in fileset(local.distributed_tff_example_package_source_directory_path, "**") : "${local.distributed_tff_example_package_source_directory_path}/${f}"]
-  distributed_tff_example_package_source_content_hash   = sha512(join("", [for f in local.distributed_tff_example_package_source_fileset : filesha512(f)]))
-
-  distributed_tff_example_mesh_wide_source_directory_path      = "${local.distributed_tff_example_source_directory_path}/mesh-wide"
-  distributed_tff_example_mesh_wide_source_fileset             = [for f in fileset(local.distributed_tff_example_mesh_wide_source_directory_path, "**") : "${local.distributed_tff_example_mesh_wide_source_directory_path}/${f}"]
-  distributed_tff_example_mesh_wide_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_mesh_wide_source_fileset : filesha512(f)]))
-  distributed_tff_example_mesh_wide_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
-
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
 
   copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
@@ -121,9 +89,6 @@ locals {
   generate_and_copy_acm_tenant_content_script_path = abspath("${path.module}/scripts/generate-copy-acm-tenant-content.sh")
 
   delete_acm_tenant_content_script_path = local.delete_fileset_script_path
-
-  copy_distributed_tff_example_mesh_wide_content_script_path   = abspath("${path.module}/scripts/copy-tff-example-mesh-wide-content.sh")
-  delete_distributed_tff_example_mesh_wide_content_script_path = local.delete_fileset_script_path
 
   # Temporary placeholder
   tenant_developer_example_account = "someuser@example.com"
@@ -156,4 +121,16 @@ module "nvflare" {
   region                  = var.region
   workspace_bucket_name   = var.workspace_bucket_name
   list_apps_sa_iam_emails = local.list_apps_sa_iam_emails[var.nvflare_namespace]
+}
+
+module "distributed_tff_example" {
+  count  = var.distributed_tff_example ? 1 : 0
+  source = "./distributed-tff-example"
+
+  distributed_tff_example_worker_1_address = var.distributed_tff_example_worker_1_address
+  distributed_tff_example_worker_2_address = var.distributed_tff_example_worker_2_address
+  list_nodepool_sa_emails                  = local.list_nodepool_sa_emails
+  project_id                               = data.google_project.project.id
+  vpc_network_id                           = module.fedlearn-vpc.network_id
+  vpc_network_name                         = module.fedlearn-vpc.network_name
 }

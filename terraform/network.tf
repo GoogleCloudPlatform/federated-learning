@@ -200,32 +200,3 @@ module "cloud_router" {
 data "http" "installation_workstation_ip" {
   url = "http://ipv4.icanhazip.com"
 }
-
-module "distributed_tff_example_firewall_rules" {
-  count = local.deploy_distributed_tff_example_any_tenant && local.distributed_tff_example_is_there_a_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? 1 : 0
-
-  source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "9.0.0"
-
-  project_id   = data.google_project.project.project_id
-  network_name = module.fedlearn-vpc.network_name
-
-  egress_rules = [
-    {
-      name                    = "allow-egress-to-workers-outside-mesh"
-      description             = "Allow egress traffic to workers outside the mesh"
-      destination_ranges      = ["${var.distributed_tff_example_worker_1_address}/32", "${var.distributed_tff_example_worker_2_address}/32"]
-      priority                = 1000
-      target_service_accounts = local.list_nodepool_sa_emails
-
-      allow = [{
-        protocol = "tcp"
-        ports    = ["8000"]
-      }]
-
-      log_config = {
-        metadata = "INCLUDE_ALL_METADATA"
-      }
-    }
-  ]
-}

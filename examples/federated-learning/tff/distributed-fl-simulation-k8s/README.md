@@ -50,49 +50,107 @@ You can run this example in different runtime environments:
 ### Containers running in different namespaces, in the same GKE cluster
 
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md).
+
 1. From Cloud Shell, change the working directory to the `terraform` directory.
+
 1. Initialize the following Terraform variables for the workers:
 
    ```hcl
    tenant_names = ["fltenant1", "fltenant2", "fltenant3"]
-
-   distributed_tff_example_configuration          = {
-       "fltenant1": {
-           emnist_partition_file_name = "emnist_part_1.sqlite"
-       },
-       "fltenant2": {
-           emnist_partition_file_name = "emnist_part_2.sqlite"
-       }
-   }
    ```
 
 1. Run `terraform apply`, and wait for Terraform to complete the provisioning process.
-1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
-   and wait for the workers Deployments and Services to be ready.
-1. Configure the coordinator by adding the `fltenant3` element to the
-   `distributed_tff_example_configuration` map. The other elements of the map
-   are the same that you added in previous steps:
 
-   ```hcl
-   distributed_tff_example_configuration          = {
-       "fltenant1": {
-           emnist_partition_file_name = "emnist_part_1.sqlite"
-       },
-       "fltenant2": {
-           emnist_partition_file_name = "emnist_part_2.sqlite"
-       },
-       "fltenant3": {
-           is_coordinator = true
-           worker_1_hostname = "tff-worker.fltenant1.svc.cluster.local"
-           worker_2_hostname = "tff-worker.fltenant2.svc.cluster.local"
-       }
-   }
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
 
-   distributed_tff_example_coordinator_namespace = "fltenant3"
+1. Generate general configuration files:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/copy-tff-example-mesh-wide-content.sh" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/mesh-wide" \
+     "$(terraform output -raw acm_config_sync_configuration_destination_directory_path)/example-tff-image-classification-mesh-wide" \
+     "false" \
+     "false" \
+     "true"
    ```
 
-1. Run `terraform apply`.
-1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+1. Generate configuration files for the first worker:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant1" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "false" \
+     "emnist_part_1.sqlite" \
+     "not-needed" \
+     "not-needed" \
+     "ksa" \
+     "fltenant3" \
+     "false" \
+     "false" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Generate configuration files for the second worker:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant2" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "false" \
+     "emnist_part_2.sqlite" \
+     "not-needed" \
+     "not-needed" \
+     "ksa" \
+     "fltenant3" \
+     "false" \
+     "false" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   ACM_REPOSITORY_PATH="$(terraform output -raw acm_repository_path)"
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
+1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
+   and wait for the workers Deployments and Services to be ready.
+
+1. Generate configuration files for the coordinator:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant3" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "true" \
+     "not-needed" \
+     "tff-worker.fltenant1.svc.cluster.local" \
+     "tff-worker.fltenant2.svc.cluster.local" \
+     "ksa" \
+     "fltenant3" \
+     "false" \
+     "false" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   ACM_REPOSITORY_PATH="$(terraform output -raw acm_repository_path)"
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
 
@@ -100,52 +158,114 @@ You can run this example in different runtime environments:
 
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
    to provision and configure the environment for the first worker in a dedicated Google Cloud project.
+
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
    to provision and configure the environment for the second worker in a dedicated Google Cloud project.
+
 1. Provision infrastructure by following the instructions in the [main readme](../../../../README.md)
    to provision and configure the environment for the coordinator in a dedicated Google Cloud project.
+
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
    the resources for the first worker.
-1. Initialize the following Terraform variables for the first worker:
 
-   ```hcl
-   distributed_tff_example_deploy_ingress_gateway = true
-   distributed_tff_example_configuration          = {
-       "fltenant1": {
-           emnist_partition_file_name = "emnist_part_1.sqlite"
-       }
-   }
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+
+1. Generate general configuration files:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/copy-tff-example-mesh-wide-content.sh" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/mesh-wide" \
+     "$(terraform output -raw acm_config_sync_configuration_destination_directory_path)/example-tff-image-classification-mesh-wide" \
+     "true" \
+     "true" \
+     "false"
    ```
 
-1. Run `terraform apply`.
+1. Initialize the configuration for the first worker:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant1" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "false" \
+     "emnist_part_1.sqlite" \
+     "not-needed" \
+     "not-needed" \
+     "ksa" \
+     "istio-ingress" \
+     "true" \
+     "false" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   ACM_REPOSITORY_PATH="$(terraform output -raw acm_repository_path)"
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
    the resources for the second worker.
+
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+
+1. Generate general configuration files:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/copy-tff-example-mesh-wide-content.sh" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/mesh-wide" \
+     "$(terraform output -raw acm_config_sync_configuration_destination_directory_path)/example-tff-image-classification-mesh-wide" \
+     "true" \
+     "true" \
+     "false"
+   ```
+
 1. Initialize the following Terraform variables for the second worker:
 
    ```hcl
    distributed_tff_example_deploy_ingress_gateway = true
-   distributed_tff_example_configuration          = {
-       "fltenant1": {
-           emnist_partition_file_name = "emnist_part_2.sqlite"
-       }
-   }
    ```
 
-1. Run `terraform apply`.
-1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant1" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "false" \
+     "emnist_part_2.sqlite" \
+     "not-needed" \
+     "not-needed" \
+     "ksa" \
+     "istio-ingress" \
+     "true" \
+     "false" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   ACM_REPOSITORY_PATH="$(terraform output -raw acm_repository_path)"
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
 1. Open the [GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
    and wait for the workers Deployments and Services to be ready.
 1. From Cloud Shell, change the working directory to the `terraform` directory that you used to provision
-   the resources for the second worker.
+   the resources for the coordinator.
+1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+
 1. Initialize the following Terraform variables for the coordinator:
 
    ```hcl
-   distributed_tff_example_configuration          = {
-       "fltenant1": {
-           is_coordinator = true
-       }
-   }
-
    distributed_tff_example_worker_1_address = "<WORKER_1_SERVICE_IP_ADDRESS>"
    distributed_tff_example_worker_2_address = "<WORKER_2_SERVICE_IP_ADDRESS>"
    ```
@@ -158,7 +278,46 @@ You can run this example in different runtime environments:
      that exposes the second worker workloads.
 
 1. Run `terraform apply`.
-1. [Build the example container image, and push it to the container image registry](#build-the-example-container-image-and-push-it-to-the-container-image-registry).
+
+1. Generate general configuration files:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/copy-tff-example-mesh-wide-content.sh" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/mesh-wide" \
+     "$(terraform output -raw acm_config_sync_configuration_destination_directory_path)/example-tff-image-classification-mesh-wide" \
+     "false" \
+     "true" \
+     "true"
+   ```
+
+1. Initialize the following Terraform variables for the coordinator:
+
+   ```sh
+   "../examples/federated-learning/tff/distributed-fl-simulation-k8s/scripts/generate-tff-example-acm-tenant-content.sh" \
+     "$(terraform output -raw acm_config_sync_tenants_configuration_destination_directory_path)" \
+     "fltenant1" \
+     "../examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg" \
+     "true" \
+     "not-needed" \
+     "tff-worker-1.tensorflow-federated.example.com" \
+     "tff-worker-2.tensorflow-federated.example.com" \
+     "ksa" \
+     "fltenant1" \
+     "false" \
+     "true" \
+     "$(terraform output -raw container_image_repository_fully_qualified_hostname)/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   ACM_REPOSITORY_PATH="$(terraform output -raw acm_repository_path)"
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
 1. Wait for GKE to report the coordinator and the workers as `Ready` in the
    [GKE Workloads dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads)
    in their respective GKE clusters.
