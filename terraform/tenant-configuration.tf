@@ -12,27 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "null_resource" "init_acm_repository" {
-  triggers = {
-    acm_repository_path = var.acm_repository_path
-    create_script_hash  = md5(file(local.init_local_acm_repository_script_path))
-    create_command      = <<-EOT
-      "${local.init_local_acm_repository_script_path}" \
-        "${var.acm_repository_path}" \
-        "${var.acm_repository_url}" \
-        "${var.acm_branch}"
-    EOT
-
-    # Always run this. We check if something needs to be done in the creation script
-    timestamp = timestamp()
-  }
-
-  provisioner "local-exec" {
-    when    = create
-    command = self.triggers.create_command
-  }
-}
-
 resource "null_resource" "copy_common_acm_content" {
   triggers = {
     create_command      = local.copy_acm_common_content_command
@@ -56,10 +35,6 @@ resource "null_resource" "copy_common_acm_content" {
     when    = destroy
     command = self.triggers.destroy_command
   }
-
-  depends_on = [
-    null_resource.init_acm_repository
-  ]
 }
 
 resource "null_resource" "tenant_configuration" {
@@ -155,34 +130,5 @@ resource "null_resource" "copy_mesh_wide_distributed_tff_example_content" {
 
   depends_on = [
     null_resource.copy_common_acm_content
-  ]
-}
-
-resource "null_resource" "commit_acm_config_sync_configuration" {
-  triggers = {
-    command     = <<-EOT
-      "${local.acm_config_sync_commit_configuration_script_path}" \
-        "${var.acm_repository_path}" \
-        "${var.acm_branch}"
-    EOT
-    script_hash = md5(file(local.acm_config_sync_commit_configuration_script_path))
-
-    # Always run this. We check if something needs to be done in the creation script
-    timestamp = timestamp()
-  }
-
-  provisioner "local-exec" {
-    when    = create
-    command = self.triggers.command
-  }
-
-  depends_on = [
-    # Wait for ASM to be ready because we rely on ASM mutating webhooks
-    module.kubectl_asm_wait_for_controlplanerevision.wait,
-
-    null_resource.copy_mesh_wide_distributed_tff_example_content,
-    null_resource.copy_common_acm_content,
-    null_resource.init_acm_repository,
-    null_resource.tenant_configuration
   ]
 }
