@@ -22,7 +22,7 @@ locals {
 
 module "fedlearn-vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "9.0.0"
+  version = "9.1.0"
 
   project_id   = data.google_project.project.project_id
   network_name = "fedlearn-network"
@@ -121,7 +121,7 @@ module "fedlearn-vpc" {
 
 module "fedlearn-fw-policies" {
   source  = "terraform-google-modules/network/google//modules/network-firewall-policy"
-  version = "9.0.0"
+  version = "9.1.0"
 
   project_id  = data.google_project.project.project_id
   policy_name = "network-firewall-policies-federated-learning"
@@ -201,7 +201,7 @@ module "distributed_tff_example_firewall_rules" {
   count = local.deploy_distributed_tff_example_any_tenant && local.distributed_tff_example_is_there_a_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? 1 : 0
 
   source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "9.0.0"
+  version = "9.1.0"
 
   project_id   = data.google_project.project.project_id
   network_name = module.fedlearn-vpc.network_name
