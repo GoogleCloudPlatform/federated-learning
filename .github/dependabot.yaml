@@ -66,5 +66,6 @@ updates:
       terraform:
         applies-to: version-updates
         patterns:
+          - hashicorp/*
           - terraform-google-modules/*
 version: 2
