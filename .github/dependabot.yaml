@@ -14,40 +14,57 @@
 
 ---
 updates:
-  - directory: "/"
+  - directories:
+      - /
     commit-message:
       prefix: "chore(deps)"
     package-ecosystem: "github-actions"
     schedule:
       interval: "daily"
-  - directory: "/container-images/ci-tooling"
+    groups:
+      dev-ci-tools:
+        applies-to: version-updates
+        patterns:
+          - actions/*
+          - docker/*
+          - hashicorp/*
+          - super-linter/super-linter
+  - directories:
+      - /container-images/ci-tooling
     commit-message:
       prefix: "chore(deps)"
     package-ecosystem: "docker"
     schedule:
       interval: "daily"
-  - directory: "/container-images/ci-tooling"
+    groups:
+      dev-ci-tools:
+        applies-to: version-updates
+        patterns:
+          - node
+  - directories:
+      - /container-images/ci-tooling
     commit-message:
       prefix: "chore(deps)"
     package-ecosystem: "npm"
     schedule:
       interval: "daily"
-  - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
-    commit-message:
-      prefix: "chore(deps)"
-    package-ecosystem: "docker"
-    schedule:
-      interval: "daily"
-  - directory: "/examples/federated-learning/tff/distributed-fl-simulation-k8s"
-    commit-message:
-      prefix: "chore(deps)"
-    package-ecosystem: "pip"
-    schedule:
-      interval: "daily"
-  - directory: "/terraform"
+    groups:
+      dev-ci-tools:
+        applies-to: version-updates
+        patterns:
+          - "@commitlint/*"
+          - commitlint
+          - release-please
+  - directories:
+      - /terraform
     commit-message:
       prefix: "chore(deps)"
     package-ecosystem: "terraform"
     schedule:
       interval: "daily"
+    groups:
+      terraform:
+        applies-to: version-updates
+        patterns:
+          - terraform-google-modules/*
 version: 2
