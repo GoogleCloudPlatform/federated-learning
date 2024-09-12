@@ -14,7 +14,7 @@
 
 module "service_accounts" {
   source     = "terraform-google-modules/service-accounts/google"
-  version    = "4.2.2"
+  version    = "4.4.0"
   project_id = data.google_project.project.project_id
 
   grant_billing_role = false
@@ -28,7 +28,7 @@ module "service_accounts" {
 
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
-  version  = "7.6.0"
+  version  = "7.7.1"
   projects = [data.google_project.project.project_id]
   mode     = "authoritative"
 
@@ -50,7 +50,7 @@ module "project-iam-bindings" {
 module "fl-workload-identity" {
   for_each   = local.tenants
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version    = "27.0.0"
+  version    = "33.0.1"
   project_id = data.google_project.project.project_id
 
   annotate_k8s_sa     = false
