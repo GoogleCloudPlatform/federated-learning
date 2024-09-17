@@ -21,7 +21,7 @@ locals {
 
 module "cloud-dns-private-google-apis" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.2.0"
+  version = "5.3.0"
 
   description = "Private DNS zone for Google APIs"
   domain      = "googleapis.com."
@@ -53,7 +53,7 @@ module "cloud-dns-private-google-apis" {
 
 module "cloud-dns-private-container-registry" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.2.0"
+  version = "5.3.0"
 
   description = "Private DNS zone for Container Registry"
   domain      = "gcr.io."
@@ -85,7 +85,7 @@ module "cloud-dns-private-container-registry" {
 
 module "cloud-dns-private-artifact-registry" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.2.0"
+  version = "5.3.0"
 
   description = "Private DNS zone for Artifact Registry"
   domain      = "pkg.dev."
@@ -117,7 +117,7 @@ module "cloud-dns-private-artifact-registry" {
 
 module "source-repositories-private-artifact-registry" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.2.0"
+  version = "5.3.0"
 
   description = "Private DNS zone for Cloud Source Repositories"
   domain      = "source.developers.google.com."
@@ -151,7 +151,7 @@ module "distributed-tff-example-dns" {
   count = local.distributed_tff_example_is_there_a_coordinator && local.distributed_tff_example_are_workers_outside_the_coordinator_mesh ? 1 : 0
 
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.2.0"
+  version = "5.3.0"
 
   description = "Private DNS zone for the distributed TensorFlow Federated example"
   domain      = "${local.distributed_tff_example_external_domain}."
