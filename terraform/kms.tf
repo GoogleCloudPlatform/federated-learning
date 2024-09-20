@@ -14,7 +14,7 @@
 
 module "kms" {
   source  = "terraform-google-modules/kms/google"
-  version = "2.2.3"
+  version = "3.1.0"
 
   project_id = data.google_project.project.project_id
   location   = var.region
