@@ -76,6 +76,28 @@
             ]
         },
         {
+            "file": "/terraform/nvflare/iam.tf",
+            "findings": [
+                {
+                    "resource": "module.nvflare.storage_bucket_iam_bindings",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/terraform/nvflare/main.tf",
+            "findings": [
+                {
+                    "resource": "module.nvflare.buckets",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
+        },
+        {
             "file": "/examples/federated-learning/tff/distributed-fl-simulation-k8s/distributed-fl-workload-pkg/coordinator.yaml",
             "findings": [
                 {
@@ -99,6 +121,261 @@
                         "CKV_K8S_43",
                         "CKV_K8S_8",
                         "CKV_K8S_9"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-server/base-server-deployment.yml",
+            "findings": [
+                {
+                    "resource": "Deployment.nvflare.nvflare-server1",
+                    "check_ids": [
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_22",
+                        "CKV_K8S_38",
+                        "CKV_K8S_9",
+                        "CKV_K8S_31"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-server/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare-server1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "base:Pod.nvflare.nvflare-server1.run-nvflare-server1",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-deployment/base-deployment.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.nvflare.nvflare",
+                    "check_ids": [
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_22",
+                        "CKV_K8S_38",
+                        "CKV_K8S_9",
+                        "CKV_K8S_31"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-deployment/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare",
+                    "check_ids": [
+                        "CKV_K8S_31",
+                        "CKV_K8S_14",
+                        "CKV_K8S_38",
+                        "CKV_K8S_9",
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_8"
+                    ]
+                },
+                {
+                    "resource": "overlay:nvflare:Pod.default.nvflare-server1.run-nvflare-server1",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "overlay:nvflare:Pod.default.nvflare-client1.run-nvflare-client1",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "overlay:nvflare:Pod.default.nvflare-client2.run-nvflare-client2",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "base:Pod.default.nvflare.run-nvflare",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "overlay:client2:Pod.default.nvflare-client2.run-nvflare-client2",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "overlay:client1:Pod.default.nvflare-client1.run-nvflare-client1",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                },
+                {
+                    "resource": "overlay:server1:Pod.default.nvflare-server1.run-nvflare-server1",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-client/base-client.yaml",
+            "findings": [
+                {
+                    "resource": "Deployment.nvflare.nvflare-client",
+                    "check_ids": [
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_22",
+                        "CKV_K8S_38",
+                        "CKV_K8S_9",
+                        "CKV_K8S_31"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/base-client/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare-client",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "base:Pod.nvflare.nvflare-client.run-nvflare-client",
+                    "check_ids": [
+                        "CKV2_K8S_6"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/server1/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare-client1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "overlay:server1:Deployment.nvflare.nvflare-server1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "overlay:server1:Service.nvflare.nvflare-server1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/client1/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare-client1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "overlay:client1:Deployment.nvflare.nvflare-client1",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                }
+            ]
+        },
+        {
+            "file": "/examples/federated-learning/tff/nvflare/client2/kustomization.yaml",
+            "findings": [
+                {
+                    "resource": "base:Deployment.nvflare.nvflare-client2",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
+                    ]
+                },
+                {
+                    "resource": "overlay:client2:Deployment.nvflare.nvflare-client2",
+                    "check_ids": [
+                        "CKV_K8S_22",
+                        "CKV_K8S_43",
+                        "CKV_K8S_14",
+                        "CKV_K8S_8",
+                        "CKV_K8S_9",
+                        "CKV_K8S_38",
+                        "CKV_K8S_31"
                     ]
                 }
             ]

@@ -164,6 +164,7 @@ To familiarize with the environment that you provisioned, you can also deploy
 the following examples in the GKE cluster:
 
 - [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
+- [Nvflare training](./examples/federated-learning/tff/nvflare/README.md)
 
 Federated learning is typically split into Cross-silo and Cross-device federated learning. Cross-silo federated computation is where the participating members are organizations or companies, and the number of members is usually small (e.g., within a hundred).
 

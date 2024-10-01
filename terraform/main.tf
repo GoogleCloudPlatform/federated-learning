@@ -152,3 +152,12 @@ module "cross_device" {
   spanner_processing_units = var.spanner_processing_units
   list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
 }
+
+module "nvflare" {
+  count                   = var.nvflare ? 1 : 0
+  source                  = "./nvflare"
+  project_id              = data.google_project.project.id
+  region                  = var.region
+  workspace_bucket_name   = var.workspace_bucket_name
+  list_apps_sa_iam_emails = local.list_apps_sa_iam_emails[var.nvflare_namespace]
+}
