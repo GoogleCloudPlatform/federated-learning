@@ -16,7 +16,7 @@ control plane.
 
 This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
 you can extended the infrastructure to
-[Anthos clusters running on premises or on other public clouds](https://cloud.google.com/anthos/clusters/docs/multi-cloud).
+[GKE clusters running on premises or on other public clouds](https://cloud.google.com/kubernetes-engine/multi-cloud/docs).
 
 This blueprint is aimed at cloud platform administrator and data scientists that
 need to provision and configure a secure environment to run potentially
@@ -110,7 +110,18 @@ Users and teams managing tenant apps should not have permissions to change clust
 ## Deploy the blueprint
 
 1. Open [Cloud Shell](https://cloud.google.com/shell)
-1. Clone this repository
+
+1. Initialize the local repository where the environment configuration will be
+   stored:
+
+   ```sh
+   ACM_REPOSITORY_PATH= # Path on the host running Terraform to store environment configuration
+   ACM_REPOSITORY_URL= # URL of the repository to store environment configuration
+   ACM_BRANCH= # Name of the Git branch in the repository that Config Sync will sync with
+   git clone "${ACM_REPOSITORY_URL}" --branch "${ACM_BRANCH}" "${ACM_REPOSITORY_PATH}"
+   ```
+
+1. Clone this Git repository.
 1. Change into the directory that contains the Terraform code:
 
    ```sh
@@ -129,8 +140,9 @@ Users and teams managing tenant apps should not have permissions to change clust
 
    ```hcl
    project_id                  = # Google Cloud project ID where to provision resources with the blueprint.
-   acm_repository_path         = # Path on the host running Terraform to store environment configuration
-   acm_repository_url          = # URL of the repository to store environment configuration
+   acm_branch                  = # Use the same value that you used for ${ACM_BRANCH}
+   acm_repository_path         = # Use the same value that you used for ${ACM_REPOSITORY_PATH}
+   acm_repository_url          = # Use the same value that you used for ${ACM_REPOSITORY_URL}
    acm_secret_type             = # Secret type to authenticate with the Config Sync Git repository
    acm_source_repository_fqdns = # FQDNs of source repository for Config Sync to allow in the Network Firewall Policy
    ```
@@ -152,9 +164,32 @@ Users and teams managing tenant apps should not have permissions to change clust
 
    The provisioning process may take about 15 minutes to complete.
 
+1. Wait for the Cloud Service Mesh custom resource definitions to be available:
+
+   ```sh
+   /bin/sh -c 'while ! kubectl wait crd/controlplanerevisions.mesh.cloud.google.com --for condition=established --timeout=60m --all-namespaces; do echo \"crd/controlplanerevisions.mesh.cloud.google.com not yet available, waiting...\"; sleep 5; done'
+   ```
+
+1. Wait for the Cloud Service Mesh custom resources to be available:
+
+   ```sh
+   /bin/sh -c 'while ! kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled; do echo \"ControlPlaneRevision not yet available, waiting...\"; sleep 5; done'
+   ```
+
+1. Commit and push generated configuration files to the environment
+   configuration repository:
+
+   ```sh
+   git -C "${ACM_REPOSITORY_PATH}" add .
+   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
+   ```
+
+   Every time you modify the environment configuration, you need to commit and
+   push changes to the environment configuration repository.
+
 1. [Grant the Config Sync agent access to the Git repository](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret)
    where the environment configuration will be stored.
-
 1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
 ### Next steps

@@ -121,7 +121,7 @@ variable "acm_version" {
 
 variable "acm_branch" {
   default     = "main"
-  description = "The Git branch in the repository that Config Sync will sync with"
+  description = "Name of the Git branch in the repository that Config Sync will sync with"
   type        = string
 }
 
@@ -146,9 +146,6 @@ variable "acm_source_repository_fqdns" {
   type        = list(string)
 }
 
-# We can't validate if this directory exists because the fileexists function
-# doesn't support directories (yet?)
-# Ref: https://github.com/hashicorp/terraform/issues/33394
 variable "acm_repository_path" {
   description = "Path to the Config Management repository on the local machine"
   type        = string

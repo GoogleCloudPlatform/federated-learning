@@ -103,11 +103,7 @@ locals {
   distributed_tff_example_mesh_wide_source_content_hash        = sha512(join("", [for f in local.distributed_tff_example_mesh_wide_source_fileset : filesha512(f)]))
   distributed_tff_example_mesh_wide_destination_directory_path = "${local.acm_config_sync_destination_directory_path}/example-tff-image-classification-mesh-wide"
 
-  acm_config_sync_commit_configuration_script_path = abspath("${path.module}/scripts/commit-repository-changes.sh")
-
   delete_fileset_script_path = abspath("${path.module}/scripts/delete-fileset.sh")
-
-  init_local_acm_repository_script_path = abspath("${path.module}/scripts/init-acm-repository.sh")
 
   copy_acm_common_content_script_path = abspath("${path.module}/scripts/copy-acm-common-content.sh")
   copy_acm_common_content_command     = <<-EOT

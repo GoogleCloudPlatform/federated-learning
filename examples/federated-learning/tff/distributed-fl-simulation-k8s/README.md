@@ -170,9 +170,10 @@ You can run this example in different runtime environments:
    ```sh
    DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_REPOSITORY_HOSTNAME="$(terraform output -raw container_image_repository_fully_qualified_hostname)"
    DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_REPOSITORY_HOSTNAME}/$(terraform output -raw container_image_repository_name)/tff-runtime:0.0.1"
+   DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH="examples/federated-learning/tff/distributed-fl-simulation-k8s/container-image"
 
    docker build \
-     --file "examples/federated-learning/tff/distributed-fl-simulation-k8s/Dockerfile" \
+     --file "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}/Dockerfile" \
      --tag "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}" \
      "${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_BUILD_CONTEXT_PATH}"
    ```
