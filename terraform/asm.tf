@@ -36,7 +36,7 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
 # https://github.com/kubernetes/kubernetes/issues/83242 is implemented.
 module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
-  version = "3.1.2"
+  version = "3.5.0"
 
   project_id              = data.google_project.project.project_id
   cluster_name            = module.gke.name
@@ -55,7 +55,7 @@ module "kubectl_asm_wait_for_controlplanerevision_custom_resource_definition" {
 # https://github.com/kubernetes/kubernetes/issues/83242 is implemented.
 module "kubectl_asm_wait_for_controlplanerevision" {
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
-  version = "3.1.2"
+  version = "3.5.0"
 
   project_id              = data.google_project.project.project_id
   cluster_name            = module.gke.name
