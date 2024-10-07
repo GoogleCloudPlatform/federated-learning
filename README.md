@@ -282,6 +282,22 @@ If this happens, wait for the cluster to complete the initialiazation, and
 delete the Deployment that has this issue. Config Sync will deploy it again with
 the correct container image identifiers.
 
+### Errors when deleting and cleaning up the environment
+
+When running `terraform destroy` to remove resources that this reference
+architecture provisioned and configured, it might happen that you get the
+following errors:
+
+- Dangling network endpoint groups (NEGs):
+
+  > Error waiting for Deleting Network: The network resource 'projects/PROJECT_NAME/global/networks/NETWORK_NAME' is already being used by 'projects/PROJECT_NAME/zones/ZONE_NAME/networkEndpointGroups/NETWORK_ENDPOINT_GROUP_NAME'.
+
+  If this happens:
+
+  1. Open the [NEGs dashboard for your project](https://console.cloud.google.com/compute/networkendpointgroups).
+  1. Delete all the NEGs that were associated with the GKE cluster that Terraform deleted.
+  1. Run `terraform destroy` again.
+
 ## Understanding the security controls that you need
 
 This section discusses the controls that you apply with the blueprint to help
