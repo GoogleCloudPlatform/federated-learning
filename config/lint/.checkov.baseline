@@ -671,6 +671,23 @@
                     ]
                 }
             ]
+        },
+        {
+            "file": "/terraform/distributed-tff-example/main.tf",
+            "findings": [
+                {
+                    "resource": "module.distributed_tff_example.distributed_tff_example_firewall_rules",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                },
+                {
+                    "resource": "module.distributed_tff_example.distributed-tff-example-dns",
+                    "check_ids": [
+                        "CKV_TF_1"
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -22,7 +22,6 @@ TENANT_CONFIGURATION_PACKAGE_PATH="${2}"
 TENANT="${3}"
 TENANT_APPS_SERVICE_ACCOUNT_EMAIL="${4}"
 TENANT_DEVELOPER_EMAIL="${5}"
-DISTRIBUTED_TFF_EXAMPLE_DEPLOY="${6}"
 
 TENANT_CONFIGURATION_DIRECTORY_PATH="${TENANTS_CONFIGURATION_DIRECTORY_PATH}/${TENANT}"
 
@@ -37,60 +36,3 @@ kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2 "${TENANT_CONFIGURATION_PAC
   tenant-name="${TENANT}" \
   gcp-service-account="${TENANT_APPS_SERVICE_ACCOUNT_EMAIL}" \
   tenant-developer="${TENANT_DEVELOPER_EMAIL}"
-
-echo "DISTRIBUTED_TFF_EXAMPLE_DEPLOY: ${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}"
-
-if [ "${DISTRIBUTED_TFF_EXAMPLE_DEPLOY}" = "true" ]; then
-  DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH="${7}"
-  IS_TFF_COORDINATOR="${8}"
-  TFF_WORKER_EMNIST_PARTITION_FILE_NAME="${9:-"not-needed"}"
-  TFF_WORKER_1_HOSTNAME="${10:-"not-needed"}"
-  TFF_WORKER_2_HOSTNAME="${11:-"not-needed"}"
-  TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME="${12}"
-  TFF_COORDINATOR_NAMESPACE="${13:-"istio-ingress"}"
-  CONFIGURE_WORKER_INGRESS_GATEWAY="${14:-"false"}"
-  ARE_WORKERS_OUTSIDE_MESH="${15:-"false"}"
-  DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID="${16}"
-
-  echo "ARE_WORKERS_OUTSIDE_MESH: ${ARE_WORKERS_OUTSIDE_MESH}"
-
-  DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH="${TENANT_CONFIGURATION_DIRECTORY_PATH}/example-tff-image-classification"
-
-  echo "Configuring ${DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH} package for ${TENANT} namespace. Output directory: ${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}"
-
-  kpt fn eval "${DISTRIBUTED_TFF_EXAMPLE_PACKAGE_PATH}" --image gcr.io/kpt-fn/apply-setters:v0.2.0 --output="${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}" --truncate-output=false -- \
-    coordinator-namespace="${TFF_COORDINATOR_NAMESPACE}" \
-    namespace="${TENANT}" \
-    tff-pod-service-account-name="${TFF_COORDINATOR_POD_SERVICE_ACCOUNT_NAME}" \
-    tff-workload-emnist-partition-file-name="${TFF_WORKER_EMNIST_PARTITION_FILE_NAME}" \
-    tff-worker-1-hostname="${TFF_WORKER_1_HOSTNAME}" \
-    tff-worker-2-hostname="${TFF_WORKER_2_HOSTNAME}" \
-    tff-runtime-container-image-id="${DISTRIBUTED_TFF_EXAMPLE_CONTAINER_IMAGE_LOCALIZED_ID}"
-
-  if [ "${IS_TFF_COORDINATOR}" = "false" ]; then
-    echo "This configuration is for a worker. Deleting coordinator-specific configuration."
-    rm -fv \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/coordinator.yaml" \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator-workers-outside-mesh.yaml"
-
-    if [ "${CONFIGURE_WORKER_INGRESS_GATEWAY}" = "false" ]; then
-      echo "This configuration is for a worker but it doesn't need to be exposed using an ingress gateway. Deleting ingress gateway-specific configuration."
-      rm -fv \
-        "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker-ingress-gateway.yaml"
-    fi
-  else
-    echo "This configuration is for a coordinator. Deleting worker-specific configuration."
-    rm -fv \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/worker.yaml" \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker.yaml" \
-      "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-worker-ingress-gateway.yaml"
-
-    if [ "${ARE_WORKERS_OUTSIDE_MESH}" = "false" ]; then
-      rm -v "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator-workers-outside-mesh.yaml"
-    fi
-  fi
-
-  # These are leftovers from previous development iterations that we don't need anymore
-  rm -fv \
-    "${DISTRIBUTED_TFF_EXAMPLE_OUTPUT_DIRECTORY_PATH}/service-mesh-coordinator.yaml"
-fi
