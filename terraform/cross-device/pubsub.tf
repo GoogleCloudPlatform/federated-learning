@@ -22,7 +22,7 @@ locals {
 module "pubsub_dl" {
   for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
-  version              = "6.0.0"
+  version              = "7.0.0"
   project_id           = data.google_project.project.project_id
   topic                = "${each.value}-topic-dead-letter"
   create_subscriptions = true
@@ -44,7 +44,7 @@ module "pubsub_dl" {
 module "pubsub" {
   for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
-  version              = "6.0.0"
+  version              = "7.0.0"
   project_id           = data.google_project.project.project_id
   topic                = "${each.value}-topic"
   create_subscriptions = true
