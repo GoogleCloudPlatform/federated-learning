@@ -30,13 +30,40 @@ This blueprint assumes that you are familiar with GKE and
 To deploy this blueprint you need:
 
 - A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled.
-- An account with the [Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) on the project.
+- An account with either the [Project Owner role](#option-1-project-owner-role) (full access) or [Granular Access roles](#option-2-granular-access).
 - The `serviceusage.googleapis.com` must be enabled on the project. For more
   information about enabling APIs, see
   [Enabling and disabling services](https://cloud.google.com/service-usage/docs/enable-disable)
 - A Git repository to store the environment configuration.
 
-You create the infastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
+### Service Account Roles & Permissions
+
+You can choose between **Project Owner** access (full access) or **Granular Access** for more fine-tuned permissions.
+
+#### Option 1: Project Owner role
+
+The service account will have full administrative access to the project.
+
+- `roles/owner`: Full administrative access to the project ([Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles))
+
+---
+
+#### Option 2: Granular Access
+
+The service account will be assigned the following roles to limit access to required resources:
+
+- **`roles/artifactregistry.admin`**: Grants full administrative access to Artifact Registry, allowing management of repositories and artifacts.
+- **`roles/browser`**: Provides read-only access to browse resources in a project.
+- **`roles/cloudkms.admin`**: Provides full administrative control over Cloud KMS (Key Management Service) resources.
+- **`roles/compute.networkAdmin`**: Grants full control over Compute Engine network resources.
+- **`roles/container.clusterAdmin`**: Provides full control over Kubernetes Engine clusters, including creating and managing clusters.
+- **`roles/gkehub.editor`**: Grants permission to manage Google Kubernetes Engine Hub features.
+- **`roles/iam.serviceAccountAdmin`**: Grants full control over managing service accounts in the project.
+- **`roles/resourcemanager.projectIamAdmin`**: Allows managing IAM policies and roles at the project level.
+- **`roles/servicenetworking.serviceAgent`**: Allows managing service networking configurations.
+- **`roles/serviceusage.serviceUsageAdmin`**: Grants permission to enable and manage services and APIs for a project.
+
+You create the infrastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
 but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
 for anything other than experimentation.
 
