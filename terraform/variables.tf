@@ -195,6 +195,7 @@ variable "nvflare_namespace" {
 
 variable "workspace_bucket_name" {
   description = "Bucket name that will contain nvflare workspace"
+  default     = ""
   type        = string
 }
 
