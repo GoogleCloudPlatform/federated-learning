@@ -91,3 +91,47 @@ variable "list_apps_sa_iam_emails" {
   description = "List of SA to add roles to when deploying cross-device workload"
   type        = list(string)
 }
+
+variable "odp_image_version" {
+  description = "Version tag for ODP service images"
+  type        = string
+  default     = "latest"
+}
+
+variable "odp_enable_monitoring" {
+  description = "Enable monitoring for ODP services"
+  type        = bool
+  default     = true
+}
+
+variable "odp_java_memory_limit" {
+  description = "Memory limit for Java services"
+  type        = string
+  default     = "3Gi"
+}
+
+variable "odp_java_memory_request" {
+  description = "Memory request for Java services"
+  type        = string
+  default     = "2Gi"
+}
+
+# Add Spanner-related variables
+
+variable "spanner_instance_name" {
+  description = "Name of the Spanner instance"
+  type        = string
+  default     = "odp-federated-compute"
+}
+
+variable "spanner_database_name" {
+  description = "Name of the Spanner database"
+  type        = string
+  default     = "odp-federated-compute"
+}
+
+variable "spanner_nodes" {
+  description = "Number of nodes for Spanner instance"
+  type        = number
+  default     = 1
+}

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  required_version = ">=1.0"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 4.69.1, < 6.0.0"
-    }
-  }
+provider "kubernetes" {
+  config_path    = "~/.kube/config"    // or your specific kubeconfig path
+  config_context = "your-context-name" // optional, if you have multiple contexts
+}
+
+provider "kubectl" {
+  config_path    = "~/.kube/config"
+  config_context = "your-context-name"
 }
