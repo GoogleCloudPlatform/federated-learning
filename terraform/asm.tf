@@ -16,7 +16,6 @@ resource "google_gke_hub_feature" "mesh_feature" {
   name     = "servicemesh"
   project  = data.google_project.project.project_id
   location = "global"
-  provider = google-beta
 }
 
 # This is needed until https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/1702
@@ -28,5 +27,4 @@ resource "google_gke_hub_feature_membership" "mesh_feature_membership" {
   mesh {
     management = "MANAGEMENT_AUTOMATIC"
   }
-  provider = google-beta
 }
