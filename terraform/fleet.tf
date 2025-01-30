@@ -19,7 +19,6 @@ resource "google_gke_hub_membership" "membership" {
       resource_link = "//container.googleapis.com/${module.gke.cluster_id}"
     }
   }
-  provider = google-beta
 
   depends_on = [
     module.project-services

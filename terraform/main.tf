@@ -13,7 +13,6 @@
 # limitations under the License.
 
 locals {
-
   main_tenant_name = "main"
 
   # To reduce duplication, treat the main pool as the first (privileged) tenant
