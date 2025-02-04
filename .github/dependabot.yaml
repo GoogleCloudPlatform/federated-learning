@@ -57,6 +57,9 @@ updates:
           - release-please
   - directories:
       - /terraform
+      - /terraform/cross-device
+      - /terraform/nvflare
+      - /terraform/distributed-tff-example
     commit-message:
       prefix: "chore(deps)"
     package-ecosystem: "terraform"
