@@ -56,7 +56,7 @@ locals {
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        MODEL_BUCKET           = module.buckets.names["model"]
+        MODEL_BUCKET           = module.buckets.names["model-0"]
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
     }
