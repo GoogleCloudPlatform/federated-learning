@@ -111,6 +111,18 @@ module "cross_device" {
   spanner_instance_config  = var.spanner_instance_config
   spanner_processing_units = var.spanner_processing_units
   list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
+  aggregator_sa            = "aggregator-sa"
+  collector_sa             = "collector-sa"
+  model_updater_sa         = "model-updater-sa"
+  task_management_sa       = "task-management-sa"
+  task_assignment_sa       = "task-assignment-sa"
+  task_scheduler_sa        = "task-scheduler-sa"
+  aggregator_image         = "debian"
+  collector_image          = "debian"
+  model_updater_image      = "debian"
+  task_management_image    = "debian"
+  task_assignment_image    = "debian"
+  task_scheduler_image     = "debian"
 }
 
 module "nvflare" {

@@ -117,7 +117,6 @@ variable "odp_java_memory_request" {
 }
 
 # Add Spanner-related variables
-
 variable "spanner_instance_name" {
   description = "Name of the Spanner instance"
   type        = string
@@ -134,4 +133,64 @@ variable "spanner_nodes" {
   description = "Number of nodes for Spanner instance"
   type        = number
   default     = 1
+}
+
+variable "aggregator_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "collector_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "task_management_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "model_updater_sa" {
+  description = "The Kubernetes service account name for model training"
+  type        = string
+}
+
+variable "task_assignment_sa" {
+  description = "The Kubernetes service account name for model evaluation"
+  type        = string
+}
+
+variable "task_scheduler_sa" {
+  description = "The Kubernetes service account name for model aggregation"
+  type        = string
+}
+
+variable "aggregator_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "collector_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "model_updater_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_assignment_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_management_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_scheduler_image" {
+  description = "The container image for task management"
+  type        = string
 }

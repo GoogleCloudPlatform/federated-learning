@@ -30,6 +30,8 @@ locals {
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.aggregator_sa
+      image = var.aggregator_image
     }
     collector = {
       replicas = 1
@@ -45,6 +47,8 @@ locals {
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.collector_sa
+      image = var.collector_image
     }
     "model-updater" = {
       replicas = 1
@@ -59,6 +63,8 @@ locals {
         MODEL_BUCKET           = module.buckets.names["model-0"]
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.model_updater_sa
+      image = var.model_updater_image
     }
     "task-assignment" = {
       replicas = 1
@@ -73,6 +79,8 @@ locals {
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.task_assignment_sa
+      image = var.task_assignment_image
     }
     "task-management" = {
       replicas = 1
@@ -88,6 +96,8 @@ locals {
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.task_management_sa
+      image = var.task_management_image
     }
     "task-scheduler" = {
       replicas = 1
@@ -103,6 +113,8 @@ locals {
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
       java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.task_scheduler_sa
+      image = var.task_scheduler_image
     }
   }
 }
@@ -122,7 +134,7 @@ resource "kubernetes_namespace" "odp_services" {
 # Create service accounts for ODP services
 resource "google_service_account" "odp_services" {
   for_each     = local.odp_services
-  account_id   = "odp-${each.key}-sa"
+  account_id   = each.value.service_account_name
   display_name = "Service Account for ODP ${each.key} service"
   project      = data.google_project.project.project_id
 
@@ -170,7 +182,7 @@ resource "kubernetes_deployment" "odp_services" {
       spec {
         container {
           name  = each.key
-          image = "gcr.io/${data.google_project.project.project_id}/federated-compute/${each.key}:latest"
+          image = "${each.value.image}:latest"
 
           dynamic "port" {
             for_each = each.value.ports
@@ -233,8 +245,6 @@ resource "kubernetes_deployment" "odp_services" {
             run_as_group    = 10000
           }
         }
-
-        service_account_name = google_service_account.odp_services[each.key].email
       }
     }
   }
