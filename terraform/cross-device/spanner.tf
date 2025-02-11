@@ -12,28 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-locals {
-  file_contents = file("${path.module}/files/spanner.ddl.sql")
-  string_list   = split("\n", local.file_contents)
-}
-
-resource "google_spanner_instance" "fcp_task_spanner_instance" {
-  name             = "fcp-task-${var.environment}"
-  display_name     = "fcp-task-${var.environment}"
-  project          = data.google_project.project.project_id
-  config           = var.spanner_instance_config
-  processing_units = var.spanner_processing_units
-}
-
-resource "google_spanner_database" "fcp_task_spanner_database" {
-  instance                 = google_spanner_instance.fcp_task_spanner_instance.name
-  name                     = "fcp-task-db-${var.environment}"
-  project                  = data.google_project.project.project_id
-  version_retention_period = var.spanner_database_retention_period
-  deletion_protection      = var.spanner_database_deletion_protection
-  ddl                      = local.string_list
-}
-
 # Spanner configuration for ODP services
 # Create Spanner instance
 resource "google_spanner_instance" "odp_spanner" {
