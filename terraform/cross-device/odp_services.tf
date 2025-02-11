@@ -29,9 +29,9 @@ locals {
         SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.aggregator_sa
-      image = var.aggregator_image
+      image                = var.aggregator_image
     }
     collector = {
       replicas = 1
@@ -46,9 +46,9 @@ locals {
         SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.collector_sa
-      image = var.collector_image
+      image                = var.collector_image
     }
     "model-updater" = {
       replicas = 1
@@ -62,9 +62,9 @@ locals {
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
         MODEL_BUCKET           = module.buckets.names["model-0"]
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.model_updater_sa
-      image = var.model_updater_image
+      image                = var.model_updater_image
     }
     "task-assignment" = {
       replicas = 1
@@ -78,9 +78,9 @@ locals {
         SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_assignment_sa
-      image = var.task_assignment_image
+      image                = var.task_assignment_image
     }
     "task-management" = {
       replicas = 1
@@ -95,9 +95,9 @@ locals {
         SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_management_sa
-      image = var.task_management_image
+      image                = var.task_management_image
     }
     "task-scheduler" = {
       replicas = 1
@@ -112,9 +112,9 @@ locals {
         SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
         SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
       }
-      java_opts = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_scheduler_sa
-      image = var.task_scheduler_image
+      image                = var.task_scheduler_image
     }
   }
 }

@@ -40,7 +40,7 @@ resource "kubernetes_service_account" "ksa" {
 
 # Set up Workload Identity bindings
 resource "google_service_account_iam_binding" "ksa_workload_identity" {
-  for_each = local.odp_services
+  for_each           = local.odp_services
   service_account_id = google_service_account.odp_services[each.key].name
   role               = "roles/iam.workloadIdentityUser"
   members = [
