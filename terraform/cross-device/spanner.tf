@@ -33,3 +33,32 @@ resource "google_spanner_database" "fcp_task_spanner_database" {
   deletion_protection      = var.spanner_database_deletion_protection
   ddl                      = local.string_list
 }
+
+# Spanner configuration for ODP services
+# Create Spanner instance
+resource "google_spanner_instance" "odp_spanner" {
+  name         = "odp-federated-compute"
+  config       = "regional-${var.region}"
+  display_name = "ODP Federated Compute Database"
+  num_nodes    = 1
+
+  labels = {
+    environment = var.environment
+    purpose     = "odp-federated-compute"
+  }
+}
+
+# Create Spanner database
+resource "google_spanner_database" "odp_db" {
+  instance                 = google_spanner_instance.odp_spanner.name
+  name                     = "odp-federated-compute"
+  version_retention_period = "7d"
+  deletion_protection      = true
+
+  ddl = [
+    file("${path.module}/spanner/schema/tasks.sdl"),
+    file("${path.module}/spanner/schema/clients.sdl"),
+    file("${path.module}/spanner/schema/models.sdl"),
+    file("${path.module}/spanner/schema/aggregations.sdl")
+  ]
+}

@@ -22,11 +22,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.69.1, < 6.0.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 4.69.1, < 6.0.0"
+      version = "> 6.0.0"
     }
     external = {
       source  = "hashicorp/external"
@@ -42,7 +38,11 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.0, ~> 2.10"
+      version = "~> 2.0"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "~> 1.14"
     }
     random = {
       source  = "hashicorp/random"
