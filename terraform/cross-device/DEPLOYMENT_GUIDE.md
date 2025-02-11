@@ -16,13 +16,12 @@ This guide provides step-by-step instructions for deploying the cross-device pla
 # Set environment variables
 
 export PROJECT_ID=$(gcloud config get-value project)
-export REGISTRY_PATH="gcr.io/${PROJECT_ID}/federated-compute" 
+export REGISTRY_PATH="gcr.io/${PROJECT_ID}/federated-compute"
 export VERSION=$(date +%Y%m%d-%H%M%S)
 
 # Configure Docker for GCR
 
 gcloud auth configure-docker
-
 
 # Enable required GCP APIs
 
@@ -111,17 +110,17 @@ SERVICES=(
 
 for SERVICE in "${SERVICES[@]}"; do
     echo "Building ${SERVICE}..."
-    
+
     # Build service
     ./gradlew :${SERVICE}:clean :${SERVICE}:bootJar
-    
+
     # Build Docker image
     docker build \
         -t "${REGISTRY_PATH}/${SERVICE}:${VERSION}" \
         -f ${SERVICE}/Dockerfile \
         --build-arg SERVICE_NAME=${SERVICE} \
         .
-    
+
     # Push image
     docker push "${REGISTRY_PATH}/${SERVICE}:${VERSION}"
     docker tag "${REGISTRY_PATH}/${SERVICE}:${VERSION}" "${REGISTRY_PATH}/${SERVICE}:latest"
@@ -263,6 +262,7 @@ EOF
 ### Common Issues
 
 1. **Image Pull Errors**
+
 ```bash
 # Check image exists
 gcloud container images list --repository=$REGISTRY_PATH
@@ -272,6 +272,7 @@ kubectl describe pod <pod-name> -n odp-federated
 ```
 
 2. **Service Account Issues**
+
 ```bash
 # Verify service account
 kubectl get serviceaccount -n odp-federated
@@ -284,6 +285,7 @@ gcloud projects get-iam-policy $PROJECT_ID \
 ```
 
 3. **Network Issues**
+
 ```bash
 # Test connectivity
 kubectl run tmp-shell --rm -i --tty \
@@ -313,10 +315,10 @@ terraform destroy
 5. Configure auto-scaling
 
 Remember to:
+
 - Keep track of deployed versions
 - Monitor resource usage
 - Review security configurations
 - Maintain backup procedures
-```
 
 This guide provides comprehensive instructions for deploying the cross-device platform and ODP services. Adjust paths, configurations, and steps according to your specific requirements and environment.
