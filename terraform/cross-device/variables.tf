@@ -116,6 +116,12 @@ variable "odp_java_memory_request" {
   default     = "2Gi"
 }
 
+variable "deploy_services" {
+  description = "Whether to deploy the ODP services within the cross-device module"
+  type        = bool
+  default     = false
+}
+
 # Add Spanner-related variables
 variable "spanner_instance_name" {
   description = "Name of the Spanner instance"
