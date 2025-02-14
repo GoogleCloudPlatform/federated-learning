@@ -10,7 +10,7 @@ This guide describes the order of operations then describes the various approach
  - The configuration use a single spanner instance and a single database for the entire deployment. If you require multiple spanner instances and databases you will need to modify the configuration to create additional spanner instances and/or databases.
  - The configuration uses a single artifact registry for the entire deployment. If you require multiple artifact registries you will need to modify the configuration to create additional artifact registries.
  - The configuration uses a single GKE cluster for the entire deployment. If you require multiple GKE clusters you will need to modify the configuration to create additional GKE clusters.
- - The configuration uses GKE confidential nodes you may require that confidential spaces is used for the aggregation services so will need to modify the configuration to use confidential spaces see the . refer to the [odp-federatedcompute repository](https://github.com/privacysandbox/odp-federatedcompute/tree/main) for more information on how to configure confidential space.
+ - The configuration uses GKE confidential nodes you may require that confidential spaces is used for the aggregation services so will need to modify the configuration to use confidential spaces. Refer to the [odp-federatedcompute repository](https://github.com/privacysandbox/odp-federatedcompute/tree/main) for more information on how to configure confidential space.
  - Client side configuration is not configurable in this deployment.  refer to the [odp-federatedcompute repository](https://github.com/privacysandbox/odp-federatedcompute/tree/main) for more information on how to configure the client side.
 
 
@@ -132,7 +132,7 @@ terraform apply
 
 ## Approach 2: Automated Deployment Using deploy.sh
 
-The `federated-learning/terraform/scripts/deploy.sh` script automates the process but doesn't use the deterministic Docker build environment. Use this approach for development/testing only.
+The `federated-learning/terraform/scripts/deploy.sh` script is a helper script that automates the process using the  Docker build environment. 
 
 ### 1\. Run Automated Deployment
 
