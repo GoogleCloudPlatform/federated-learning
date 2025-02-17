@@ -15,7 +15,6 @@
 resource "google_gke_hub_feature" "acm_feature" {
   name     = "configmanagement"
   location = "global"
-  provider = google-beta
 
   depends_on = [
     module.project-services
@@ -29,6 +28,7 @@ resource "google_gke_hub_feature_membership" "acm_feature_member" {
   configmanagement {
     version = var.acm_version
     config_sync {
+      enabled = true
       git {
         sync_repo   = var.acm_repository_url
         sync_branch = var.acm_branch
@@ -45,5 +45,4 @@ resource "google_gke_hub_feature_membership" "acm_feature_member" {
       template_library_installed = true
     }
   }
-  provider = google-beta
 }
