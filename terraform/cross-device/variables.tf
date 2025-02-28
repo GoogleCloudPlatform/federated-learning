@@ -91,3 +91,112 @@ variable "list_apps_sa_iam_emails" {
   description = "List of SA to add roles to when deploying cross-device workload"
   type        = list(string)
 }
+
+variable "odp_image_version" {
+  description = "Version tag for ODP service images"
+  type        = string
+  default     = "latest"
+}
+
+variable "odp_enable_monitoring" {
+  description = "Enable monitoring for ODP services"
+  type        = bool
+  default     = true
+}
+
+variable "odp_java_memory_limit" {
+  description = "Memory limit for Java services"
+  type        = string
+  default     = "3Gi"
+}
+
+variable "odp_java_memory_request" {
+  description = "Memory request for Java services"
+  type        = string
+  default     = "2Gi"
+}
+
+variable "deploy_services" {
+  description = "Whether to deploy the ODP services within the cross-device module"
+  type        = bool
+  default     = false
+}
+
+# Add Spanner-related variables
+variable "spanner_instance_name" {
+  description = "Name of the Spanner instance"
+  type        = string
+  default     = "odp-federated-compute"
+}
+
+variable "spanner_database_name" {
+  description = "Name of the Spanner database"
+  type        = string
+  default     = "odp-federated-compute"
+}
+
+variable "spanner_nodes" {
+  description = "Number of nodes for Spanner instance"
+  type        = number
+  default     = 1
+}
+
+variable "aggregator_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "collector_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "task_management_sa" {
+  description = "The Kubernetes service account name for task management"
+  type        = string
+}
+
+variable "model_updater_sa" {
+  description = "The Kubernetes service account name for model training"
+  type        = string
+}
+
+variable "task_assignment_sa" {
+  description = "The Kubernetes service account name for model evaluation"
+  type        = string
+}
+
+variable "task_scheduler_sa" {
+  description = "The Kubernetes service account name for model aggregation"
+  type        = string
+}
+
+variable "aggregator_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "collector_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "model_updater_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_assignment_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_management_image" {
+  description = "The container image for task management"
+  type        = string
+}
+
+variable "task_scheduler_image" {
+  description = "The container image for task management"
+  type        = string
+}
