@@ -14,7 +14,7 @@
 
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
-  version  = "8.0.0"
+  version  = "8.1.0"
   projects = [data.google_project.project.project_id]
 
   bindings = {
