@@ -218,3 +218,35 @@ variable "distributed_tff_example_worker_2_address" {
   default     = ""
   type        = string
 }
+
+variable "encryption_key_service_a_base_url" {
+
+}
+
+variable "encryption_key_service_b_base_url" {
+
+}
+
+variable "encryption_key_service_a_cloudfunction_url" {
+
+}
+
+variable "encryption_key_service_b_cloudfunction_url" {
+
+}
+
+variable "wip_provider_a" {
+
+}
+
+variable "wip_provider_b" {
+
+}
+
+variable "service_account_a" {
+
+}
+
+variable "service_account_b" {
+  
+}

@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+locals {
+  list_sa_to_create = concat(local.list_confidential_space_sa, local.list_sa_names)
+  list_iam_sa = concat(local.list_confidential_space_sa_iam_emails, local.list_nodepool_sa_iam_emails)
+}
+
 module "service_accounts" {
   source     = "terraform-google-modules/service-accounts/google"
   version    = "4.5.0"
@@ -19,7 +24,7 @@ module "service_accounts" {
 
   grant_billing_role = false
   grant_xpn_roles    = false
-  names              = local.list_sa_names
+  names              = local.list_sa_to_create
 
   depends_on = [
     module.project-services
@@ -35,11 +40,12 @@ module "project-iam-bindings" {
   bindings = {
     # Least-privilege roles needed for a node pool service account to function and
     # to get read-only access to Container Registry and Artifact Registry
-    "roles/logging.logWriter"                   = local.list_nodepool_sa_iam_emails,
-    "roles/monitoring.metricWriter"             = local.list_nodepool_sa_iam_emails,
-    "roles/monitoring.viewer"                   = local.list_nodepool_sa_iam_emails,
-    "roles/stackdriver.resourceMetadata.writer" = local.list_nodepool_sa_iam_emails,
-    "roles/artifactregistry.reader"             = local.list_nodepool_sa_iam_emails,
+    "roles/logging.logWriter"                   = local.list_iam_sa,
+    "roles/monitoring.metricWriter"             = local.list_iam_sa,
+    "roles/monitoring.viewer"                   = local.list_iam_sa,
+    "roles/stackdriver.resourceMetadata.writer" = local.list_iam_sa,
+    "roles/artifactregistry.reader"             = local.list_iam_sa,
+    "roles/confidentialcomputing.workloadUser"  = local.list_confidential_space_sa_iam_emails
   }
 
   depends_on = [

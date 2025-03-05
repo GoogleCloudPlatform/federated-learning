@@ -53,7 +53,7 @@ module "pubsub" {
   pull_subscriptions = [
     {
       name                             = "${each.value}-subscription"
-      dead_letter_topic                = "${var.project_id}/topics/${each.value}-topic-dead-letter"
+      dead_letter_topic                = "projects/${var.project_id}/topics/${each.value}-topic-dead-letter"
       topic_message_retention_duration = "604800s"
       retain_acked_messages            = true
       ack_deadline_seconds             = 600
