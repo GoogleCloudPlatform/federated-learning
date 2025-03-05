@@ -27,18 +27,18 @@ resource "google_spanner_instance" "odp_spanner" {
 locals {
   # Read all .sdl files from the schema directory
   schema_files = fileset("${path.module}/spanner/schema", "*.sdl")
-  
+
   # Read each file's content
   file_contents = {
     for file in local.schema_files :
     file => file("${path.module}/spanner/schema/${file}")
   }
-  
+
   # Process the content of each file to extract DDL statements
   raw_statements = flatten([
     for content in values(local.file_contents) : split("CREATE", content)
   ])
-  
+
   # Clean up and format statements
   ddl_statements = [
     for stmt in local.raw_statements :

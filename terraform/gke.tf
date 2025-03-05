@@ -20,6 +20,7 @@ module "gke" {
   authenticator_security_group = var.gke_rbac_security_group_domain != null ? "gke-security-groups@${var.gke_rbac_security_group_domain}" : null
   create_service_account       = false
   datapath_provider            = "ADVANCED_DATAPATH"
+  deletion_protection = false
   enable_binary_authorization  = true
   enable_confidential_nodes    = var.enable_confidential_nodes
   enable_private_endpoint      = false

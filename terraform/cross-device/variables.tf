@@ -200,3 +200,102 @@ variable "task_scheduler_image" {
   description = "The container image for task management"
   type        = string
 }
+
+# Aggregator parameters
+variable "aggregator_instance_source_image" {
+  description = "The aggregator OS source container image to run."
+  type        = string
+  default     = "projects/confidential-space-images/global/images/confidential-space-debug-250100"
+}
+
+variable "aggregator_machine_type" {
+  description = "The aggregator machine type of the VM."
+  type        = string
+  default     = "n2d-standard-8"
+}
+
+variable "aggregator_autoscaling_jobs_per_instance" {
+  description = "The ratio of jobs to aggregator worker instances to scale by."
+  type        = number
+  default     = 2
+}
+
+variable "aggregator_max_replicas" {
+  description = "The maximum number of aggregator instances that the autoscaler can scale up to. "
+  type        = number
+  default     = 5
+}
+
+variable "aggregator_min_replicas" {
+  description = "The minimum number of aggregator replicas that the autoscaler can scale down to."
+  type        = number
+  default     = 2
+}
+
+variable "aggregator_cooldown_period" {
+  description = "The number of seconds that the autoscaler should wait before it starts collecting information from a aggregator new instance."
+  type        = number
+  default     = 180
+}
+
+variable "aggregator_subscriber_max_outstanding_element_count" {
+  description = "The maximum number of messages for the aggregator which have not received acknowledgments or negative acknowledgments before pausing the stream."
+  type        = number
+  default     = 2
+}
+
+# ModelUpdater parameters
+variable "model_updater_instance_source_image" {
+  description = "The model_updater OS source container image to run."
+  type        = string
+  default     = "projects/confidential-space-images/global/images/confidential-space-debug-250100"
+}
+
+variable "model_updater_machine_type" {
+  description = "The model_updater machine type of the VM."
+  type        = string
+  default     = "n2d-standard-8"
+}
+
+variable "model_updater_autoscaling_jobs_per_instance" {
+  description = "The ratio of jobs to model_updater worker instances to scale by."
+  type        = number
+  default     = 2
+}
+
+variable "model_updater_max_replicas" {
+  description = "The maximum number of model_updater instances that the autoscaler can scale up to. "
+  type        = number
+  default     = 5
+}
+
+variable "model_updater_min_replicas" {
+  description = "The minimum number of model_updater replicas that the autoscaler can scale down to."
+  type        = number
+  default     = 2
+}
+
+variable "model_updater_cooldown_period" {
+  description = "The number of seconds that the autoscaler should wait before it starts collecting information from a model_updater new instance."
+  type        = number
+  default     = 120
+}
+
+variable "model_updater_subscriber_max_outstanding_element_count" {
+  description = "The maximum number of messages for the model updater which have not received acknowledgments or negative acknowledgments before pausing the stream."
+  type        = number
+  default     = 2
+}
+
+variable "allowed_operator_service_accounts" {
+  description = "The service accounts provided by coordinator for the worker to impersonate."
+  type        = string
+}
+
+variable "network_name" {
+
+}
+
+variable "subnet_name" {
+
+}

@@ -40,14 +40,6 @@ locals {
       k8s_name = "collector-sa"
       gcp_name = "collector-sa"
     }
-    "model-updater" = {
-      k8s_name = "model-updater-sa"
-      gcp_name = "model-updater-sa"
-    }
-    "aggregator" = {
-      k8s_name = "aggregator-sa"
-      gcp_name = "aggregator-sa"
-    }
     "task-scheduler" = {
       k8s_name = "task-scheduler-sa"
       gcp_name = "task-scheduler-sa"

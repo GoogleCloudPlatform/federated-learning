@@ -21,6 +21,13 @@ locals {
     var.tenant_names
   )
 
+  list_confidential_space_sa = [
+    "odp-federated-aggregator-sa",
+    "odp-federated-model-updater-sa"
+  ]
+
+  list_confidential_space_sa_iam_emails = [for sa in local.list_confidential_space_sa : "serviceAccount:${module.service_accounts.service_accounts_map[local.list_confidential_space_sa[index(local.list_confidential_space_sa, sa)]].email}"]
+
   tenants = {
     for name in local.tenant_and_main_pool_names : name => {
       tenant_name                                 = name
@@ -53,7 +60,7 @@ locals {
 
   list_sa_names = concat(
     [for tenant in local.tenants : tenant.tenant_nodepool_sa_name],
-    [for tenant in local.tenants : tenant.tenant_apps_sa_name],
+    [for tenant in local.tenants : tenant.tenant_apps_sa_name]
   )
 
   acm_config_sync_tenant_configuration_package_source_directory_path = abspath("${path.module}/../tenant-config-pkg")
@@ -106,7 +113,7 @@ data "google_client_config" "default" {}
 module "cross_device" {
   count                    = var.cross_device ? 1 : 0
   source                   = "./cross-device"
-  project_id               = data.google_project.project.id
+  project_id               = var.project_id
   region                   = var.region
   spanner_instance_config  = var.spanner_instance_config
   spanner_processing_units = var.spanner_processing_units
@@ -117,12 +124,15 @@ module "cross_device" {
   task_management_sa       = "task-management-sa"
   task_assignment_sa       = "task-assignment-sa"
   task_scheduler_sa        = "task-scheduler-sa"
-  aggregator_image         = "debian"
-  collector_image          = "debian"
-  model_updater_image      = "debian"
-  task_management_image    = "debian"
-  task_assignment_image    = "debian"
-  task_scheduler_image     = "debian"
+  aggregator_image         = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/aggregator_image@sha256:a9cdcadff8b1c5c4d4225a129428dd86b65e75be80df48c6b3aecc8b68b46e30"
+  collector_image          = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/collector_image"
+  model_updater_image      = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/model_updater_image@sha256:b0bc213e4cb34c99525345b1d544371ce5c9d647ec08405a9ca96d61e0b272fa"
+  task_management_image    = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_management_image"
+  task_assignment_image    = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_assignment_image"
+  task_scheduler_image     = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_scheduler_image"
+  allowed_operator_service_accounts = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
+  network_name = module.fedlearn-vpc.network_name
+  subnet_name = local.fedlearn_subnet_name
 }
 
 module "nvflare" {

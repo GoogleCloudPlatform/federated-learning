@@ -11,18 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-module "project-services" {
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "18.0.0"
-
-  project_id                  = var.project_id
-  disable_services_on_destroy = false
-  activate_apis = [
-    "confidentialcomputing.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "pubsub.googleapis.com",
-    "secretmanager.googleapis.com",
-    "spanner.googleapis.com"
-  ]
-}

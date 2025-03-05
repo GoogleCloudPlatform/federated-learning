@@ -14,7 +14,7 @@
 
 # ODP Services Configuration
 locals {
-  odp_namespace = "odp-federated"
+  odp_namespace = "fltenant1"
   odp_services = {
     aggregator = {
       replicas = 1
@@ -26,8 +26,9 @@ locals {
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
-        SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
+        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
+        SPANNER_DATABASE       = google_spanner_database.odp_db.name
+        GCLOUD_PROJECT = var.project_id
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.aggregator_sa
@@ -43,8 +44,8 @@ locals {
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
-        SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
+        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
+        SPANNER_DATABASE       = google_spanner_database.odp_db.name
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.collector_sa
@@ -75,8 +76,8 @@ locals {
       }]
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
-        SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
-        SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
+        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
+        SPANNER_DATABASE       = google_spanner_database.odp_db.name
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_assignment_sa
@@ -92,8 +93,8 @@ locals {
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
-        SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
+        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
+        SPANNER_DATABASE       = google_spanner_database.odp_db.name
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_management_sa
@@ -109,8 +110,8 @@ locals {
       env = {
         SPRING_PROFILES_ACTIVE = "prod"
         PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.fcp_task_spanner_instance.name
-        SPANNER_DATABASE       = google_spanner_database.fcp_task_spanner_database.name
+        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
+        SPANNER_DATABASE       = google_spanner_database.odp_db.name
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_scheduler_sa
@@ -137,6 +138,7 @@ resource "google_service_account" "odp_services" {
   account_id   = each.value.service_account_name
   display_name = "Service Account for ODP ${each.key} service"
   project      = data.google_project.project.project_id
+  create_ignore_already_exists = true
 
   lifecycle {
     prevent_destroy = false # Add this to help with recreation
@@ -353,6 +355,7 @@ resource "kubernetes_manifest" "odp_authorization_policy" {
       namespace = kubernetes_namespace.odp_services.metadata[0].name
     }
     spec = {
+      action = "ALLOW"
       selector = {
         matchLabels = {
           app = "odp-federated"
@@ -363,7 +366,7 @@ resource "kubernetes_manifest" "odp_authorization_policy" {
           from = [
             {
               source = {
-                principals = ["cluster.local/ns/${kubernetes_namespace.odp_services.metadata[0].name}/sa/*"]
+                namespaces = [kubernetes_namespace.odp_services.metadata[0].name]
               }
             }
           ]
