@@ -18,6 +18,7 @@ data "google_compute_zones" "available" {
 resource "google_compute_instance_template" "instance_template" {
   project = var.project_id
   region  = var.region
+  
   disk {
     auto_delete  = true
     boot         = true

@@ -299,3 +299,44 @@ variable "network_name" {
 variable "subnet_name" {
 
 }
+
+# Service input variables
+variable "encryption_key_service_a_base_url" {
+  description = "The base url of the encryption key service A."
+  type        = string
+}
+
+variable "encryption_key_service_b_base_url" {
+  description = "The base url of the encryption key service B."
+  type        = string
+}
+
+variable "encryption_key_service_a_cloudfunction_url" {
+  description = "The cloudfunction url of the encryption key service A."
+  type        = string
+}
+
+variable "encryption_key_service_b_cloudfunction_url" {
+  description = "The cloudfunction url of the encryption key service B."
+  type        = string
+}
+
+variable "wip_provider_a" {
+  description = "The workload identity provider of the encryption key service A."
+  type        = string
+}
+
+variable "wip_provider_b" {
+  description = "The workload identity provider of the encryption key service B."
+  type        = string
+}
+
+variable "service_account_a" {
+  description = "The service account to impersonate of the encryption key service A."
+  type        = string
+}
+
+variable "service_account_b" {
+  description = "The service account to impersonate of the encryption key service B."
+  type        = string
+}

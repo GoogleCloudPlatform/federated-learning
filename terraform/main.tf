@@ -124,7 +124,7 @@ module "cross_device" {
   task_management_sa       = "task-management-sa"
   task_assignment_sa       = "task-assignment-sa"
   task_scheduler_sa        = "task-scheduler-sa"
-  aggregator_image         = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/aggregator_image@sha256:a9cdcadff8b1c5c4d4225a129428dd86b65e75be80df48c6b3aecc8b68b46e30"
+  aggregator_image         = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/aggregator_image@sha256:1043eb980b618e325d5b490c879fc72f211a70104d7f645b1bbb70996a42de2c"
   collector_image          = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/collector_image"
   model_updater_image      = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/model_updater_image@sha256:b0bc213e4cb34c99525345b1d544371ce5c9d647ec08405a9ca96d61e0b272fa"
   task_management_image    = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_management_image"
@@ -133,6 +133,14 @@ module "cross_device" {
   allowed_operator_service_accounts = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
   network_name = module.fedlearn-vpc.network_name
   subnet_name = local.fedlearn_subnet_name
+  encryption_key_service_a_base_url = var.encryption_key_service_a_base_url
+  encryption_key_service_a_cloudfunction_url = var.encryption_key_service_a_cloudfunction_url
+  encryption_key_service_b_base_url = var.encryption_key_service_b_base_url
+  encryption_key_service_b_cloudfunction_url = var.encryption_key_service_b_cloudfunction_url
+  service_account_a = var.service_account_a
+  service_account_b = var.service_account_b
+  wip_provider_a = var.wip_provider_a
+  wip_provider_b = var.wip_provider_b
 }
 
 module "nvflare" {
