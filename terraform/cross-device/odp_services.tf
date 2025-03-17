@@ -16,24 +16,6 @@
 locals {
   odp_namespace = "fltenant1"
   odp_services = {
-    aggregator = {
-      replicas = 1
-      ports = [{
-        containerPort = 8080
-        name          = "http"
-        protocol      = "TCP"
-      }]
-      env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
-        SPANNER_DATABASE       = google_spanner_database.odp_db.name
-        GCLOUD_PROJECT = var.project_id
-      }
-      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
-      service_account_name = var.aggregator_sa
-      image                = var.aggregator_image
-    }
     collector = {
       replicas = 1
       ports = [{
@@ -42,30 +24,11 @@ locals {
         protocol      = "TCP"
       }]
       env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
-        SPANNER_DATABASE       = google_spanner_database.odp_db.name
+        FCP_OPTS = "--environment '${var.environment}'"
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.collector_sa
       image                = var.collector_image
-    }
-    "model-updater" = {
-      replicas = 1
-      ports = [{
-        containerPort = 8080
-        name          = "http"
-        protocol      = "TCP"
-      }]
-      env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        MODEL_BUCKET           = module.buckets.names["model-0"]
-      }
-      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
-      service_account_name = var.model_updater_sa
-      image                = var.model_updater_image
     }
     "task-assignment" = {
       replicas = 1
@@ -75,9 +38,7 @@ locals {
         protocol      = "TCP"
       }]
       env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
-        SPANNER_DATABASE       = google_spanner_database.odp_db.name
+        FCP_OPTS = "--environment '${var.environment}'"
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_assignment_sa
@@ -91,10 +52,7 @@ locals {
         protocol      = "TCP"
       }]
       env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
-        SPANNER_DATABASE       = google_spanner_database.odp_db.name
+        FCP_OPTS = "--environment '${var.environment}'"
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_management_sa
@@ -108,10 +66,7 @@ locals {
         protocol      = "TCP"
       }]
       env = {
-        SPRING_PROFILES_ACTIVE = "prod"
-        PUBSUB_PROJECT_ID      = data.google_project.project.project_id
-        SPANNER_INSTANCE       = google_spanner_instance.odp_spanner.name
-        SPANNER_DATABASE       = google_spanner_database.odp_db.name
+        FCP_OPTS = "--environment '${var.environment}'"
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_scheduler_sa
@@ -346,32 +301,32 @@ resource "google_project_iam_member" "odp_services_storage" {
 }
 
 # Create service mesh configuration
-resource "kubernetes_manifest" "odp_authorization_policy" {
-  manifest = {
-    apiVersion = "security.istio.io/v1beta1"
-    kind       = "AuthorizationPolicy"
-    metadata = {
-      name      = "odp-services-policy"
-      namespace = kubernetes_namespace.odp_services.metadata[0].name
-    }
-    spec = {
-      action = "ALLOW"
-      selector = {
-        matchLabels = {
-          app = "odp-federated"
-        }
-      }
-      rules = [
-        {
-          from = [
-            {
-              source = {
-                namespaces = [kubernetes_namespace.odp_services.metadata[0].name]
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
+# resource "kubernetes_manifest" "odp_authorization_policy" {
+#   manifest = {
+#     apiVersion = "security.istio.io/v1beta1"
+#     kind       = "AuthorizationPolicy"
+#     metadata = {
+#       name      = "odp-services-policy"
+#       namespace = kubernetes_namespace.odp_services.metadata[0].name
+#     }
+#     spec = {
+#       action = "ALLOW"
+#       selector = {
+#         matchLabels = {
+#           app = "odp-federated"
+#         }
+#       }
+#       rules = [
+#         {
+#           from = [
+#             {
+#               source = {
+#                 namespaces = [kubernetes_namespace.odp_services.metadata[0].name]
+#               }
+#             }
+#           ]
+#         }
+#       ]
+#     }
+#   }
+# }

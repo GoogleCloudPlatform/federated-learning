@@ -220,33 +220,79 @@ variable "distributed_tff_example_worker_2_address" {
 }
 
 variable "encryption_key_service_a_base_url" {
+  default     = ""
+  type        = string
 
 }
 
 variable "encryption_key_service_b_base_url" {
+  default     = ""
+  type        = string
 
 }
 
 variable "encryption_key_service_a_cloudfunction_url" {
+  default     = ""
+  type        = string
 
 }
 
 variable "encryption_key_service_b_cloudfunction_url" {
+  default     = ""
+  type        = string
 
 }
 
 variable "wip_provider_a" {
+  default     = ""
+  type        = string
 
 }
 
 variable "wip_provider_b" {
+  default     = ""
+  type        = string
 
 }
 
 variable "service_account_a" {
+  default     = ""
+  type        = string
 
 }
 
 variable "service_account_b" {
-  
+  default     = ""
+  type        = string
+
+}
+
+variable "aggregator_image" {
+  default     = ""
+
+}
+
+variable "collector_image" {
+  default     = ""
+
+}
+
+variable "model_updater_image" {
+  default     = ""
+
+}
+
+variable "task_management_image" {
+  default     = ""
+
+}
+
+variable "task_assignment_image" {
+  default     = ""
+
+}
+
+variable "task_scheduler_image" {
+  default     = ""
+
 }

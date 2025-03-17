@@ -118,18 +118,16 @@ module "cross_device" {
   spanner_instance_config  = var.spanner_instance_config
   spanner_processing_units = var.spanner_processing_units
   list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
-  aggregator_sa            = "aggregator-sa"
   collector_sa             = "collector-sa"
-  model_updater_sa         = "model-updater-sa"
   task_management_sa       = "task-management-sa"
   task_assignment_sa       = "task-assignment-sa"
   task_scheduler_sa        = "task-scheduler-sa"
-  aggregator_image         = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/aggregator_image@sha256:1043eb980b618e325d5b490c879fc72f211a70104d7f645b1bbb70996a42de2c"
-  collector_image          = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/collector_image"
-  model_updater_image      = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/model_updater_image@sha256:b0bc213e4cb34c99525345b1d544371ce5c9d647ec08405a9ca96d61e0b272fa"
-  task_management_image    = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_management_image"
-  task_assignment_image    = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_assignment_image"
-  task_scheduler_image     = "europe-docker.pkg.dev/federated-learning-452214/container-image-repository/task_scheduler_image"
+  aggregator_image         = var.aggregator_image
+  collector_image          = var.collector_image
+  model_updater_image      = var.model_updater_image
+  task_management_image    = var.task_management_image
+  task_assignment_image    = var.task_assignment_image
+  task_scheduler_image     = var.task_scheduler_image
   allowed_operator_service_accounts = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
   network_name = module.fedlearn-vpc.network_name
   subnet_name = local.fedlearn_subnet_name
@@ -141,6 +139,8 @@ module "cross_device" {
   service_account_b = var.service_account_b
   wip_provider_a = var.wip_provider_a
   wip_provider_b = var.wip_provider_b
+  aggregator_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
+  model_updater_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
 }
 
 module "nvflare" {

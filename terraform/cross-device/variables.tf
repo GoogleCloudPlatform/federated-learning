@@ -141,11 +141,6 @@ variable "spanner_nodes" {
   default     = 1
 }
 
-variable "aggregator_sa" {
-  description = "The Kubernetes service account name for task management"
-  type        = string
-}
-
 variable "collector_sa" {
   description = "The Kubernetes service account name for task management"
   type        = string
@@ -153,11 +148,6 @@ variable "collector_sa" {
 
 variable "task_management_sa" {
   description = "The Kubernetes service account name for task management"
-  type        = string
-}
-
-variable "model_updater_sa" {
-  description = "The Kubernetes service account name for model training"
   type        = string
 }
 
@@ -339,4 +329,13 @@ variable "service_account_a" {
 variable "service_account_b" {
   description = "The service account to impersonate of the encryption key service B."
   type        = string
+}
+
+variable "aggregator_compute_service_account" {
+
+}
+
+
+variable "model_updater_compute_service_account" {
+
 }
