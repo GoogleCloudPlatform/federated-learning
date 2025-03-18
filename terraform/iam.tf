@@ -50,7 +50,7 @@ module "project-iam-bindings" {
 module "fl-workload-identity" {
   for_each   = local.tenants
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version    = "36.0.2"
+  version    = "36.1.0"
   project_id = data.google_project.project.project_id
 
   annotate_k8s_sa     = false
