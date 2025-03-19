@@ -14,8 +14,8 @@
 
 locals {
   topics = {
-    aggregator_topic   = "aggregator-${var.environment}"
-    modelupdater_topic = "modelupdater-${var.environment}"
+    aggregator_topic               = "aggregator-${var.environment}"
+    modelupdater_topic             = "modelupdater-${var.environment}"
     aggregator_notifications_topic = "aggregator-notifications-${var.environment}"
   }
 }

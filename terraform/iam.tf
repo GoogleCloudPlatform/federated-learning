@@ -14,7 +14,7 @@
 
 locals {
   list_sa_to_create = concat(local.list_confidential_space_sa, local.list_sa_names)
-  list_iam_sa = concat(local.list_confidential_space_sa_iam_emails, local.list_nodepool_sa_iam_emails)
+  list_iam_sa       = concat(local.list_confidential_space_sa_iam_emails, local.list_nodepool_sa_iam_emails)
 }
 
 module "service_accounts" {

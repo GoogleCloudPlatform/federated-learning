@@ -111,36 +111,36 @@ data "google_project" "project" {
 data "google_client_config" "default" {}
 
 module "cross_device" {
-  count                    = var.cross_device ? 1 : 0
-  source                   = "./cross-device"
-  project_id               = var.project_id
-  region                   = var.region
-  spanner_instance_config  = var.spanner_instance_config
-  spanner_processing_units = var.spanner_processing_units
-  list_apps_sa_iam_emails  = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
-  collector_sa             = "collector-sa"
-  task_management_sa       = "task-management-sa"
-  task_assignment_sa       = "task-assignment-sa"
-  task_scheduler_sa        = "task-scheduler-sa"
-  aggregator_image         = var.aggregator_image
-  collector_image          = var.collector_image
-  model_updater_image      = var.model_updater_image
-  task_management_image    = var.task_management_image
-  task_assignment_image    = var.task_assignment_image
-  task_scheduler_image     = var.task_scheduler_image
-  allowed_operator_service_accounts = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
-  network_name = module.fedlearn-vpc.network_name
-  subnet_name = local.fedlearn_subnet_name
-  encryption_key_service_a_base_url = var.encryption_key_service_a_base_url
+  count                                      = var.cross_device ? 1 : 0
+  source                                     = "./cross-device"
+  project_id                                 = var.project_id
+  region                                     = var.region
+  spanner_instance_config                    = var.spanner_instance_config
+  spanner_processing_units                   = var.spanner_processing_units
+  list_apps_sa_iam_emails                    = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
+  collector_sa                               = "collector-sa"
+  task_management_sa                         = "task-management-sa"
+  task_assignment_sa                         = "task-assignment-sa"
+  task_scheduler_sa                          = "task-scheduler-sa"
+  aggregator_image                           = var.aggregator_image
+  collector_image                            = var.collector_image
+  model_updater_image                        = var.model_updater_image
+  task_management_image                      = var.task_management_image
+  task_assignment_image                      = var.task_assignment_image
+  task_scheduler_image                       = var.task_scheduler_image
+  allowed_operator_service_accounts          = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
+  network_name                               = module.fedlearn-vpc.network_name
+  subnet_name                                = local.fedlearn_subnet_name
+  encryption_key_service_a_base_url          = var.encryption_key_service_a_base_url
   encryption_key_service_a_cloudfunction_url = var.encryption_key_service_a_cloudfunction_url
-  encryption_key_service_b_base_url = var.encryption_key_service_b_base_url
+  encryption_key_service_b_base_url          = var.encryption_key_service_b_base_url
   encryption_key_service_b_cloudfunction_url = var.encryption_key_service_b_cloudfunction_url
-  service_account_a = var.service_account_a
-  service_account_b = var.service_account_b
-  wip_provider_a = var.wip_provider_a
-  wip_provider_b = var.wip_provider_b
-  aggregator_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
-  model_updater_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
+  service_account_a                          = var.service_account_a
+  service_account_b                          = var.service_account_b
+  wip_provider_a                             = var.wip_provider_a
+  wip_provider_b                             = var.wip_provider_b
+  aggregator_compute_service_account         = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
+  model_updater_compute_service_account      = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
 }
 
 module "nvflare" {

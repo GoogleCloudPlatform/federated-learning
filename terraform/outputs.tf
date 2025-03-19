@@ -15,8 +15,8 @@
 locals {
   container_image_repository_fully_qualified_hostname = "${google_artifact_registry_repository.container_image_repository.location}-docker.pkg.dev"
   container_image_repository_name                     = "${google_artifact_registry_repository.container_image_repository.project}/${google_artifact_registry_repository.container_image_repository.repository_id}"
-  aggregator_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
-  model_updater_compute_service_account = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
+  aggregator_compute_service_account                  = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
+  model_updater_compute_service_account               = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
 }
 
 output "container_image_repository_fully_qualified_hostname" {
@@ -65,9 +65,9 @@ output "nvflare_namespace" {
 }
 
 output "aggregator_compute_service_account" {
-value = local.aggregator_compute_service_account
+  value = local.aggregator_compute_service_account
 }
 
 output "model_updater_compute_service_account" {
-value = local.model_updater_compute_service_account
+  value = local.model_updater_compute_service_account
 }

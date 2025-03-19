@@ -67,7 +67,7 @@ resource "kubernetes_service_account" "ksa" {
   for_each = local.service_accounts
   metadata {
     name      = each.value.k8s_name
-    namespace = "default"  # Changed from var.k8s_namespace_name to "default"
+    namespace = "default" # Changed from var.k8s_namespace_name to "default"
     annotations = {
       "iam.gke.io/gcp-service-account" = "${each.value.gcp_name}@${data.google_project.project.project_id}.iam.gserviceaccount.com"
     }

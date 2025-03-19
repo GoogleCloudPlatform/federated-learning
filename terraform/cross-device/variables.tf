@@ -343,19 +343,19 @@ variable "model_updater_compute_service_account" {
 variable "download_plan_token_duration" {
   description = "Duration in seconds the download plan signed URL token is valid for"
   type        = number
-  default = 900
+  default     = 900
 }
 
 variable "download_checkpoint_token_duration" {
   description = "Duration in seconds the download checkpoint signed URL token is valid for"
   type        = number
-  default = 900
+  default     = 900
 }
 
 variable "upload_gradient_token_duration" {
   description = "Duration in seconds the upload gradient signed URL token is valid for"
   type        = number
-  default = 900
+  default     = 900
 }
 
 variable "allow_rooted_devices" {

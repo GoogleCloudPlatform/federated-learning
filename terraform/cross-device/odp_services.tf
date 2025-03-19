@@ -89,10 +89,10 @@ resource "kubernetes_namespace" "odp_services" {
 
 # Create service accounts for ODP services
 resource "google_service_account" "odp_services" {
-  for_each     = local.odp_services
-  account_id   = each.value.service_account_name
-  display_name = "Service Account for ODP ${each.key} service"
-  project      = data.google_project.project.project_id
+  for_each                     = local.odp_services
+  account_id                   = each.value.service_account_name
+  display_name                 = "Service Account for ODP ${each.key} service"
+  project                      = data.google_project.project.project_id
   create_ignore_already_exists = true
 
   lifecycle {
