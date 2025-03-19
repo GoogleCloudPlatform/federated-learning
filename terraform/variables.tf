@@ -157,14 +157,50 @@ variable "gke_rbac_security_group_domain" {
   type        = string
 }
 
-variable "cross_device" {
-  description = "Enable cross device infrastructure deployment"
+# Distributed TensorFlow Federated example variables
+
+variable "distributed_tff_example" {
+  description = "Set this to true to provision cloud resources for the distributed TensorFlow Federated example"
+  default     = false
+  type        = bool
+}
+
+variable "distributed_tff_example_worker_1_address" {
+  description = "IP address of the first worker in the distributed TensorFlow Federated example"
+  default     = ""
+  type        = string
+}
+
+variable "distributed_tff_example_worker_2_address" {
+  description = "IP address of the second worker in the distributed TensorFlow Federated example"
+  default     = ""
+  type        = string
+}
+
+# NVFlare example variables
+
+variable "nvflare" {
+  description = "Enable nvflare infrastructure deployment"
   type        = bool
   default     = false
 }
 
-variable "nvflare" {
-  description = "Enable nvflare infrastructure deployment"
+variable "nvflare_namespace" {
+  description = "Namespace of SA where the cross-device workload will be deployed"
+  type        = string
+  default     = "fltenant1"
+}
+
+variable "workspace_bucket_name" {
+  description = "Bucket name that will contain nvflare workspace"
+  default     = ""
+  type        = string
+}
+
+# Cross-devices example variables
+
+variable "cross_device" {
+  description = "Enable cross device infrastructure deployment"
   type        = bool
   default     = false
 }
@@ -187,112 +223,131 @@ variable "cross_device_workloads_kubernetes_namespace" {
   default     = "main"
 }
 
-variable "nvflare_namespace" {
-  description = "Namespace of SA where the cross-device workload will be deployed"
-  type        = string
-  default     = "fltenant1"
-}
-
-variable "workspace_bucket_name" {
-  description = "Bucket name that will contain nvflare workspace"
-  default     = ""
-  type        = string
-}
-
-# Distributed TensorFlow Federated example variables
-
-variable "distributed_tff_example" {
-  description = "Set this to true to provision cloud resources for the distributed TensorFlow Federated example"
-  default     = false
-  type        = bool
-}
-
-variable "distributed_tff_example_worker_1_address" {
-  description = "IP address of the first worker in the distributed TensorFlow Federated example"
-  default     = ""
-  type        = string
-}
-
-variable "distributed_tff_example_worker_2_address" {
-  description = "IP address of the second worker in the distributed TensorFlow Federated example"
-  default     = ""
-  type        = string
-}
-
 variable "encryption_key_service_a_base_url" {
-  default = ""
-  type    = string
-
+  description = "The base url of the encryption key service A."
+  default     = ""
+  type        = string
 }
 
 variable "encryption_key_service_b_base_url" {
-  default = ""
-  type    = string
-
+  description = "The base url of the encryption key service B."
+  default     = ""
+  type        = string
 }
 
 variable "encryption_key_service_a_cloudfunction_url" {
-  default = ""
-  type    = string
-
+  description = "The cloudfunction url of the encryption key service A."
+  default     = ""
+  type        = string
 }
 
 variable "encryption_key_service_b_cloudfunction_url" {
-  default = ""
-  type    = string
-
+  description = "The cloudfunction url of the encryption key service B."
+  default     = ""
+  type        = string
 }
 
 variable "wip_provider_a" {
-  default = ""
-  type    = string
-
+  description = "The workload identity provider of the encryption key service A."
+  default     = ""
+  type        = string
 }
 
 variable "wip_provider_b" {
-  default = ""
-  type    = string
-
+  description = "The workload identity provider of the encryption key service B."
+  default     = ""
+  type        = string
 }
 
 variable "service_account_a" {
-  default = ""
-  type    = string
-
+  description = "The service account to impersonate of the encryption key service A."
+  default     = ""
+  type        = string
 }
 
 variable "service_account_b" {
-  default = ""
-  type    = string
-
+  description = "The service account to impersonate of the encryption key service B."
+  default     = ""
+  type        = string
 }
 
-variable "aggregator_image" {
-  default = ""
+variable "allowed_operator_service_accounts" {
+  description = "The service accounts provided by coordinator for the worker to impersonate"
+  default     = ""
+  type        = string
+}
 
+# Images of the cross-devices workloads
+
+variable "aggregator_image" {
+  description = "The tag of the aggregator image"
+  default     = ""
+  type        = string
 }
 
 variable "collector_image" {
-  default = ""
-
+  description = "The tag of the collector image"
+  default     = ""
+  type        = string
 }
 
 variable "model_updater_image" {
-  default = ""
-
+  description = "The tag of the model updater image"
+  default     = ""
+  type        = string
 }
 
 variable "task_management_image" {
-  default = ""
-
+  description = "The tag of the task management image"
+  default     = ""
+  type        = string
 }
 
 variable "task_assignment_image" {
-  default = ""
-
+  description = "The tag of the task assignment image"
+  default     = ""
+  type        = string
 }
 
 variable "task_scheduler_image" {
-  default = ""
+  description = "The tag of the task scheduler image"
+  default     = ""
+  type        = string
+}
 
+# Service accounts for the cross-devices workloads
+
+variable "aggregator_sa" {
+  description = "The service account to use for the aggregator"
+  default     = "odp-federated-aggregator-sa"
+  type        = string
+}
+
+variable "model_updater_sa" {
+  description = "The service account to use for the model updater"
+  default     = "odp-federated-model-updater-sa"
+  type        = string
+}
+
+variable "collector_sa" {
+  description = "The service account to use for the collector"
+  default     = "odp-federated-collector-sa"
+  type        = string
+}
+
+variable "task_management_sa" {
+  description = "The service account to use for the task management"
+  default     = "odp-federated-task-management-sa"
+  type        = string
+}
+
+variable "task_assignment_sa" {
+  description = "The service account to use for the task assignment"
+  default     = "odp-federated-task-assignment-sa"
+  type        = string
+}
+variable "task_scheduler_sa" {
+  description = "The service account to use for the task scheduler"
+  default     = "odp-federated-task-scheduler-sa"
+  type        = string
 }

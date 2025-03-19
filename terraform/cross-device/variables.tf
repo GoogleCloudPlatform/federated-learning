@@ -92,11 +92,7 @@ variable "list_apps_sa_iam_emails" {
   type        = list(string)
 }
 
-variable "odp_image_version" {
-  description = "Version tag for ODP service images"
-  type        = string
-  default     = "latest"
-}
+# ODP
 
 variable "odp_enable_monitoring" {
   description = "Enable monitoring for ODP services"
@@ -141,6 +137,8 @@ variable "spanner_nodes" {
   default     = 1
 }
 
+# Service accounts
+
 variable "collector_sa" {
   description = "The Kubernetes service account name for task management"
   type        = string
@@ -161,23 +159,25 @@ variable "task_scheduler_sa" {
   type        = string
 }
 
+# Images
+
 variable "aggregator_image" {
-  description = "The container image for task management"
+  description = "The container image for aggregator"
   type        = string
 }
 
 variable "collector_image" {
-  description = "The container image for task management"
+  description = "The container image for collector"
   type        = string
 }
 
 variable "model_updater_image" {
-  description = "The container image for task management"
+  description = "The container image for model updater"
   type        = string
 }
 
 variable "task_assignment_image" {
-  description = "The container image for task management"
+  description = "The container image for task assignment"
   type        = string
 }
 
@@ -187,7 +187,7 @@ variable "task_management_image" {
 }
 
 variable "task_scheduler_image" {
-  description = "The container image for task management"
+  description = "The container image for task scheduler"
   type        = string
 }
 
@@ -283,11 +283,13 @@ variable "allowed_operator_service_accounts" {
 }
 
 variable "network_name" {
-
+  description = "The name of the network to deploy the Confidential space VM into"
+  type        = string
 }
 
 variable "subnet_name" {
-
+  description = "The name of the subnetwork to deploy the Confidential space VM into"
+  type        = string
 }
 
 # Service input variables
@@ -332,12 +334,14 @@ variable "service_account_b" {
 }
 
 variable "aggregator_compute_service_account" {
-
+  description = "The name of the aggregator service account to allowlist in the coordinator"
+  type        = string
 }
 
 
 variable "model_updater_compute_service_account" {
-
+  description = "The name of the model updater service account to allowlist in the coordinator"
+  type        = string
 }
 
 variable "download_plan_token_duration" {

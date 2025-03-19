@@ -93,7 +93,6 @@ resource "google_service_account" "odp_services" {
   account_id                   = each.value.service_account_name
   display_name                 = "Service Account for ODP ${each.key} service"
   project                      = data.google_project.project.project_id
-  create_ignore_already_exists = true
 
   lifecycle {
     prevent_destroy = false # Add this to help with recreation
@@ -297,6 +296,13 @@ resource "google_project_iam_member" "odp_services_storage" {
   for_each = local.odp_services
   project  = data.google_project.project.project_id
   role     = "roles/storage.objectViewer"
+  member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
+}
+
+resource "google_project_iam_member" "odp_services_secret" {
+  for_each = local.odp_services
+  project  = data.google_project.project.project_id
+  role     = "roles/secretmanager.secretAccessor"
   member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
 }
 

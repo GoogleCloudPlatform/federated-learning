@@ -22,8 +22,8 @@ locals {
   )
 
   list_confidential_space_sa = [
-    "odp-federated-aggregator-sa",
-    "odp-federated-model-updater-sa"
+    var.aggregator_sa,
+    var.model_updater_sa
   ]
 
   list_confidential_space_sa_iam_emails = [for sa in local.list_confidential_space_sa : "serviceAccount:${module.service_accounts.service_accounts_map[local.list_confidential_space_sa[index(local.list_confidential_space_sa, sa)]].email}"]
@@ -118,17 +118,17 @@ module "cross_device" {
   spanner_instance_config                    = var.spanner_instance_config
   spanner_processing_units                   = var.spanner_processing_units
   list_apps_sa_iam_emails                    = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
-  collector_sa                               = "collector-sa"
-  task_management_sa                         = "task-management-sa"
-  task_assignment_sa                         = "task-assignment-sa"
-  task_scheduler_sa                          = "task-scheduler-sa"
+  collector_sa                               = var.collector_sa
+  task_management_sa                         = var.task_management_sa
+  task_assignment_sa                         = var.task_assignment_sa
+  task_scheduler_sa                          = var.task_scheduler_sa
   aggregator_image                           = var.aggregator_image
-  collector_image                            = var.collector_image
   model_updater_image                        = var.model_updater_image
+  collector_image                            = var.collector_image
   task_management_image                      = var.task_management_image
   task_assignment_image                      = var.task_assignment_image
   task_scheduler_image                       = var.task_scheduler_image
-  allowed_operator_service_accounts          = "ca-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com,cb-staging-opallowedusr@rb-odp-key-host.iam.gserviceaccount.com"
+  allowed_operator_service_accounts          = var.allowed_operator_service_accounts
   network_name                               = module.fedlearn-vpc.network_name
   subnet_name                                = local.fedlearn_subnet_name
   encryption_key_service_a_base_url          = var.encryption_key_service_a_base_url
@@ -139,8 +139,8 @@ module "cross_device" {
   service_account_b                          = var.service_account_b
   wip_provider_a                             = var.wip_provider_a
   wip_provider_b                             = var.wip_provider_b
-  aggregator_compute_service_account         = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
-  model_updater_compute_service_account      = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
+  aggregator_compute_service_account         = module.service_accounts.service_accounts_map[var.aggregator_sa].email
+  model_updater_compute_service_account      = module.service_accounts.service_accounts_map[var.model_updater_sa].email
 }
 
 module "nvflare" {

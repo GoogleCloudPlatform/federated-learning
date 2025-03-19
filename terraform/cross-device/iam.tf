@@ -12,6 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+locals {
+  service_accounts = {
+    "task-management" = {
+      k8s_name = var.task_management_sa
+      gcp_name = var.task_management_sa
+    }
+    "task-assignment" = {
+      k8s_name = var.task_assignment_sa
+      gcp_name = var.task_assignment_sa
+    }
+    "collector" = {
+      k8s_name = var.collector_sa
+      gcp_name = var.collector_sa
+    }
+    "task-scheduler" = {
+      k8s_name = var.task_scheduler_sa
+      gcp_name = var.task_scheduler_sa
+    }
+  }
+}
+
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "8.0.0"
@@ -23,42 +44,6 @@ module "project-iam-bindings" {
     "roles/iam.serviceAccountTokenCreator" = var.list_apps_sa_iam_emails,
     "roles/storage.objectAdmin"            = var.list_apps_sa_iam_emails,
     "roles/pubsub.admin"                   = var.list_apps_sa_iam_emails
-  }
-}
-
-locals {
-  service_accounts = {
-    "task-management" = {
-      k8s_name = "task-management-sa"
-      gcp_name = "task-management-sa"
-    }
-    "task-assignment" = {
-      k8s_name = "task-assignment-sa"
-      gcp_name = "task-assignment-sa"
-    }
-    "collector" = {
-      k8s_name = "collector-sa"
-      gcp_name = "collector-sa"
-    }
-    "task-scheduler" = {
-      k8s_name = "task-scheduler-sa"
-      gcp_name = "task-scheduler-sa"
-    }
-  }
-}
-
-# Create GCP Service Accounts
-resource "google_service_account" "gsa" {
-  for_each     = local.service_accounts
-  account_id   = each.value.gcp_name
-  display_name = "Service Account for ${each.key}"
-  project      = data.google_project.project.project_id
-
-  lifecycle {
-    ignore_changes = [
-      display_name,
-      description,
-    ]
   }
 }
 
@@ -86,7 +71,7 @@ resource "kubernetes_service_account" "ksa" {
 resource "google_service_account_iam_binding" "ksa_workload_identity" {
   for_each = local.service_accounts
 
-  service_account_id = google_service_account.gsa[each.key].name
+  service_account_id = google_service_account.odp_services[each.key].name
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
@@ -102,6 +87,6 @@ resource "google_project_iam_member" "service_account_roles" {
   member   = "serviceAccount:${each.value.gcp_name}@${data.google_project.project.project_id}.iam.gserviceaccount.com"
 
   depends_on = [
-    google_service_account.gsa
+    google_service_account.odp_services
   ]
 }
