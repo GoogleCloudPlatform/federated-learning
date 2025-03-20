@@ -18,6 +18,18 @@ updates:
       - /
     commit-message:
       prefix: "chore(deps)"
+    package-ecosystem: "devcontainers"
+    schedule:
+      interval: "daily"
+    groups:
+      dev-ci-tools:
+        applies-to: version-updates
+        patterns:
+          - ghcr.io/super-linter/*
+  - directories:
+      - /
+    commit-message:
+      prefix: "chore(deps)"
     package-ecosystem: "github-actions"
     schedule:
       interval: "daily"
