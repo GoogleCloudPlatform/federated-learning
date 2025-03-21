@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
   "name": "Google Cloud Federated Learning devcontainer",
-  "image": "ghcr.io/super-linter/super-linter:v7.1.0",
+  "image": "ghcr.io/super-linter/super-linter:v7.3.0",
   "customizations": {
     "vscode": {
       "settings": {
@@ -12,6 +12,7 @@
         "files.insertFinalNewline": true,
         "files.trimFinalNewlines": true,
         "prettier.resolveGlobalModules": true,
+        "redhat.telemetry.enabled": false,
         "telemetry.telemetryLevel": "off",
         "[javascript]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -40,6 +41,7 @@
         "DavidAnson.vscode-markdownlint",
         "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
+        "exiasr.hadolint",
         "HashiCorp.terraform",
         "mads-hartmann.bash-ide-vscode",
         "mkhl.shfmt",
@@ -47,6 +49,7 @@
         "ms-python.isort",
         "ms-python.python",
         "ms-python.vscode-pylance",
+        "redhat.vscode-yaml",
         "timonwong.shellcheck"
       ]
     }

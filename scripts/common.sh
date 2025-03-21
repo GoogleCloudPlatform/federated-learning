@@ -1,7 +1,7 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -o errexit
 set -o nounset
+set -o pipefail
 
 # shellcheck disable=SC2034
 ERR_ARGUMENT_EVAL=2

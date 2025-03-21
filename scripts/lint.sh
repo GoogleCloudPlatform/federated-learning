@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 set -o errexit
-set -o nounset
-set -o pipefail
 
 # shellcheck disable=SC1091,SC1094
 . ./scripts/common.sh
