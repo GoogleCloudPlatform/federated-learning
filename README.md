@@ -1,36 +1,38 @@
 # Federated Learning on Google Cloud
 
-This repository contains a blueprint that creates and secures a
+This repository contains a reference architecture that creates and helps you
+secure a Google Cloud environment that is ready for you to implement Federated
+Learning (FL) use cases on Google Cloud.
+
+This reference architecture is aimed at cloud platform administrators and data
+scientists that need to provision and configure a secure environment to run FL
+workloads in their Google Cloud environment.
+
+This reference architecture implements controls that you can use to help
+configure and secure your Google Cloud environment to host FL workloads.
+Workloads are considered as untrusted within the Google Cloud environment.
+Therefore, the cluster is configured according to isolate and FL workloads from
+other workloads and from the cluster control plane. We recommend that you grant
+only the required permissions that FL workloads need in order to work as
+designed.
+
+This reference architecture provisions resources on Google Cloud. The runtime
+environment is based on
 [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
-(GKE) cluster that is ready to host custom apps distributed by a third party.
-
-You can use this blueprint to implement Federated Learning (FL) use cases on
-Google Cloud.
-
-This blueprint suggests controls that you can use to help configure and secure
-GKE clusters that host custom apps distributed by third-party tenants. These
-custom apps are considered as untrusuted workloads within the cluster.
-Therefore, the cluster is configured according to security best practices to
-isolate and constrain the workloads from other workloads and from the cluster
-control plane.
-
-This blueprint provisions cloud resources on Google Cloud. After the initial provisioning,
-you can extended the infrastructure to
+(GKE). After the initial provisioning, you can extended the infrastructure to
 [GKE clusters running on premises or on other public clouds](https://cloud.google.com/kubernetes-engine/multi-cloud/docs).
 
-This blueprint is aimed at cloud platform administrator and data scientists that
-need to provision and configure a secure environment to run potentially
-untrusted workloads in their Google Cloud environment.
-
-This blueprint assumes that you are familiar with GKE and
+This reference architecture assumes that you are familiar with GKE and
 [Kubernetes](https://kubernetes.io/).
 
 ## Get started
 
-To deploy this blueprint you need:
+To deploy this reference architecture you need:
 
-- A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with billing enabled.
-- An account with either the [Project Owner role](#option-1-project-owner-role) (full access) or [Granular Access roles](#option-2-granular-access).
+- A [Google Cloud project](https://cloud.google.com/docs/overview#projects) with
+  billing enabled.
+- An account with either the [Project Owner role](#option-1-project-owner-role)
+  (full access) or [Granular Access roles](#option-2-granular-access).
 - The `serviceusage.googleapis.com` must be enabled on the project. For more
   information about enabling APIs, see
   [Enabling and disabling services](https://cloud.google.com/service-usage/docs/enable-disable)
@@ -38,535 +40,251 @@ To deploy this blueprint you need:
 
 ### Service Account Roles & Permissions
 
-You can choose between **Project Owner** access (full access) or **Granular Access** for more fine-tuned permissions.
+You can choose between **Project Owner** access or **Granular Access** for more
+fine-tuned permissions.
 
 #### Option 1: Project Owner role
 
 The service account will have full administrative access to the project.
 
-- `roles/owner`: Full administrative access to the project ([Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles))
-
----
+- `roles/owner`: Full administrative access to the project
+  ([Project Owner role](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles))
 
 #### Option 2: Granular Access
 
-The service account will be assigned the following roles to limit access to required resources:
+The service account will be assigned the following roles to limit access to
+required resources:
 
-- **`roles/artifactregistry.admin`**: Grants full administrative access to Artifact Registry, allowing management of repositories and artifacts.
-- **`roles/browser`**: Provides read-only access to browse resources in a project.
-- **`roles/cloudkms.admin`**: Provides full administrative control over Cloud KMS (Key Management Service) resources.
-- **`roles/compute.networkAdmin`**: Grants full control over Compute Engine network resources.
-- **`roles/container.clusterAdmin`**: Provides full control over Kubernetes Engine clusters, including creating and managing clusters.
-- **`roles/gkehub.editor`**: Grants permission to manage Google Kubernetes Engine Hub features.
-- **`roles/iam.serviceAccountAdmin`**: Grants full control over managing service accounts in the project.
-- **`roles/resourcemanager.projectIamAdmin`**: Allows managing IAM policies and roles at the project level.
-- **`roles/servicenetworking.serviceAgent`**: Allows managing service networking configurations.
-- **`roles/serviceusage.serviceUsageAdmin`**: Grants permission to enable and manage services and APIs for a project.
-
-You create the infrastructure using Terraform. The blueprint uses a local [Terraform backend](https://www.terraform.io/docs/language/settings/backends/configuration.html),
-but we recommend to configure a [remote backend](https://www.terraform.io/language/settings/backends/configuration#backend-types)
-for anything other than experimentation.
-
-## Understand the repository structure
-
-This repository has the following key directories:
-
-- `examples`: contains examples that build on top of this blueprint.
-- `terraform`: contains the Terraform code used to create the project-level infrastructure and resources, for example a GKE cluster, VPC network, firewall rules etc. It also installs Anthos components into the cluster
-- `configsync`: contains the cluster-level resources and configurations that are applied to your GKE cluster.
-- `tenant-config-pkg`: a [kpt](https://kpt.dev/?id=overview) package that you can use as a template to configure new tenants in the GKE cluster.
+- **`roles/artifactregistry.admin`**: Grants full administrative access to
+  Artifact Registry, allowing management of repositories and artifacts.
+- **`roles/browser`**: Provides read-only access to browse resources in a
+  project.
+- **`roles/cloudkms.admin`**: Provides full administrative control over Cloud
+  KMS (Key Management Service) resources.
+- **`roles/compute.networkAdmin`**: Grants full control over Compute Engine
+  network resources.
+- **`roles/container.clusterAdmin`**: Provides full control over Kubernetes
+  Engine clusters, including creating and managing clusters.
+- **`roles/gkehub.editor`**: Grants permission to manage Google Kubernetes
+  Engine Hub features.
+- **`roles/iam.serviceAccountAdmin`**: Grants full control over managing service
+  accounts in the project.
+- **`roles/resourcemanager.projectIamAdmin`**: Allows managing IAM policies and
+  roles at the project level.
+- **`roles/servicenetworking.serviceAgent`**: Allows managing service networking
+  configurations.
+- **`roles/serviceusage.serviceUsageAdmin`**: Grants permission to enable and
+  manage services and APIs for a project.
 
 ## Architecture
 
 The following diagram describes the architecture that you create with this
-blueprint:
+reference architecture:
 
-![alt_text](./assets/infra.svg "Infrastructure overview")
+![alt_text](./assets/architecture.png "Architecture overview")
 
-As shown in the preceding diagram, the blueprint helps you to create and
-configure the following infrastructure components:
+As shown in the preceding diagram, the reference architecture helps you create
+and configure the following infrastructure components:
 
-- A [Virtual Private Cloud (VPC) network](https://cloud.google.com/vpc/docs/vpc) and subnet.
-- A [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept) that helps you:
+- A [Virtual Private Cloud (VPC) network](https://cloud.google.com/vpc/docs/vpc)
+  and subnets.
+
+- A
+  [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
+  that helps you:
+
   - Isolate cluster nodes from the internet.
-  - Limit exposure of your cluster nodes and control plane to the internet by creating a private GKE cluster with [authorised networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
-  - Use shielded cluster nodes that use a hardened node image with the containerd runtime.
-  - Enable [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2) for optimised Kubernetes networking.
-  - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets) at the application layer.
-- Dedicated GKE [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools).
-  - You create a dedicated node pool to exclusively host tenant apps and resources. The nodes have taints to ensure that only tenant workloads are scheduled onto the tenant nodes.
-  - Other cluster resources are hosted in the main node pool.
-- [VPC Firewall rules](https://cloud.google.com/vpc/docs/firewalls)
-  - Baseline rules that apply to all nodes in the cluster.
-  - Additional rules that apply only to the nodes in the tenant node pool. These firewall rules limit ingress to and egress from tenant nodes.
-- [Cloud NAT](https://cloud.google.com/nat/docs/overview) to allow egress to the internet
-- [Cloud DNS](https://cloud.google.com/dns/docs/overview) records to enable [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access) such that apps within the cluster can access Google APIs without traversing the internet.
-- [Service Accounts](https://cloud.google.com/iam/docs/understanding-service-accounts):
-  - Dedicated service account for the nodes in the tenant node pool.
-  - Dedicated service account for tenant apps to use with Workload Identity.
-- Support for using [Google Groups for Kubernetes RBAC](https://cloud.google.com/kubernetes-engine/docs/how-to/google-groups-rbac).
-- A [Cloud Source Repository](https://cloud.google.com/source-repositories/docs) to store configuration descriptors.
-- An [Artifact Registry](https://cloud.google.com/artifact-registry/docs) repository to store container images.
+  - Limit exposure of your cluster nodes and control plane to the internet.
+  - Use shielded GKE nodes.
+  - Enable
+    [Dataplane V2](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2)
+    for optimized Kubernetes networking.
+  - [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets)
+    at the application layer.
 
-### Applications
+- Dedicated GKE
+  [node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools)
+  to isolate workloads from each other in dedicated runtime environments.
 
-The following diagram shows the cluster-level resources that you create and configure with the blueprint.
+- For each GKE node pool, the reference architecture creates a dedicated
+  Kubernetes namespace. The Kubernetes namespace and its resources are treated
+  as a tenant within the GKE cluster.
 
-![alt_text](./assets/apps.svg "Cluster resources and applications")
+- For each GKE node, the reference architecture configures Kubernetes taints to
+  ensure that only the tenant's workloads are schedulable onto the GKE nodes
+  belonging to a particular tenant.
 
-As shown in the preceding diagram, in the blueprint, you use the following to create and configure the cluster-level resources:
+- A GKE node pool (`system`) to host coordination and management workloads that
+  aren't tied to specific tenants.
 
-- Anthos Config Management [Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview), to sync cluster configuration and policies from a Git repository.
-  - When you provision the resources using this blueprint, the tooling initializes a Git repository for Config Sync to consume, and automatically renders the relevant templates and commits changes.
-  - The tooling automatically commits any modification to templates in the Config Sync repository on each [run of the provisioning process](#deploy-the-blueprint).
-- Anthos Config Management [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller) enforces policies ('constraints') to enforce policies on resources in the cluster.
-- [Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview) to control and help secure network traffic.
-- A dedicated namespace and node pools for tenant apps and resources. Custom apps are treated as a tenant within the cluster.
-- Policies and controls applied to the tenant namespace:
-  - Allow egress only to known hosts.
-  - Allow requests that originate from within the same namespace.
-  - By default, deny all ingress and egress traffic to and from pods. This acts as baseline 'deny all' rule.
-  - Allow traffic between pods in the namespace.
-  - Allow egress to required cluster resources such as: Kubernetes DNS, the service mesh control plane, and the GKE metadata server.
-  - Allow egress to Google APIs only using Private Google Access.
-  - Allow running host tenant pods on nodes in the dedicated tenant node pool exclusively.
-  - Use a dedicated Kubernetes service account that is linked to a Cloud Identity and Access Management service account using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).
+- [Firewall policies](https://cloud.google.com/firewall/docs/firewall-policies-overview)
+  to limit ingress and egress traffic from GKE node pools, unless explicitly
+  allowed.
 
-Users and teams managing tenant apps should not have permissions to change cluster configuration or modify service mesh resources
+- [Cloud NAT](https://cloud.google.com/nat/docs/overview) to allow egress
+  traffic to the internet, only if allowed.
 
-## Deploy the blueprint
+- [Cloud DNS](https://cloud.google.com/dns/docs/overview) records to enable
+  [Private Google Access](https://cloud.google.com/vpc/docs/private-google-access)
+  such that workloads within the cluster can access Google APIs without
+  traversing the internet.
+
+- [Cloud Identity and Access Management (IAM) service accounts](https://cloud.google.com/iam/docs/understanding-service-accounts):
+
+  - A service account for GKE nodes in each GKE node pool with only the
+    [minimum amount of permissions needed by GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
+  - A service account for workloads in each tenant. These service don't have any
+    permission by default, and map to Kubernetes service accounts using
+    [Workload Identity for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).
+
+- An [Artifact Registry](https://cloud.google.com/artifact-registry/docs)
+  repository to store container images for your workloads.
+
+- [Config Sync](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/overview)
+  to sync cluster configuration and policies from a Git repository or an
+  OCI-compliant repository. Users and teams managing workloads should not have
+  permissions to change cluster configuration or modify service mesh resources
+  unless explicitly allowed by your policies.
+
+- An Artifact Registry repository to store Config Sync configurations.
+
+- [Policy Controller](https://cloud.google.com/kubernetes-engine/enterprise/policy-controller/docs/overview)
+  to enforce policies on resources in the GKE cluster to help you isolate
+  workloads.
+
+- [Cloud Service Mesh](https://cloud.google.com/service-mesh/docs/overview) to
+  control and help secure network traffic.
+
+Config Sync applies the following Policy controller and Cloud Service Mesh
+controls to each Kubernetes namespace:
+
+- By default, deny all ingress and egress traffic to and from pods. This rule
+  acts as baseline 'deny all' rule.
+- Allow egress traffic to required cluster resources such as the GKE control
+  plane.
+- Allow egress traffic only to known hosts.
+- Allow ingress and egress traffic that originate from within the same
+  namespace.
+- Allow ingress and egress traffic between pods in the same namespace.
+- Allow egress traffic to Google APIs only using Private Google Access.
+
+## Deploy the reference architecture
 
 1. Open [Cloud Shell](https://cloud.google.com/shell)
 
-1. Initialize the local repository where the environment configuration will be
-   stored:
+1. Clone this Git repository, including submodules:
 
    ```sh
-   ACM_REPOSITORY_PATH= # Path on the host running Terraform to store environment configuration
-   ACM_REPOSITORY_URL= # URL of the repository to store environment configuration
-   ACM_BRANCH= # Name of the Git branch in the repository that Config Sync will sync with
-   git clone "${ACM_REPOSITORY_URL}" --branch "${ACM_BRANCH}" "${ACM_REPOSITORY_PATH}"
+   git clone --recurse-submodules git@github.com:GoogleCloudPlatform/federated-learning.git
    ```
 
-1. Clone this Git repository.
-1. Change into the directory that contains the Terraform code:
+   If you prefer cloning using the repository web URL, run this command instead:
 
    ```sh
-   cd [REPOSITORY]/terraform
+   git clone --recurse-submodules https://github.com/GoogleCloudPlatform/federated-learning.git
    ```
 
-   Where `[REPOSITORY]` is the path to the directory where you cloned this repository.
-
-1. Initialize Terraform:
+1. Change into the directory where you cloned this repository:
 
    ```sh
-   terraform init
+   cd federated-learning
    ```
 
-1. Initialize the following Terraform variables:
+1. Configure the ID of the Google Cloud project where you want to initialize the
+   provisioning and configuration environment. This project will also contain
+   the remote Terraform backend. Add the following content to
+   `accelerated-platforms/platforms/gke/base/_shared_config/terraform.auto.tfvars`:
 
    ```hcl
-   project_id                  = # Google Cloud project ID where to provision resources with the blueprint.
-   acm_branch                  = # Use the same value that you used for ${ACM_BRANCH}
-   acm_repository_path         = # Use the same value that you used for ${ACM_REPOSITORY_PATH}
-   acm_repository_url          = # Use the same value that you used for ${ACM_REPOSITORY_URL}
-   acm_secret_type             = # Secret type to authenticate with the Config Sync Git repository
-   acm_source_repository_fqdns = # FQDNs of source repository for Config Sync to allow in the Network Firewall Policy
+   terraform_project_id = "<CONFIG_PROJECT_ID>"
    ```
 
-   For more information about setting `acm_secret_type`, see
-   [Grant access to Git](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret).
+   Where:
 
-   If you don't provide all the necessary inputs, Terraform will exit with an
-   error, and will provide information about the missing inputs. For example,
-   you can create a Terraform variables initialization file and set inputs there.
-   For more information about providing these inputs, see
-   [Terraform input variables](https://developer.hashicorp.com/terraform/language/values/variables).
+   - `<CONFIG_PROJECT_ID>` is the Google Cloud project ID.
 
-1. Review the proposed changes, and apply them:
+1. Configure the ID of the Google Cloud project where you want to deploy the
+   reference architecture by adding the following content to
+   `accelerated-platforms/platforms/gke/base/_shared_config/cluster.auto.tfvars`:
+
+   ```hcl
+   cluster_project_id = "<PROJECT_ID>"
+   ```
+
+   Where:
+
+   - `<PROJECT_ID>` is the Google Cloud project ID. Can be different from
+     `<CONFIG_PROJECT_ID>`.
+
+1. Optionally configure a unique identifier to append to the name of all the
+   resources in the reference architecture to identify a particular instance of
+   the reference architecture, and to allow for multiple instances of the
+   reference architecture to be deployed in the same Google Cloud project. To
+   optionally configure the unique prefix, add the following content to
+   `accelerated-platforms/platforms/gke/base/_shared_config/platform.auto.tfvars`:
+
+   ```hcl
+   resource_name_prefix = "<RESOURCE_NAME_PREFIX>"
+   platform_name        = "<PLATFORM_NAME>"
+   ```
+
+   Where:
+
+   - `<RESOURCE_NAME_PREFIX>` and `<PLATFORM_NAME>` are strings that compose the
+     unique identifier to append to the name of all the resources in the
+     reference architecture.
+
+   When you set `resource_name_prefix` and `platform_name`, we recommend that
+   you avoid long strings because the might make resource naming validation to
+   fail because the resource name might be too long.
+
+1. Run the script to deploy the reference architecture:
 
    ```sh
-   terraform apply
+   accelerated-platforms/platforms/gke/base/use-cases/federated-learning/deploy.sh
    ```
 
-   The provisioning process may take about 15 minutes to complete.
-
-1. Wait for the Cloud Service Mesh custom resource definitions to be available:
-
-   ```sh
-   /bin/sh -c 'while ! kubectl wait crd/controlplanerevisions.mesh.cloud.google.com --for condition=established --timeout=60m --all-namespaces; do echo \"crd/controlplanerevisions.mesh.cloud.google.com not yet available, waiting...\"; sleep 5; done'
-   ```
-
-1. Wait for the Cloud Service Mesh custom resources to be available:
-
-   ```sh
-   /bin/sh -c 'while ! kubectl -n istio-system wait ControlPlaneRevision --all --timeout=60m --for condition=Reconciled; do echo \"ControlPlaneRevision not yet available, waiting...\"; sleep 5; done'
-   ```
-
-1. Commit and push generated configuration files to the environment
-   configuration repository:
-
-   ```sh
-   git -C "${ACM_REPOSITORY_PATH}" add .
-   git -C "${ACM_REPOSITORY_PATH}" commit -m "Config update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-   git -C "${ACM_REPOSITORY_PATH}" push -u origin "${ACM_BRANCH}"
-   ```
-
-   Every time you modify the environment configuration, you need to commit and
-   push changes to the environment configuration repository.
-
-1. [Grant the Config Sync agent access to the Git repository](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret)
-   where the environment configuration will be stored.
-1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
+   It takes about 20 minutes to provision the reference architecture.
 
 ### Next steps
 
-After deploying the blueprint completes, the GKE cluster is ready to host untrusted workloads.
-To familiarize with the environment that you provisioned, you can also deploy
-the following examples in the GKE cluster:
+After deploying the reference architecture completes, the GKE cluster is ready
+to host FL workloads. To familiarize with the environment that you provisioned,
+you can also deploy the following examples in the GKE cluster:
 
-- [Distributed TensorFlow Federated training](./examples/federated-learning/tff/distributed-fl-simulation-k8s/README.md)
-- [Nvflare training](./examples/federated-learning/tff/nvflare/README.md)
+- [NVIDIA FLARE example](https://github.com/GoogleCloudPlatform/accelerated-platforms/blob/main/platforms/gke/base/use-cases/federated-learning/examples/nvflare-tff/README.md)
 
-Federated learning is typically split into Cross-silo and Cross-device federated learning. Cross-silo federated computation is where the participating members are organizations or companies, and the number of members is usually small (e.g., within a hundred).
+Federated computation in FL use cases is typically defined as either:
 
-Cross-device computation is a type of federated computation where the participating members are end user devices such as mobile phones and vehicles. The number of members can reach up to a scale of millions or even tens of millions.
+- Cross-silo federated computation is where the participating members are
+  organizations or companies, and the number of members is usually small (e.g.,
+  within a hundred). You can realize cross-silo FL use cases by configuring this
+  reference architecture, and by deploying FL workloads in the GKE cluster that
+  this reference architecture provides.
+- Cross-device computation is a type of federated computation where the
+  participating members are end user devices such as mobile phones and vehicles.
+  The number of members can reach up to a scale of millions or even tens of
+  millions. You can deploy a cross-device infrastructure by following
+  [this README.md](./terraform/cross-device/README.md)
 
-You can deploy a cross-device infrastructure by following [this README.md](./terraform/cross-device/README.md)
+## Configure the reference architecture
 
-## Add another tenant
-
-This blueprint dynamically provisions a runtime environment for each tenant you
-configure.
-
-To add another tenant:
-
-1. Add its name to the list of tenants to configure using the `tenant_names` variable.
-1. Follow the steps to [Deploy the blueprint](#deploy-the-blueprint) again.
-
-## Connect to cluster nodes
-
-To open an SSH session against a node of the cluster, you use an IAP tunnel
-because cluster nodes don't have external IP addresses:
-
-```sh
-gcloud compute ssh --tunnel-through-iap node_name
-```
-
-Where `node_name` is the Compute Engine instance name to connect to.
+For more information about configuring this reference architecture, see
+[Configure the Federated Learning reference architecture](https://github.com/GoogleCloudPlatform/accelerated-platforms/tree/main/platforms/gke/base/use-cases/federated-learning#configure-the-federated-learning-reference-architecture).
 
 ## Troubleshooting
 
-This section describes common issues and troubleshooting steps.
+For more information about how to troubleshoot issue, see
+[Troubleshooting the reference architecture](https://github.com/GoogleCloudPlatform/accelerated-platforms/tree/main/platforms/gke/base/use-cases/federated-learning#troubleshooting).
 
-### I/O timeouts when running Terraform plan or apply
+## Understanding security controls
 
-If Terraform reports errors when you run `plan` or `apply` because it can't get
-the status of a resource inside a GKE cluster, and it also reports that it needs
-to update the `cidr_block` of the `master_authorized_networks` block of that
-cluster, it might be that the instance that runs Terraform is not part of any
-CIDR that is authorized to connect to that GKE cluster control plane.
+For more information about the controls that this reference architecture
+implements to help you secure your environment, see
+[GKE security controls](https://cloud.google.com/architecture/cross-silo-cross-device-federated-learning-google-cloud).
 
-To solve this issue, you can try updating the `cidr_block` by targeting the GKE
-cluster specifically when applying changes:
+## What's next
 
-```sh
-terraform apply -target module.gke
-```
-
-Then, you can try running `terraform apply` again, without any resource
-targeting.
-
-### Network address assignment errors when running Terraform
-
-If Terraform reports `connect: cannot assign requested address` errors when
-you run Terraform, try running the command again.
-
-### Errors when adding the GKE cluster to the Fleet
-
-If Terraform reports errors about the format of the fleet membership
-configuration, it may mean that the Fleet API initialization didn't complete
-when Terraform tried to add the GKE cluster to the fleet. Example:
-
-```plain text
-Error creating FeatureMembership: googleapi: Error 400: InvalidValueError for
-field membership_specs["projects/<project number>/locations/global/memberships/<cluster name>"].feature_spec:
-does not match a current membership in this project. Keys should be in the form: projects/<project number>/locations/{l}/memberships/{m}
-```
-
-If this error occurs, try running `terraform apply` again.
-
-### Errors when pulling container images
-
-If `istio-ingress` or `istio-egress` Pods fail to run because GKE cannot
-download their container images and GKE reports `ImagePullBackOff` errors, see
-[Troubleshoot gateways](https://cloud.google.com/service-mesh/docs/gateways#troubleshoot_gateways)
-for details about the potential root cause. You can inspect the status of these
-Pods in the
-[GKE Workloads Dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#workloads).
-
-If this happens, wait for the cluster to complete the initialiazation, and
-delete the Deployment that has this issue. Config Sync will deploy it again with
-the correct container image identifiers.
-
-### Errors when deleting and cleaning up the environment
-
-When running `terraform destroy` to remove resources that this reference
-architecture provisioned and configured, it might happen that you get the
-following errors:
-
-- Dangling network endpoint groups (NEGs):
-
-  > Error waiting for Deleting Network: The network resource 'projects/PROJECT_NAME/global/networks/NETWORK_NAME' is already being used by 'projects/PROJECT_NAME/zones/ZONE_NAME/networkEndpointGroups/NETWORK_ENDPOINT_GROUP_NAME'.
-
-  If this happens:
-
-  1. Open the [NEGs dashboard for your project](https://console.cloud.google.com/compute/networkendpointgroups).
-  1. Delete all the NEGs that were associated with the GKE cluster that Terraform deleted.
-  1. Run `terraform destroy` again.
-
-## Understanding the security controls that you need
-
-This section discusses the controls that you apply with the blueprint to help
-you secure your GKE cluster.
-
-### Enhanced security of GKE clusters
-
-_Creating clusters according to security best practices._
-
-The blueprint helps you create a GKE cluster which
-implements the following security settings:
-
-- Limit exposure of your cluster nodes and control plane to the internet
-  by creating a
-  [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
-  with
-  [authorized networks](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#overview).
-- Use
-  [shielded nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
-  that use a hardened node image with the
-  [`containerd`](https://cloud.google.com/kubernetes-engine/docs/concepts/using-containerd)
-  runtime.
-- Increased isolation of tenant workloads using
-  [GKE Sandbox](https://cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods).
-- [Encrypt cluster secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets)
-  at the application layer.
-
-For more information about GKE security settings, refer to
-[Hardening your cluster's security](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
-
-### VPC firewall rules: Restricting traffic between virtual machines
-
-[VPC firewall rules](https://cloud.google.com/vpc/docs/firewalls)
-govern which traffic is allowed to or from Compute Engine VMs. The rules let
-you filter traffic at VM granularity, depending on
-[Layer 4](https://wikipedia.org/wiki/Transport_layer)
-attributes.
-
-You create a GKE cluster with the
-[default GKE cluster firewall rules](https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules#cluster-fws).
-These firewall rules enable communication between the cluster nodes and
-GKE control plane, and between nodes and Pods in the
-cluster.
-
-You apply additional firewall rules to the nodes in the tenant node pool. These
-firewall rules restrict egress traffic from the tenant nodes. This approach lets
-you increase the isolation of the tenant nodes. By default, all egress traffic
-from the tenant nodes is denied. Any required egress must be explicitly
-configured. For example, you use the blueprint to create firewall rules to allow
-egress from the tenant nodes to the GKE control plane, and
-to Google APIs using
-[Private Google Access](https://cloud.google.com/vpc/docs/private-google-access).
-The firewall rules are targeted to the tenant nodes using the tenant node pool
-[service account](https://cloud.google.com/vpc/docs/firewalls#service-accounts-vs-tags).
-
-<<\_shared/\_anthos_snippets/\_anthos-blueprints-snippets-namespaces.md>>
-
-The blueprint helps you create a dedicated namespace to host the third-party
-apps. The namespace and its resources are treated as a tenant within
-your cluster. You apply policies and controls to the namespace to limit the
-scope of resources in the namespace.
-
-### Network policies: Enforcing network traffic flow within clusters
-
-[Network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
-enforce Layer 4 network traffic flows by using Pod-level firewall rules. Network
-policies are
-[scoped to a namespace](https://cloud.google.com/anthos-config-management/docs/how-to/configs#network-policy-config).
-
-In the blueprint, you apply network policies to the tenant namespace that
-hosts the third-party apps. By default, the network policy denies all traffic to
-and from pods in the namespace. Any required traffic must be explicitly
-allowlisted. For example, the network policies in the blueprint explicitly
-allow traffic to required cluster services, such as the cluster internal DNS and
-the Anthos Service Mesh control plane.
-
-### Config Sync: Applying configurations to your GKE clusters
-
-[Config Sync](https://cloud.google.com/anthos-config-management/docs/config-sync-overview)
-keeps your GKE clusters in sync with configs stored in a
-Git
-[repository](https://cloud.google.com/anthos-config-management/docs/how-to/repo).
-The Git repository acts as the single source of truth for your cluster
-configuration and policies. Config Sync is declarative. It continuously
-checks cluster state and applies the state declared in the configuration file in
-order to enforce policies, which helps to prevent
-[configuration drift](https://cloud.google.com/anthos-config-management/docs/how-to/prevent-config-drift).
-
-You install Config Sync into your GKE cluster. You
-configure Config Sync to sync cluster configurations and policies from the
-GitHub repository associated with the blueprint. The synced resources include
-the following:
-
-- Cluster-level Anthos Service Mesh configuration
-- Cluster-level security policies
-- Tenant namespace-level configuration and policy including network
-  policies, service accounts, RBAC rules, and Anthos Service Mesh configuration
-
-### Policy Controller: Enforcing compliance with policies
-
-[Anthos Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller)
-is a
-[dynamic admission controller](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
-for Kubernetes that enforces
-[CustomResourceDefinition-based (CRD-based)](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/)
-policies that are executed by the
-[Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
-
-[Admission controllers](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)
-are Kubernetes plugins that intercept requests to the Kubernetes API server
-before an object is persisted, but after the request is authenticated and
-authorized. You can use admission controllers to limit how a cluster is used.
-
-You install Policy Controller into your GKE cluster. The
-blueprint includes example policies to help secure your cluster. You
-automatically apply the policies to your cluster using Config Sync. You
-apply the following policies:
-
-- Selected policies to help
-  [enforce Pod security](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security).
-  For example, you apply policies that prevent pods
-  [running privileged containers](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#prevent-privileged-containers)
-  and that require a
-  [read-only root file system](https://cloud.google.com/anthos-config-management/docs/how-to/using-constraints-to-enforce-pod-security#require-readonly-rootfs).
-- Policies from the Policy Controller
-  [template library](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library).
-  For example, you apply a policy that
-  [disallows services with type NodePort](https://cloud.google.com/anthos-config-management/docs/latest/reference/constraint-template-library#k8sblocknodeport).
-
-### Anthos Service Mesh: Managing secure communications between services
-
-[Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)
-helps you monitor and manage an
-[Istio](https://istio.io/docs/concepts/what-is-istio/)-based
-service mesh. A service mesh is an infrastructure layer that helps create managed,
-observable, and secure communication across your services.
-
-Anthos Service Mesh helps simplify the management of secure communications
-across services in the following ways:
-
-- Managing authentication and encryption of traffic
-  ([supported protocols](https://cloud.google.com/service-mesh/docs/supported-features#protocol_support)
-  within the cluster using
-  [mutual Transport Layer Communication (mTLS)](https://cloud.google.com/service-mesh/docs/security-overview#mutual_tls)).
-  Anthos Service Mesh manages the provisioning and rotation of mTLS keys and
-  certificates for Anthos workloads without disrupting
-  communications. Regularly rotating mTLS keys is a security best practice
-  that helps reduce exposure in the event of an attack.
-- Letting you configure network security policies based on service
-  identity rather than on the IP address of a peers on the network. Anthos Service Mesh
-  is used to configure identity-aware access control (firewall) policies that
-  let you create security policies that are independent of the network location
-  of the workload. This approach simplifies the process of setting up
-  service-to-service communications policies.
-- Letting you configure policies that permit access from certain clients.
-
-The blueprint guides you to install Anthos Service Mesh in your cluster. You
-configure the tenant namespace for
-[automatic sidecar proxy injection](https://cloud.google.com/service-mesh/docs/proxy-injection).
-This approach ensures that apps in the tenant namespace are part of the mesh.
-You automatically configure Anthos Service Mesh using Config Sync. You
-configure the mesh to do the following:
-
-- Enforce
-  [mTLS communication](https://cloud.google.com/service-mesh/docs/security/configuring-mtls#enforcing_mesh-wide_mtls)
-  between services in the mesh.
-- Limit outbound traffic from the mesh to only known hosts.
-- Limit
-  [authorized communication](https://cloud.google.com/service-mesh/docs/security/authorization-policy-overview)
-  between services in the mesh. For example, apps in the tenant namespace are
-  only allowed to communicate with apps in the same namespace, or with a
-  set of known external hosts.
-- Route all outbound traffic through a mesh gateway where you can apply
-  further traffic controls.
-
-### Node taints and affinities: Controlling workload scheduling
-
-[Node taints](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
-and
-[node affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
-are Kubernetes mechanisms that let you influence how pods are scheduled onto
-cluster nodes.
-
-Tainted nodes repel pods. Kubernetes will not schedule a Pod onto a tainted
-node unless the Pod has a _toleration_ for the taint. You can use node taints to
-reserve nodes for use only by certain workloads or tenants. Taints and
-tolerations are often used in multi-tenant clusters. See the
-[dedicated nodes with taints and tolerations](https://cloud.google.com/kubernetes-engine/docs/concepts/multitenancy-overview#dedicated_nodes_with_taints_and_tolerations)
-documentation for more information.
-
-Node affinity lets you constrain pods to nodes with particular labels. If a pod
-has a node affinity requirement, Kubernetes will not schedule the Pod onto a
-node unless the node has a label that matches the affinity requirement. You can
-use node affinity to ensure that pods are scheduled onto appropriate nodes.
-
-You can use node taints and node affinity together to ensure tenant workload
-pods are scheduled exclusively onto nodes reserved for the tenant.
-
-The blueprint helps you control the scheduling of the tenant apps in the
-following ways:
-
-- Creating a GKE node pool dedicated to the tenant.
-  Each node in the pool has a taint related to the tenant name.
-- Automatically applying the appropriate toleration and node affinity to
-  any Pod targeting the tenant namespace. You apply the toleration and
-  affinity using
-  [PolicyController mutations](https://cloud.google.com/anthos-config-management/docs/how-to/mutation).
-
-### Least privilege: Limiting access to cluster and project resources
-
-It is a security best practice to adopt a principle of least privilege for your
-Google Cloud projects and resources like GKE clusters. This
-way, the apps that run inside your cluster, and the developers and operators
-that use the cluster, have only the minimum set of permissions required.
-
-The blueprint helps you use least privilege service accounts in the following
-ways:
-
-- Each GKE node pool receives its own service
-  account. For example, the nodes in the tenant node pool use a service
-  account dedicated to those nodes. The node service accounts are configured
-  with the
-  [minimum required permissions](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
-- The cluster uses
-  [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
-  to associate Kubernetes service accounts with Google service accounts. This
-  way, the tenant apps can be granted limited access to any required Google
-  APIs without downloading and storing a service account key. For example,
-  you can grant the service account permissions to read data from a
-  Cloud Storage bucket.
-
-The blueprint helps you
-[restrict access to cluster resources](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_namespaces_and_rbac_to_restrict_access_to_cluster_resources)
-in the following ways:
-
-- You create a sample Kubernetes RBAC role with limited permissions to
-  manage apps. You can grant this role to the users and groups who operate
-  the apps in the tenant namespace. This way, those users only have
-  permissions to modify app resources in the tenant namespace. They do not
-  have permissions to modify cluster-level resources or sensitive security
-  settings like Anthos Service Mesh policies.
-
-## References
-
-- [GKE hardening guide](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
+For a complete overview about how to implement Federated Learning on Google
+Cloud, see
+[Cross-silo and cross-device federated learning on Google Cloud](https://cloud.google.com/architecture/cross-silo-cross-device-federated-learning-google-cloud).

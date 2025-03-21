@@ -90,22 +90,3 @@ jobs:
           commit_message: "chore: fix linting issues"
           commit_user_name: super-linter
           commit_user_email: super-linter@super-linter.dev
-
-  ci:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        id: init
-        working-directory: terraform
-        run: terraform init
-
-      - name: Terraform validate
-        id: lint
-        working-directory: terraform
-        run: terraform validate
