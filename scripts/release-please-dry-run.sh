@@ -1,7 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -o errexit
-set -o nounset
 
 # shellcheck disable=SC1091,SC1094
 . ./scripts/common.sh

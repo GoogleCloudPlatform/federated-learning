@@ -13,11 +13,16 @@
 # limitations under the License.
 
 terraform {
-  required_version = ">=1.0"
+  required_version = ">= 1.5.7"
+
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "> 6.0.0"
+      version = "6.12.0"
     }
+  }
+
+  provider_meta "google" {
+    module_name = "cloud-solutions/acp_fl_cross_device_deploy-v1"
   }
 }
