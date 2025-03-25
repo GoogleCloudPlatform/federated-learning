@@ -30,7 +30,7 @@ locals {
     "AGGREGATOR_NOTIF_PUBSUB_TOPIC"              = module.pubsub["aggregator_notifications_topic"].topic
     "SPANNER_INSTANCE"                           = google_spanner_instance.odp_spanner.name
     "TASK_DATABASE_NAME"                         = google_spanner_database.odp_db.name
-    "LOCK_DATABASE_NAME"                         = google_spanner_database.odp_db.name
+    "LOCK_DATABASE_NAME"                         = google_spanner_database.odp_lock_db.name
     "METRICS_SPANNER_INSTANCE"                   = google_spanner_instance.odp_spanner.name
     "METRICS_DATABASE_NAME"                      = google_spanner_database.odp_db.name
     "CLIENT_GRADIENT_BUCKET_TEMPLATE"            = module.buckets.names["model-0"]

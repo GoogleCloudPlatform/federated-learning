@@ -331,23 +331,23 @@ variable "model_updater_sa" {
 
 variable "collector_sa" {
   description = "The service account to use for the collector"
-  default     = "odp-federated-collector-sa"
+  default     = "odp-collector-sa"
   type        = string
 }
 
 variable "task_management_sa" {
   description = "The service account to use for the task management"
-  default     = "odp-federated-task-management-sa"
+  default     = "odp-task-management-sa"
   type        = string
 }
 
 variable "task_assignment_sa" {
   description = "The service account to use for the task assignment"
-  default     = "odp-federated-task-assignment-sa"
+  default     = "odp-task-assignment-sa"
   type        = string
 }
 variable "task_scheduler_sa" {
   description = "The service account to use for the task scheduler"
-  default     = "odp-federated-task-scheduler-sa"
+  default     = "odp-task-scheduler-sa"
   type        = string
 }

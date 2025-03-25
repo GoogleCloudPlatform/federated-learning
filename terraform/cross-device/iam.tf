@@ -13,80 +13,72 @@
 # limitations under the License.
 
 locals {
-  service_accounts = {
-    "task-management" = {
-      k8s_name = var.task_management_sa
-      gcp_name = var.task_management_sa
-    }
-    "task-assignment" = {
-      k8s_name = var.task_assignment_sa
-      gcp_name = var.task_assignment_sa
-    }
-    "collector" = {
-      k8s_name = var.collector_sa
-      gcp_name = var.collector_sa
-    }
-    "task-scheduler" = {
-      k8s_name = var.task_scheduler_sa
-      gcp_name = var.task_scheduler_sa
-    }
-  }
+  service_accounts = [
+    var.task_assignment_sa,
+    var.task_management_sa,
+    var.task_scheduler_sa,
+    var.collector_sa
+  ]
+
+  list_sa_iam_emails = [for sa in local.service_accounts : "serviceAccount:${module.service_accounts.service_accounts_map[sa].email}"]
+}
+
+module "service_accounts" {
+  source     = "terraform-google-modules/service-accounts/google"
+  version    = "4.5.0"
+  project_id = data.google_project.project.project_id
+
+  grant_billing_role = false
+  grant_xpn_roles    = false
+  names              = local.service_accounts
+
+  depends_on = [
+    module.project-services
+  ]
 }
 
 module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "8.0.0"
   projects = [data.google_project.project.project_id]
+  mode     = "authoritative"
 
   bindings = {
-    "roles/spanner.admin"                  = var.list_apps_sa_iam_emails,
-    "roles/logging.logWriter"              = var.list_apps_sa_iam_emails,
-    "roles/iam.serviceAccountTokenCreator" = var.list_apps_sa_iam_emails,
-    "roles/storage.objectAdmin"            = var.list_apps_sa_iam_emails,
-    "roles/pubsub.admin"                   = var.list_apps_sa_iam_emails
-  }
-}
-
-# Create Kubernetes Service Accounts
-resource "kubernetes_service_account" "ksa" {
-  for_each = local.service_accounts
-  metadata {
-    name      = each.value.k8s_name
-    namespace = "default" # Changed from var.k8s_namespace_name to "default"
-    annotations = {
-      "iam.gke.io/gcp-service-account" = "${each.value.gcp_name}@${data.google_project.project.project_id}.iam.gserviceaccount.com"
-    }
+    # Least-privilege roles needed for a node pool service account to function and
+    # to get read-only access to Container Registry and Artifact Registry
+    "roles/spanner.databaseUser"                   = local.list_sa_iam_emails,
+    "roles/logging.logWriter" = local.list_sa_iam_emails,
+    "roles/iam.serviceAccountTokenCreator" = local.list_sa_iam_emails,
+    "roles/storage.objectUser"             = local.list_sa_iam_emails,
+    "roles/pubsub.subscriber" = local.list_sa_iam_emails,
+    "roles/gkehub.serviceAgent"            = local.list_sa_iam_emails,
+    "roles/iam.workloadIdentityUser"             = local.list_sa_iam_emails,
+    "roles/pubsub.publisher"                   = local.list_sa_iam_emails,
+    "roles/secretmanager.secretAccessor"        = local.list_sa_iam_emails
   }
 
-  # Add lifecycle block to handle pre-existing resources
-  lifecycle {
-    ignore_changes = [
-      metadata[0].annotations,
-      metadata[0].labels,
-    ]
-  }
-}
-
-# Set up Workload Identity bindings
-resource "google_service_account_iam_binding" "ksa_workload_identity" {
-  for_each = local.service_accounts
-
-  service_account_id = google_service_account.odp_services[each.key].name
-  role               = "roles/iam.workloadIdentityUser"
-
-  members = [
-    "serviceAccount:${data.google_project.project.project_id}.svc.id.goog[default/${each.value.k8s_name}]"
+  depends_on = [
+    module.project-services
   ]
 }
 
-# Grant necessary roles to service accounts
-resource "google_project_iam_member" "service_account_roles" {
-  for_each = local.service_accounts
-  project  = data.google_project.project.project_id
-  role     = "roles/spanner.databaseUser"
-  member   = "serviceAccount:${each.value.gcp_name}@${data.google_project.project.project_id}.iam.gserviceaccount.com"
+module "fl-workload-identity" {
+  for_each   = toset(local.service_accounts)
+  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  version    = "35.0.1"
+  project_id = data.google_project.project.project_id
+
+  annotate_k8s_sa     = false
+  k8s_sa_name         = each.value
+  location            = var.region
+  name                = module.service_accounts.service_accounts_map[each.value].account_id
+  namespace           = local.odp_namespace
+  use_existing_gcp_sa = true
+  use_existing_k8s_sa = false
 
   depends_on = [
-    google_service_account.odp_services
+    # Wait for the service accounts to be ready before trying to load data about them
+    # Ref: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/issues/1059
+    module.service_accounts
   ]
 }

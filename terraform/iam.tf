@@ -45,7 +45,8 @@ module "project-iam-bindings" {
     "roles/monitoring.viewer"                   = local.list_iam_sa,
     "roles/stackdriver.resourceMetadata.writer" = local.list_iam_sa,
     "roles/artifactregistry.reader"             = local.list_iam_sa,
-    "roles/confidentialcomputing.workloadUser"  = local.list_confidential_space_sa_iam_emails
+    "roles/confidentialcomputing.workloadUser"  = local.list_confidential_space_sa_iam_emails,
+    "roles/secretmanager.secretAccessor"        = local.list_confidential_space_sa_iam_emails
   }
 
   depends_on = [

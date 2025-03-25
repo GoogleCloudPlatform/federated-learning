@@ -76,28 +76,16 @@ locals {
 }
 
 # Create namespace for ODP services
-resource "kubernetes_namespace" "odp_services" {
-  metadata {
-    name = local.odp_namespace
-    labels = {
-      istio-injection = "enabled"
-      environment     = var.environment
-      purpose         = "odp-federated-compute"
-    }
-  }
-}
-
-# Create service accounts for ODP services
-resource "google_service_account" "odp_services" {
-  for_each                     = local.odp_services
-  account_id                   = each.value.service_account_name
-  display_name                 = "Service Account for ODP ${each.key} service"
-  project                      = data.google_project.project.project_id
-
-  lifecycle {
-    prevent_destroy = false # Add this to help with recreation
-  }
-}
+# resource "kubernetes_namespace" "odp_services" {
+#   metadata {
+#     name = local.odp_namespace
+#     labels = {
+#       istio-injection = "enabled"
+#       environment     = var.environment
+#       purpose         = "odp-federated-compute"
+#     }
+#   }
+# }
 
 # Create Kubernetes deployments for ODP services
 resource "kubernetes_deployment" "odp_services" {
@@ -105,7 +93,7 @@ resource "kubernetes_deployment" "odp_services" {
 
   metadata {
     name      = each.key
-    namespace = kubernetes_namespace.odp_services.metadata[0].name
+    namespace = local.odp_namespace
     labels = {
       app     = "odp-federated"
       service = each.key
@@ -136,6 +124,8 @@ resource "kubernetes_deployment" "odp_services" {
       }
 
       spec {
+        service_account_name = each.value.service_account_name
+
         container {
           name  = each.key
           image = "${each.value.image}:latest"
@@ -212,7 +202,7 @@ resource "kubernetes_service" "odp_services" {
 
   metadata {
     name      = each.key
-    namespace = kubernetes_namespace.odp_services.metadata[0].name
+    namespace = local.odp_namespace
     labels = {
       app     = "odp-federated"
       service = each.key
@@ -240,71 +230,42 @@ resource "kubernetes_service" "odp_services" {
 }
 
 # Create network policies
-resource "kubernetes_network_policy" "odp_services" {
-  metadata {
-    name      = "odp-services-network-policy"
-    namespace = kubernetes_namespace.odp_services.metadata[0].name
-  }
+# resource "kubernetes_network_policy" "odp_services" {
+#   metadata {
+#     name      = "odp-services-network-policy"
+#     namespace = kubernetes_namespace.odp_services.metadata[0].name
+#   }
 
-  spec {
-    pod_selector {
-      match_labels = {
-        app = "odp-federated"
-      }
-    }
+#   spec {
+#     pod_selector {
+#       match_labels = {
+#         app = "odp-federated"
+#       }
+#     }
 
-    ingress {
-      from {
-        pod_selector {
-          match_labels = {
-            app = "odp-federated"
-          }
-        }
-      }
-      ports {
-        port     = "8080"
-        protocol = "TCP"
-      }
-    }
+#     ingress {
+#       from {
+#         pod_selector {
+#           match_labels = {
+#             app = "odp-federated"
+#           }
+#         }
+#       }
+#       ports {
+#         port     = "8080"
+#         protocol = "TCP"
+#       }
+#     }
 
-    egress {
-      to {
-        pod_selector {}
-      }
-    }
+#     egress {
+#       to {
+#         pod_selector {}
+#       }
+#     }
 
-    policy_types = ["Ingress", "Egress"]
-  }
-}
-
-# Create IAM bindings for service accounts
-resource "google_project_iam_member" "odp_services_pubsub" {
-  for_each = local.odp_services
-  project  = data.google_project.project.project_id
-  role     = "roles/pubsub.publisher"
-  member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
-}
-
-resource "google_project_iam_member" "odp_services_spanner" {
-  for_each = local.odp_services
-  project  = data.google_project.project.project_id
-  role     = "roles/spanner.databaseUser"
-  member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
-}
-
-resource "google_project_iam_member" "odp_services_storage" {
-  for_each = local.odp_services
-  project  = data.google_project.project.project_id
-  role     = "roles/storage.objectViewer"
-  member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
-}
-
-resource "google_project_iam_member" "odp_services_secret" {
-  for_each = local.odp_services
-  project  = data.google_project.project.project_id
-  role     = "roles/secretmanager.secretAccessor"
-  member   = "serviceAccount:${google_service_account.odp_services[each.key].email}"
-}
+#     policy_types = ["Ingress", "Egress"]
+#   }
+# }
 
 # Create service mesh configuration
 # resource "kubernetes_manifest" "odp_authorization_policy" {
