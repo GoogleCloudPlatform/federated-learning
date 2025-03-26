@@ -41,7 +41,7 @@ module "project-iam-bindings" {
   source   = "terraform-google-modules/iam/google//modules/projects_iam"
   version  = "8.0.0"
   projects = [data.google_project.project.project_id]
-  mode     = "authoritative"
+  mode     = "additive"
 
   bindings = {
     # Least-privilege roles needed for a node pool service account to function and

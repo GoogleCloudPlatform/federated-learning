@@ -19,7 +19,7 @@ locals {
     collector = {
       replicas = 1
       ports = [{
-        containerPort = 8080
+        containerPort = 8082
         name          = "http"
         protocol      = "TCP"
       }]
@@ -33,7 +33,7 @@ locals {
     "task-assignment" = {
       replicas = 1
       ports = [{
-        containerPort = 8080
+        containerPort = 8083
         name          = "http"
         protocol      = "TCP"
       }]
@@ -47,7 +47,7 @@ locals {
     "task-management" = {
       replicas = 1
       ports = [{
-        containerPort = 8080
+        containerPort = 8082
         name          = "http"
         protocol      = "TCP"
       }]
@@ -61,7 +61,7 @@ locals {
     "task-scheduler" = {
       replicas = 1
       ports = [{
-        containerPort = 8080
+        containerPort = 8082
         name          = "http"
         protocol      = "TCP"
       }]
@@ -163,32 +163,38 @@ resource "kubernetes_deployment" "odp_services" {
             }
           }
 
-          liveness_probe {
-            http_get {
-              path = "/actuator/health/liveness"
-              port = 8080
+          dynamic "liveness_probe" {
+            for_each = each.value.ports
+            content {
+              http_get {
+                path = "/healthz"
+                port = liveness_probe.value.containerPort
+              }
             }
-            initial_delay_seconds = 90
-            period_seconds        = 10
-            timeout_seconds       = 5
-            failure_threshold     = 3
           }
 
-          readiness_probe {
-            http_get {
-              path = "/actuator/health/readiness"
-              port = 8080
+
+          dynamic "readiness_probe" {
+            for_each = each.value.ports
+            content {
+              http_get {
+                path = "/ready"
+                port = readiness_probe.value.containerPort
+              }
             }
-            initial_delay_seconds = 60
-            period_seconds        = 10
-            timeout_seconds       = 5
-            failure_threshold     = 3
           }
 
           security_context {
             run_as_non_root = true
+            allow_privilege_escalation = false
+            privileged = false
             run_as_user     = 10000
             run_as_group    = 10000
+
+            capabilities {
+              add = []
+              drop = ["NET_RAW"]
+            }
           }
         }
       }
