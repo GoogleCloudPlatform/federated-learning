@@ -46,15 +46,15 @@ module "project-iam-bindings" {
   bindings = {
     # Least-privilege roles needed for a node pool service account to function and
     # to get read-only access to Container Registry and Artifact Registry
-    "roles/spanner.databaseUser"                   = local.list_sa_iam_emails,
-    "roles/logging.logWriter" = local.list_sa_iam_emails,
+    "roles/spanner.databaseUser"           = local.list_sa_iam_emails,
+    "roles/logging.logWriter"              = local.list_sa_iam_emails,
     "roles/iam.serviceAccountTokenCreator" = local.list_sa_iam_emails,
     "roles/storage.objectUser"             = local.list_sa_iam_emails,
-    "roles/pubsub.subscriber" = local.list_sa_iam_emails,
+    "roles/pubsub.subscriber"              = local.list_sa_iam_emails,
     "roles/gkehub.serviceAgent"            = local.list_sa_iam_emails,
-    "roles/iam.workloadIdentityUser"             = local.list_sa_iam_emails,
-    "roles/pubsub.publisher"                   = local.list_sa_iam_emails,
-    "roles/secretmanager.secretAccessor"        = local.list_sa_iam_emails
+    "roles/iam.workloadIdentityUser"       = local.list_sa_iam_emails,
+    "roles/pubsub.publisher"               = local.list_sa_iam_emails,
+    "roles/secretmanager.secretAccessor"   = local.list_sa_iam_emails
   }
 
   depends_on = [

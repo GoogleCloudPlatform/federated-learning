@@ -185,14 +185,14 @@ resource "kubernetes_deployment" "odp_services" {
           }
 
           security_context {
-            run_as_non_root = true
+            run_as_non_root            = true
             allow_privilege_escalation = false
-            privileged = false
-            run_as_user     = 10000
-            run_as_group    = 10000
+            privileged                 = false
+            run_as_user                = 10000
+            run_as_group               = 10000
 
             capabilities {
-              add = []
+              add  = []
               drop = ["NET_RAW"]
             }
           }

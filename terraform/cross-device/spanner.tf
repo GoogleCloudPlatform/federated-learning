@@ -94,9 +94,9 @@ resource "google_spanner_database" "odp_db" {
 
 resource "google_spanner_database" "odp_lock_db" {
   instance            = google_spanner_instance.odp_spanner.name
-  name                     = "fcp-lock-db-${var.environment}"
+  name                = "fcp-lock-db-${var.environment}"
   project             = data.google_project.project.project_id
-  deletion_protection      = false
+  deletion_protection = false
   // Spring JDBC Lock Registry DDL
   // https://docs.spring.io/spring-integration/reference/jdbc/lock-registry.html
   database_dialect = "POSTGRESQL"
