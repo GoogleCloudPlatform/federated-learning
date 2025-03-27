@@ -18,6 +18,10 @@ locals {
   odp_services = {
     collector = {
       replicas = 1
+      hpa = {
+        min_replicas = 1
+        max_replicas = 3
+      }
       ports = [{
         containerPort = 8082
         name          = "http"
@@ -31,7 +35,11 @@ locals {
       image                = var.collector_image
     }
     "task-assignment" = {
-      replicas = 1
+      replicas = 4
+      hpa = {
+        min_replicas = 4
+        max_replicas = 20
+      }
       ports = [{
         containerPort = 8083
         name          = "http"
@@ -45,7 +53,11 @@ locals {
       image                = var.task_assignment_image
     }
     "task-management" = {
-      replicas = 1
+      replicas = 2
+      hpa = {
+        min_replicas = 2
+        max_replicas = 5
+      }
       ports = [{
         containerPort = 8082
         name          = "http"
@@ -59,7 +71,11 @@ locals {
       image                = var.task_management_image
     }
     "task-scheduler" = {
-      replicas = 1
+      replicas = 2
+      hpa = {
+        min_replicas = 2
+        max_replicas = 5
+      }
       ports = [{
         containerPort = 8082
         name          = "http"
@@ -72,28 +88,37 @@ locals {
       service_account_name = var.task_scheduler_sa
       image                = var.task_scheduler_image
     }
+    "task-builder" = {
+      replicas = 2
+      hpa = {
+        min_replicas = 2
+        max_replicas = 5
+      }
+      ports = [{
+        containerPort = 5000
+        name          = "http"
+        protocol      = "TCP"
+      }]
+      env = {
+        FCP_OPTS = "--environment '${var.environment}'"
+        TASK_MANAGEMENT_SERVER_URL = kubernetes_service.odp_services["task-management"].spec[0].cluster_ip
+        PYTHONUNBUFFERED = 1
+      }
+      java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+      service_account_name = var.task_builder_sa
+      image                = var.task_builder_image
+    }
   }
 }
-
-# Create namespace for ODP services
-# resource "kubernetes_namespace" "odp_services" {
-#   metadata {
-#     name = local.odp_namespace
-#     labels = {
-#       istio-injection = "enabled"
-#       environment     = var.environment
-#       purpose         = "odp-federated-compute"
-#     }
-#   }
-# }
 
 # Create Kubernetes deployments for ODP services
 resource "kubernetes_deployment" "odp_services" {
   for_each = local.odp_services
 
   metadata {
-    name      = each.key
+    name      = "${var.environment}-${each.key}"
     namespace = local.odp_namespace
+
     labels = {
       app     = "odp-federated"
       service = each.key
@@ -173,7 +198,6 @@ resource "kubernetes_deployment" "odp_services" {
             }
           }
 
-
           dynamic "readiness_probe" {
             for_each = each.value.ports
             content {
@@ -207,8 +231,9 @@ resource "kubernetes_service" "odp_services" {
   for_each = local.odp_services
 
   metadata {
-    name      = each.key
+    name      = "${var.environment}-${each.key}"
     namespace = local.odp_namespace
+
     labels = {
       app     = "odp-federated"
       service = each.key
@@ -235,71 +260,33 @@ resource "kubernetes_service" "odp_services" {
   }
 }
 
-# Create network policies
-# resource "kubernetes_network_policy" "odp_services" {
-#   metadata {
-#     name      = "odp-services-network-policy"
-#     namespace = kubernetes_namespace.odp_services.metadata[0].name
-#   }
+resource "kubernetes_horizontal_pod_autoscaler_v2" "odp_services" {
+  for_each = local.odp_services
 
-#   spec {
-#     pod_selector {
-#       match_labels = {
-#         app = "odp-federated"
-#       }
-#     }
+  metadata {
+    name = "${var.environment}-${each.key}"
+    namespace = local.odp_namespace
+  }
 
-#     ingress {
-#       from {
-#         pod_selector {
-#           match_labels = {
-#             app = "odp-federated"
-#           }
-#         }
-#       }
-#       ports {
-#         port     = "8080"
-#         protocol = "TCP"
-#       }
-#     }
+  spec {
+    min_replicas = each.value.hpa.min_replicas
+    max_replicas = each.value.hpa.max_replicas
 
-#     egress {
-#       to {
-#         pod_selector {}
-#       }
-#     }
+    metric {
+      type = "Resource"
+      resource {
+        name = "cpu"
+        target {
+          type                = "Utilization"
+          average_utilization = "70"
+        }
+      }
+    }
 
-#     policy_types = ["Ingress", "Egress"]
-#   }
-# }
-
-# Create service mesh configuration
-# resource "kubernetes_manifest" "odp_authorization_policy" {
-#   manifest = {
-#     apiVersion = "security.istio.io/v1beta1"
-#     kind       = "AuthorizationPolicy"
-#     metadata = {
-#       name      = "odp-services-policy"
-#       namespace = kubernetes_namespace.odp_services.metadata[0].name
-#     }
-#     spec = {
-#       action = "ALLOW"
-#       selector = {
-#         matchLabels = {
-#           app = "odp-federated"
-#         }
-#       }
-#       rules = [
-#         {
-#           from = [
-#             {
-#               source = {
-#                 namespaces = [kubernetes_namespace.odp_services.metadata[0].name]
-#               }
-#             }
-#           ]
-#         }
-#       ]
-#     }
-#   }
-# }
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.odp_services[each.key].metadata[0].name
+    }
+  }
+}

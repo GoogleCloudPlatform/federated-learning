@@ -278,7 +278,6 @@ variable "allowed_operator_service_accounts" {
 }
 
 # Images of the cross-devices workloads
-
 variable "aggregator_image" {
   description = "The tag of the aggregator image"
   default     = ""
@@ -315,8 +314,13 @@ variable "task_scheduler_image" {
   type        = string
 }
 
-# Service accounts for the cross-devices workloads
+variable "task_builder_image" {
+  description = "The tag of the task builder image"
+  default     = ""
+  type        = string
+}
 
+# Service accounts for the cross-devices workloads
 variable "aggregator_sa" {
   description = "The service account to use for the aggregator"
   default     = "odp-federated-aggregator-sa"
@@ -349,5 +353,11 @@ variable "task_assignment_sa" {
 variable "task_scheduler_sa" {
   description = "The service account to use for the task scheduler"
   default     = "odp-task-scheduler-sa"
+  type        = string
+}
+
+variable "task_builder_sa" {
+  description = "The service account to use for the task builder"
+  default     = "odp-task-builder-sa"
   type        = string
 }

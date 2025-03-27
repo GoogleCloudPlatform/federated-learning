@@ -122,12 +122,14 @@ module "cross_device" {
   task_management_sa                         = var.task_management_sa
   task_assignment_sa                         = var.task_assignment_sa
   task_scheduler_sa                          = var.task_scheduler_sa
+  task_builder_sa                            = var.task_builder_sa
   aggregator_image                           = var.aggregator_image
   model_updater_image                        = var.model_updater_image
   collector_image                            = var.collector_image
   task_management_image                      = var.task_management_image
   task_assignment_image                      = var.task_assignment_image
   task_scheduler_image                       = var.task_scheduler_image
+  task_builder_image                         = var.task_builder_image
   allowed_operator_service_accounts          = var.allowed_operator_service_accounts
   network_name                               = module.fedlearn-vpc.network_name
   subnet_name                                = local.fedlearn_subnet_name

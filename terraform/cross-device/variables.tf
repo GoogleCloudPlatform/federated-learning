@@ -138,29 +138,31 @@ variable "spanner_nodes" {
 }
 
 # Service accounts
-
 variable "collector_sa" {
-  description = "The Kubernetes service account name for task management"
+  description = "The service account to use for the collector"
   type        = string
 }
 
 variable "task_management_sa" {
-  description = "The Kubernetes service account name for task management"
+  description = "The service account to use for the task management"
   type        = string
 }
 
 variable "task_assignment_sa" {
-  description = "The Kubernetes service account name for model evaluation"
+  description = "The service account to use for the task assignment"
+  type        = string
+}
+variable "task_scheduler_sa" {
+  description = "The service account to use for the task scheduler"
   type        = string
 }
 
-variable "task_scheduler_sa" {
-  description = "The Kubernetes service account name for model aggregation"
+variable "task_builder_sa" {
+  description = "The service account to use for the task builder"
   type        = string
 }
 
 # Images
-
 variable "aggregator_image" {
   description = "The container image for aggregator"
   type        = string
@@ -188,6 +190,11 @@ variable "task_management_image" {
 
 variable "task_scheduler_image" {
   description = "The container image for task scheduler"
+  type        = string
+}
+
+variable "task_builder_image" {
+  description = "The container image for task builder"
   type        = string
 }
 

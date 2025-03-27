@@ -48,7 +48,7 @@ locals {
   }
 }
 
-module "encryption_key_service_a_base_url" {
+module "parameters_secret_manager" {
   for_each        = local.parameters
   source          = "./secretmanager"
   environment     = var.environment

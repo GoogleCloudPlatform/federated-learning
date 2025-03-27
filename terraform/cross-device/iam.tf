@@ -14,10 +14,11 @@
 
 locals {
   service_accounts = [
+    var.collector_sa,
     var.task_assignment_sa,
     var.task_management_sa,
     var.task_scheduler_sa,
-    var.collector_sa
+    var.task_builder_sa
   ]
 
   list_sa_iam_emails = [for sa in local.service_accounts : "serviceAccount:${module.service_accounts.service_accounts_map[sa].email}"]
