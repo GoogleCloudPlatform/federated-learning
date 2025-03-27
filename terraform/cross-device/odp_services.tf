@@ -100,9 +100,9 @@ locals {
         protocol      = "TCP"
       }]
       env = {
-        FCP_OPTS = "--environment '${var.environment}'"
+        FCP_OPTS                   = "--environment '${var.environment}'"
         TASK_MANAGEMENT_SERVER_URL = kubernetes_service.odp_services["task-management"].spec[0].cluster_ip
-        PYTHONUNBUFFERED = 1
+        PYTHONUNBUFFERED           = 1
       }
       java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
       service_account_name = var.task_builder_sa
@@ -264,7 +264,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "odp_services" {
   for_each = local.odp_services
 
   metadata {
-    name = "${var.environment}-${each.key}"
+    name      = "${var.environment}-${each.key}"
     namespace = local.odp_namespace
   }
 
