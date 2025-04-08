@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add Spanner-related outputs
-output "spanner_instance" {
-  description = "The name of the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.name
-}
-
-output "spanner_database" {
-  description = "The name of the Spanner database"
-  value       = google_spanner_database.odp_db.name
-}
-
-output "spanner_instance_config" {
-  description = "The configuration for the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.config
+resource "google_compute_managed_ssl_certificate" "default" {
+  name     = "${var.environment}-cert"
+  provider = google
+  managed {
+    domains = [
+      "taskassignment.${var.parent_domain_name}",
+      "taskmanagement.${var.parent_domain_name}",
+      "taskbuilder.${var.parent_domain_name}"
+    ]
+  }
 }

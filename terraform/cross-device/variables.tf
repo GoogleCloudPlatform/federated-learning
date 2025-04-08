@@ -407,3 +407,8 @@ variable "parent_domain_name" {
   description = "Parent domain name to use for cdn"
   type        = string
 }
+
+variable "namespace" {
+  default = "fltenant1"
+  type    = string
+}

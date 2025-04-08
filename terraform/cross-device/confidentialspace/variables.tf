@@ -23,7 +23,7 @@ variable "environment" {
 }
 
 variable "name" {
-  description = "Name of CS workload"
+  description = "Name of Confidential Space workload"
   type        = string
 }
 

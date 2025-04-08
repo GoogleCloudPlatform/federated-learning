@@ -73,7 +73,7 @@ module "fl-workload-identity" {
   k8s_sa_name         = each.value
   location            = var.region
   name                = module.service_accounts.service_accounts_map[each.value].account_id
-  namespace           = local.odp_namespace
+  namespace           = var.namespace
   use_existing_gcp_sa = true
   use_existing_k8s_sa = false
 

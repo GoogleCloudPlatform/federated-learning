@@ -12,18 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add Spanner-related outputs
-output "spanner_instance" {
-  description = "The name of the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.name
-}
-
-output "spanner_database" {
-  description = "The name of the Spanner database"
-  value       = google_spanner_database.odp_db.name
-}
-
-output "spanner_instance_config" {
-  description = "The configuration for the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.config
+module "task-assignment" {
+  source   = "./kubernetes"
+  name     = "task-assignment"
+  replicas = 4
+  hpa = {
+    min_replicas = 4
+    max_replicas = 20
+  }
+  ports = [{
+    containerPort = 8083
+    name          = "http"
+    protocol      = "TCP"
+  }]
+  env = {
+    FCP_OPTS = "--environment '${var.environment}'"
+  }
+  java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+  service_account_name = var.task_assignment_sa
+  image                = var.task_assignment_image
+  environment          = var.environment
+  namespace            = var.namespace
 }

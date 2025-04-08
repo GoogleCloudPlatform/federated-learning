@@ -12,18 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add Spanner-related outputs
-output "spanner_instance" {
-  description = "The name of the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.name
-}
-
-output "spanner_database" {
-  description = "The name of the Spanner database"
-  value       = google_spanner_database.odp_db.name
-}
-
-output "spanner_instance_config" {
-  description = "The configuration for the Spanner instance"
-  value       = google_spanner_instance.odp_spanner.config
+module "collector" {
+  source   = "./kubernetes"
+  name     = "collector"
+  replicas = 1
+  hpa = {
+    min_replicas = 1
+    max_replicas = 3
+  }
+  ports = [{
+    containerPort = 8082
+    name          = "http"
+    protocol      = "TCP"
+  }]
+  env = {
+    FCP_OPTS = "--environment '${var.environment}'"
+  }
+  java_opts            = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xmx2g -Xms2g"
+  service_account_name = var.collector_sa
+  image                = var.collector_image
+  environment          = var.environment
+  namespace            = var.namespace
 }
