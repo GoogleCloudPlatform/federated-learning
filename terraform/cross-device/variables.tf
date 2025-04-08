@@ -93,7 +93,6 @@ variable "list_apps_sa_iam_emails" {
 }
 
 # ODP
-
 variable "odp_enable_monitoring" {
   description = "Enable monitoring for ODP services"
   type        = bool
@@ -345,7 +344,6 @@ variable "aggregator_compute_service_account" {
   type        = string
 }
 
-
 variable "model_updater_compute_service_account" {
   description = "The name of the model updater service account to allowlist in the coordinator"
   type        = string
@@ -403,4 +401,9 @@ variable "collector_batch_size" {
   description = "The size of aggregation batches created by the collector"
   type        = number
   default     = 50
+}
+
+variable "parent_domain_name" {
+  description = "Parent domain name to use for cdn"
+  type        = string
 }

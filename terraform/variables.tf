@@ -361,3 +361,61 @@ variable "task_builder_sa" {
   default     = "odp-task-builder-sa"
   type        = string
 }
+variable "download_plan_token_duration" {
+  description = "Duration in seconds the download plan signed URL token is valid for"
+  type        = number
+  default     = 900
+}
+
+variable "download_checkpoint_token_duration" {
+  description = "Duration in seconds the download checkpoint signed URL token is valid for"
+  type        = number
+  default     = 900
+}
+
+variable "upload_gradient_token_duration" {
+  description = "Duration in seconds the upload gradient signed URL token is valid for"
+  type        = number
+  default     = 900
+}
+
+variable "allow_rooted_devices" {
+  description = "Whether to allow rooted devices. This setting will have no effect when authentication is disabled. It is recommended to be set false for production environments."
+  type        = bool
+  default     = false
+}
+
+variable "is_authentication_enabled" {
+  description = "Whether to enable authentication"
+  type        = bool
+  default     = false
+}
+
+variable "local_compute_timeout_minutes" {
+  description = "The duration an assignment will remain in ASSIGNED status before timing out in minutes."
+  type        = number
+  default     = 15
+}
+
+variable "upload_timeout_minutes" {
+  description = "The duration an assignment will remain in LOCAL_COMPLETED status before timing out in minutes."
+  type        = number
+  default     = 15
+}
+
+variable "aggregation_batch_failure_threshold" {
+  description = "The number of aggregation batches failed for an iteration before moving the iteration to a failure state."
+  type        = number
+  default     = 3
+}
+
+variable "collector_batch_size" {
+  description = "The size of aggregation batches created by the collector"
+  type        = number
+  default     = 50
+}
+
+variable "parent_domain_name" {
+  description = "Parent domain name to use for cdn"
+  type        = string
+}

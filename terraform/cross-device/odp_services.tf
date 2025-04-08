@@ -290,3 +290,44 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "odp_services" {
     }
   }
 }
+
+resource "kubernetes_ingress_v1" "ingress" {
+  metadata {
+    name = "${var.environment}-ingress"
+    annotations = {
+      "kubernetes.io/ingress.allow-http"            = "false"
+      "kubernetes.io/ingress.global-static-ip-name" = var.static_ip_name
+      "ingress.gcp.kubernetes.io/pre-shared-cert"   = google_compute_managed_ssl_certificate.default.name
+    }
+    labels = {
+      maintained_by = "terraform"
+    }
+  }
+
+  spec {
+    rule {
+      http {
+        path {
+          backend {
+            service {
+              name = kubernetes_service_v1.taskassignment.metadata[0].name
+              port {
+                number = var.task_assignment_port
+              }
+            }
+          }
+
+          path = "/taskassignment/*"
+        }
+      }
+    }
+  }
+}
+
+resource "google_compute_managed_ssl_certificate" "default" {
+  name     = "${var.environment}-cert"
+  provider = google
+  managed {
+    domains = [var.parent_domain_name]
+  }
+}

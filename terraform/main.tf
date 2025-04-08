@@ -143,6 +143,16 @@ module "cross_device" {
   wip_provider_b                             = var.wip_provider_b
   aggregator_compute_service_account         = module.service_accounts.service_accounts_map[var.aggregator_sa].email
   model_updater_compute_service_account      = module.service_accounts.service_accounts_map[var.model_updater_sa].email
+  download_plan_token_duration               = var.download_plan_token_duration
+  download_checkpoint_token_duration         = var.download_checkpoint_token_duration
+  upload_gradient_token_duration             = var.upload_gradient_token_duration
+  allow_rooted_devices                       = var.allow_rooted_devices
+  is_authentication_enabled                  = var.is_authentication_enabled
+  local_compute_timeout_minutes              = var.local_compute_timeout_minutes
+  upload_timeout_minutes                     = var.upload_timeout_minutes
+  aggregation_batch_failure_threshold        = var.aggregation_batch_failure_threshold
+  collector_batch_size                       = var.collector_batch_size
+  parent_domain_name                         = var.parent_domain_name
 }
 
 module "nvflare" {
