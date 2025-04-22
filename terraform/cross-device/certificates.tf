@@ -16,10 +16,8 @@ resource "google_compute_managed_ssl_certificate" "default" {
   name     = "${var.environment}-cert"
   provider = google
   managed {
-    domains = [
-      "taskassignment.${var.parent_domain_name}",
-      "taskmanagement.${var.parent_domain_name}",
-      "taskbuilder.${var.parent_domain_name}"
-    ]
+    domains = local.domains
   }
+
+  depends_on = [google_dns_record_set.a]
 }
