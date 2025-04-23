@@ -47,10 +47,11 @@ metadata:
   name: istio-ingressgateway
   namespace: istio-ingress
   annotations:
-    networking.gke.io/pre-shared-certs: demo-dev-cert
+    networking.gke.io/pre-shared-certs: "demo-dev-cert"
+    networking.gke.io/load-balancer-ip-addresses: "cdn-demo-dev-ip"
+    cloud.google.com/l4-rbs: "enabled"
 spec:
   type: LoadBalancer
-  loadBalancerIP: 34.36.75.21
   selector:
     app: istio-ingressgateway
     istio: ingressgateway

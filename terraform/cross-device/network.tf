@@ -20,9 +20,9 @@ locals {
   ]
 }
 
-resource "google_compute_global_address" "default" {
+resource "google_compute_address" "default" {
   name = "cdn-${var.environment}-ip"
-
+  region = var.region
 }
 
 data "google_dns_managed_zone" "dns_zone" {
@@ -40,59 +40,5 @@ resource "google_dns_record_set" "a" {
   type         = "A"
   ttl          = 300
 
-  rrdatas = [google_compute_global_address.default.address]
-}
-
-resource "google_compute_target_https_proxy" "default" {
-  name             = "${var.environment}-proxy"
-  url_map          = google_compute_url_map.default.id
-  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
-}
-
-resource "google_compute_url_map" "default" {
-  name        = "${var.environment}-https-lb"
-  description = "${var.environment} HTTPS Load Balancer"
-
-  default_service = google_compute_backend_service.default.id
-
-  dynamic "host_rule" {
-    for_each = toset(local.domains)
-    content {
-      hosts        = [host_rule.value]
-      path_matcher = "allpaths"
-    }
-  }
-
-  path_matcher {
-    name            = "allpaths"
-    default_service = google_compute_backend_service.default.id
-
-    path_rule {
-      paths   = ["/*"]
-      service = google_compute_backend_service.default.id
-    }
-  }
-}
-
-resource "google_compute_backend_service" "default" {
-  name        = "${var.environment}-backend-service"
-  port_name   = "https"
-  protocol    = "HTTPS"
-  timeout_sec = 10
-
-  health_checks = [google_compute_https_health_check.default.id]
-}
-
-resource "google_compute_https_health_check" "default" {
-  name               = "${var.environment}-https-health-check"
-  request_path       = "/"
-  check_interval_sec = 1
-  timeout_sec        = 1
-}
-
-resource "google_compute_global_forwarding_rule" "default" {
-  name       = "${var.environment}-forwarding-rule"
-  target     = google_compute_target_https_proxy.default.id
-  ip_address = google_compute_global_address.default.id
-  port_range = 443
+  rrdatas = [google_compute_address.default.address]
 }
