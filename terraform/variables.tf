@@ -418,4 +418,5 @@ variable "collector_batch_size" {
 variable "parent_domain_name" {
   description = "Parent domain name to use for cdn"
   type        = string
+  default     = ""
 }
