@@ -217,7 +217,7 @@ Users and teams managing tenant apps should not have permissions to change clust
 
 1. [Grant the Config Sync agent access to the Git repository](https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/how-to/installing-config-sync#git-creds-secret)
    where the environment configuration will be stored.
-1. Wait for the GKE cluster to be reported as ready in the [GKE Kuberentes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
+1. Wait for the GKE cluster to be reported as ready in the [GKE Kubernetes clusters dashboard](https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards#kubernetes_clusters).
 
 ### Next steps
 
