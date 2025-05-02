@@ -14,9 +14,18 @@
 
 locals {
   topics = {
-    aggregator_topic               = "aggregator-${var.environment}"
-    modelupdater_topic             = "modelupdater-${var.environment}"
-    aggregator_notifications_topic = "aggregator-notifications-${var.environment}"
+    aggregator_topic               = {
+      name = "aggregator-${var.environment}",
+      service_account_name = var.aggregator_compute_service_account
+    }
+    modelupdater_topic             = {
+      name = "modelupdater-${var.environment}",
+      service_account_name = var.model_updater_compute_service_account
+    }
+    aggregator_notifications_topic = {
+      name = "aggregator-notifications-${var.environment}",
+      service_account_name = var.aggregator_compute_service_account
+    }
   }
 }
 
@@ -25,18 +34,18 @@ module "pubsub_dl" {
   source               = "terraform-google-modules/pubsub/google"
   version              = "7.0.0"
   project_id           = data.google_project.project.project_id
-  topic                = "${each.value}-topic-dead-letter"
+  topic                = "${each.value.name}-topic-dead-letter"
   create_subscriptions = true
   create_topic         = true
 
   pull_subscriptions = [
     {
-      name                             = "${each.value}-dlq-subscription"
+      name                             = "${each.value.name}-dlq-subscription"
       topic_message_retention_duration = "604800s"
       retain_acked_messages            = true
       ack_deadline_seconds             = 600
       enable_exactly_once_delivery     = true
-      service_account                  = "service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+      service_account                  = each.value.service_account_name
       expiration_policy                = ""
     }
   ]
@@ -47,20 +56,20 @@ module "pubsub" {
   source               = "terraform-google-modules/pubsub/google"
   version              = "7.0.0"
   project_id           = data.google_project.project.project_id
-  topic                = "${each.value}-topic"
+  topic                = "${each.value.name}-topic"
   create_subscriptions = true
   create_topic         = true
 
   pull_subscriptions = [
     {
-      name                             = "${each.value}-subscription"
-      dead_letter_topic                = "projects/${var.project_id}/topics/${each.value}-topic-dead-letter"
+      name                             = "${each.value.name}-subscription"
+      dead_letter_topic                = "projects/${var.project_id}/topics/${each.value.name}-topic-dead-letter"
       topic_message_retention_duration = "604800s"
       retain_acked_messages            = true
       ack_deadline_seconds             = 600
       max_delivery_attempts            = 10
       enable_exactly_once_delivery     = true
-      service_account                  = "service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+      service_account                  = each.value.service_account_name
       expiration_policy                = ""
     }
   ]

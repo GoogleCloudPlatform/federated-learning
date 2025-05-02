@@ -20,7 +20,7 @@ module "aggregator" {
   cooldown_period                   = var.aggregator_cooldown_period
   environment                       = var.environment
   instance_source_image             = var.aggregator_instance_source_image
-  jobqueue_subscription_name        = "${local.topics.aggregator_topic}-subscription"
+  jobqueue_subscription_name        = "${local.topics.aggregator_topic.name}-subscription"
   machine_type                      = var.aggregator_machine_type
   max_replicas                      = var.aggregator_max_replicas
   min_replicas                      = var.aggregator_min_replicas
@@ -40,7 +40,7 @@ module "model_updater" {
   cooldown_period                   = var.model_updater_cooldown_period
   environment                       = var.environment
   instance_source_image             = var.model_updater_instance_source_image
-  jobqueue_subscription_name        = "${local.topics.modelupdater_topic}-subscription"
+  jobqueue_subscription_name        = "${local.topics.modelupdater_topic.name}-subscription"
   machine_type                      = var.model_updater_machine_type
   max_replicas                      = var.model_updater_max_replicas
   min_replicas                      = var.model_updater_min_replicas
