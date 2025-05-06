@@ -24,7 +24,7 @@ locals {
 
 module "fedlearn-vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "10.0.0"
+  version = "11.0.0"
 
   project_id   = data.google_project.project.project_id
   network_name = "fedlearn-network"
@@ -123,7 +123,7 @@ module "fedlearn-vpc" {
 
 module "fedlearn-fw-policies" {
   source  = "terraform-google-modules/network/google//modules/network-firewall-policy"
-  version = "10.0.0"
+  version = "11.0.0"
 
   project_id  = data.google_project.project.project_id
   policy_name = "network-firewall-policies-federated-learning"
@@ -170,7 +170,7 @@ resource "google_compute_address" "nat_ip" {
 
 module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
-  version = "6.2.0"
+  version = "7.0.0"
 
   name    = "fl-router"
   network = module.fedlearn-vpc.network_id
