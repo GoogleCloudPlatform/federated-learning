@@ -16,7 +16,7 @@ module "aggregator" {
   source                            = "./confidentialspace"
   allowed_operator_service_accounts = var.allowed_operator_service_accounts
   autoscaling_jobs_per_instance     = var.aggregator_autoscaling_jobs_per_instance
-  compute_service_account           = var.aggregator_compute_service_account
+  compute_service_account           = module.service_accounts.service_accounts_map[var.aggregator_compute_service_account].email
   cooldown_period                   = var.aggregator_cooldown_period
   environment                       = var.environment
   instance_source_image             = var.aggregator_instance_source_image
@@ -36,7 +36,7 @@ module "model_updater" {
   source                            = "./confidentialspace"
   allowed_operator_service_accounts = var.allowed_operator_service_accounts
   autoscaling_jobs_per_instance     = var.model_updater_autoscaling_jobs_per_instance
-  compute_service_account           = var.model_updater_compute_service_account
+  compute_service_account           = module.service_accounts.service_accounts_map[var.model_updater_compute_service_account].email
   cooldown_period                   = var.model_updater_cooldown_period
   environment                       = var.environment
   instance_source_image             = var.model_updater_instance_source_image

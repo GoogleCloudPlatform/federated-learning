@@ -15,8 +15,6 @@
 locals {
   container_image_repository_fully_qualified_hostname = "${google_artifact_registry_repository.container_image_repository.location}-docker.pkg.dev"
   container_image_repository_name                     = "${google_artifact_registry_repository.container_image_repository.project}/${google_artifact_registry_repository.container_image_repository.repository_id}"
-  aggregator_compute_service_account                  = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[0]].email
-  model_updater_compute_service_account               = module.service_accounts.service_accounts_map[local.list_confidential_space_sa[1]].email
 }
 
 output "container_image_repository_fully_qualified_hostname" {
@@ -64,10 +62,12 @@ output "nvflare_namespace" {
   value       = var.nvflare ? var.nvflare_namespace : null
 }
 
-output "aggregator_compute_service_account" {
-  value = local.aggregator_compute_service_account
+output "aggregator_compute_service_account_email" {
+  description = "Service account to be allowlisted for aggregation support"
+  value = var.cross_device ? module.cross_device[*].aggregator_compute_service_account_email : null
 }
 
-output "model_updater_compute_service_account" {
-  value = local.model_updater_compute_service_account
+output "model_updater_compute_service_account_email" {
+  description = "Service account to be allowlisted for model update support"
+  value = var.cross_device ? module.cross_device[*].model_updater_compute_service_account_email : null
 }

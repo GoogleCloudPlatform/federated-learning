@@ -25,26 +25,10 @@ spec:
     - "*"
   tcp:
     - match:
-        - port: 5000
+        - port: ${cross_device_workload_port}
       route:
         - destination:
             host: ${cross_device_workload_name}.${namespace_name}.svc.cluster.local
             port:
-              number: 5000
-          weight: 100
-    - match:
-        - port: 8082
-      route:
-        - destination:
-            host: ${cross_device_workload_name}.${namespace_name}.svc.cluster.local
-            port:
-              number: 8082
-          weight: 100
-    - match:
-        - port: 8083
-      route:
-        - destination:
-            host: ${cross_device_workload_name}.${namespace_name}.svc.cluster.local
-            port:
-              number: 8083
+              number: ${cross_device_workload_port}
           weight: 100

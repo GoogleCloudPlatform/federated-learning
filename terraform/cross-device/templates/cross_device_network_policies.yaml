@@ -25,11 +25,11 @@ spec:
     - Ingress
   ingress:
     - ports:
-        - protocol: HTTPS
+        - protocol: TCP
           port: 5000
-        - protocol: HTTPS
+        - protocol: TCP
           port: 8082
-        - protocol: HTTPS
+        - protocol: TCP
           port: 8083
 ---
 kind: NetworkPolicy

@@ -21,13 +21,6 @@ locals {
     var.tenant_names
   )
 
-  list_confidential_space_sa = [
-    var.aggregator_sa,
-    var.model_updater_sa
-  ]
-
-  list_confidential_space_sa_iam_emails = [for sa in local.list_confidential_space_sa : "serviceAccount:${module.service_accounts.service_accounts_map[local.list_confidential_space_sa[index(local.list_confidential_space_sa, sa)]].email}"]
-
   tenants = {
     for name in local.tenant_and_main_pool_names : name => {
       tenant_name                                 = name
@@ -111,48 +104,49 @@ data "google_project" "project" {
 data "google_client_config" "default" {}
 
 module "cross_device" {
-  count                                      = var.cross_device ? 1 : 0
-  source                                     = "./cross-device"
-  project_id                                 = var.project_id
-  region                                     = var.region
-  spanner_instance_config                    = var.spanner_instance_config
-  spanner_processing_units                   = var.spanner_processing_units
-  list_apps_sa_iam_emails                    = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
-  collector_sa                               = var.collector_sa
-  task_management_sa                         = var.task_management_sa
-  task_assignment_sa                         = var.task_assignment_sa
-  task_scheduler_sa                          = var.task_scheduler_sa
-  task_builder_sa                            = var.task_builder_sa
-  aggregator_image                           = var.aggregator_image
-  model_updater_image                        = var.model_updater_image
-  collector_image                            = var.collector_image
-  task_management_image                      = var.task_management_image
-  task_assignment_image                      = var.task_assignment_image
-  task_scheduler_image                       = var.task_scheduler_image
-  task_builder_image                         = var.task_builder_image
-  allowed_operator_service_accounts          = var.allowed_operator_service_accounts
-  network_name                               = module.fedlearn-vpc.network_name
-  subnet_name                                = local.fedlearn_subnet_name
-  encryption_key_service_a_base_url          = var.encryption_key_service_a_base_url
-  encryption_key_service_a_cloudfunction_url = var.encryption_key_service_a_cloudfunction_url
-  encryption_key_service_b_base_url          = var.encryption_key_service_b_base_url
-  encryption_key_service_b_cloudfunction_url = var.encryption_key_service_b_cloudfunction_url
-  service_account_a                          = var.service_account_a
-  service_account_b                          = var.service_account_b
-  wip_provider_a                             = var.wip_provider_a
-  wip_provider_b                             = var.wip_provider_b
-  aggregator_compute_service_account         = module.service_accounts.service_accounts_map[var.aggregator_sa].email
-  model_updater_compute_service_account      = module.service_accounts.service_accounts_map[var.model_updater_sa].email
-  download_plan_token_duration               = var.download_plan_token_duration
-  download_checkpoint_token_duration         = var.download_checkpoint_token_duration
-  upload_gradient_token_duration             = var.upload_gradient_token_duration
-  allow_rooted_devices                       = var.allow_rooted_devices
-  is_authentication_enabled                  = var.is_authentication_enabled
-  local_compute_timeout_minutes              = var.local_compute_timeout_minutes
-  upload_timeout_minutes                     = var.upload_timeout_minutes
-  aggregation_batch_failure_threshold        = var.aggregation_batch_failure_threshold
-  collector_batch_size                       = var.collector_batch_size
-  parent_domain_name                         = var.parent_domain_name
+  count                                                            = var.cross_device ? 1 : 0
+  source                                                           = "./cross-device"
+  project_id                                                       = var.project_id
+  region                                                           = var.region
+  spanner_instance_config                                          = var.spanner_instance_config
+  spanner_processing_units                                         = var.spanner_processing_units
+  list_apps_sa_iam_emails                                          = local.list_apps_sa_iam_emails[var.cross_device_workloads_kubernetes_namespace]
+  collector_sa                                                     = var.collector_sa
+  task_management_sa                                               = var.task_management_sa
+  task_assignment_sa                                               = var.task_assignment_sa
+  task_scheduler_sa                                                = var.task_scheduler_sa
+  task_builder_sa                                                  = var.task_builder_sa
+  aggregator_image                                                 = var.aggregator_image
+  model_updater_image                                              = var.model_updater_image
+  collector_image                                                  = var.collector_image
+  task_management_image                                            = var.task_management_image
+  task_assignment_image                                            = var.task_assignment_image
+  task_scheduler_image                                             = var.task_scheduler_image
+  task_builder_image                                               = var.task_builder_image
+  allowed_operator_service_accounts                                = var.allowed_operator_service_accounts
+  network_name                                                     = module.fedlearn-vpc.network_name
+  subnet_name                                                      = local.fedlearn_subnet_name
+  encryption_key_service_a_base_url                                = var.encryption_key_service_a_base_url
+  encryption_key_service_a_cloudfunction_url                       = var.encryption_key_service_a_cloudfunction_url
+  encryption_key_service_b_base_url                                = var.encryption_key_service_b_base_url
+  encryption_key_service_b_cloudfunction_url                       = var.encryption_key_service_b_cloudfunction_url
+  service_account_a                                                = var.service_account_a
+  service_account_b                                                = var.service_account_b
+  wip_provider_a                                                   = var.wip_provider_a
+  wip_provider_b                                                   = var.wip_provider_b
+  aggregator_compute_service_account                               = var.aggregator_sa
+  model_updater_compute_service_account                            = var.model_updater_sa
+  download_plan_token_duration                                     = var.download_plan_token_duration
+  download_checkpoint_token_duration                               = var.download_checkpoint_token_duration
+  upload_gradient_token_duration                                   = var.upload_gradient_token_duration
+  allow_rooted_devices                                             = var.allow_rooted_devices
+  is_authentication_enabled                                        = var.is_authentication_enabled
+  local_compute_timeout_minutes                                    = var.local_compute_timeout_minutes
+  upload_timeout_minutes                                           = var.upload_timeout_minutes
+  aggregation_batch_failure_threshold                              = var.aggregation_batch_failure_threshold
+  collector_batch_size                                             = var.collector_batch_size
+  parent_domain_name                                               = var.parent_domain_name
+  acm_config_sync_tenants_configuration_destination_directory_path = local.acm_config_sync_tenants_configuration_destination_directory_path
 }
 
 module "nvflare" {

@@ -27,3 +27,13 @@ output "spanner_instance_config" {
   description = "The configuration for the Spanner instance"
   value       = google_spanner_instance.odp_spanner.config
 }
+
+output "aggregator_compute_service_account_email" {
+  description = "The service account for the aggregator"
+  value       = module.service_accounts.service_accounts_map[var.aggregator_compute_service_account].email
+}
+
+output "model_updater_compute_service_account_email" {
+  description = "The service account for the model updater"
+  value       = module.service_accounts.service_accounts_map[var.model_updater_compute_service_account].email
+}

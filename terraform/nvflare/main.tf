@@ -18,7 +18,7 @@ data "google_project" "project" {
 
 module "buckets" {
   source     = "terraform-google-modules/cloud-storage/google"
-  version    = "9.0.1"
+  version    = "10.0.1"
   project_id = data.google_project.project.project_id
   location   = var.region
   prefix     = "fcp"

@@ -1,6 +1,6 @@
 module "distributed-tff-example-dns" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.3.0"
+  version = "6.0.0"
 
   description = "Private DNS zone for the distributed TensorFlow Federated example"
   domain      = "tensorflow-federated.example.com."
@@ -30,7 +30,7 @@ module "distributed-tff-example-dns" {
 
 module "distributed_tff_example_firewall_rules" {
   source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "10.0.0"
+  version = "11.0.0"
 
   project_id   = var.project_id
   network_name = var.vpc_network_name

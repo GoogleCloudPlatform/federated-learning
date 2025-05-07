@@ -12,18 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-ingress
-  labels:
-    istio-injection: "enabled"
-    tenant-ns: "false"
----
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: ingress-gateway
+  name: ingress-gateway-cross-device
   namespace: istio-ingress
 spec:
   selector:
@@ -31,32 +23,34 @@ spec:
     istio: ingressgateway
   servers:
     - port:
-        number: 443
-        name: https
-        protocol: HTTPS
+        number: 8082
+        name: tmport
+        protocol: TCP
       hosts:
-        - "taskassignment.lgrangeau.demo.altostrat.com"
-        - "taskmanagement.lgrangeau.demo.altostrat.com"
-        - "taskbuilder.lgrangeau.demo.altostrat.com"
-      tls:
-        mode: PASSTHROUGH
+        - "*"
+    - port:
+        number: 8083
+        name: taport
+        protocol: TCP
+      hosts:
+        - "*"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: istio-ingressgateway
+  name: istio-ingressgateway-cross-device
   namespace: istio-ingress
-  annotations:
-    networking.gke.io/pre-shared-certs: "demo-dev-cert"
-    networking.gke.io/load-balancer-ip-addresses: "cdn-demo-dev-ip"
-    cloud.google.com/l4-rbs: "enabled"
 spec:
   type: LoadBalancer
   selector:
     app: istio-ingressgateway
     istio: ingressgateway
   ports:
-  - name: https
-    port: 443
-    targetPort: 8443
+  - name: tmport
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+  - name: taport
+    port: 8083
+    targetPort: 8083
     protocol: TCP

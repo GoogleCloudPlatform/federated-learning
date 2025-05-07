@@ -21,7 +21,7 @@ locals {
 
 module "cloud-dns-private-google-apis" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.3.0"
+  version = "6.0.0"
 
   description = "Private DNS zone for Google APIs"
   domain      = "googleapis.com."
@@ -53,7 +53,7 @@ module "cloud-dns-private-google-apis" {
 
 module "cloud-dns-private-container-registry" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.3.0"
+  version = "6.0.0"
 
   description = "Private DNS zone for Container Registry"
   domain      = "gcr.io."
@@ -85,7 +85,7 @@ module "cloud-dns-private-container-registry" {
 
 module "cloud-dns-private-artifact-registry" {
   source  = "terraform-google-modules/cloud-dns/google"
-  version = "5.3.0"
+  version = "6.0.0"
 
   description = "Private DNS zone for Artifact Registry"
   domain      = "pkg.dev."

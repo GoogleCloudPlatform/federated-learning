@@ -16,15 +16,15 @@ locals {
   topics = {
     aggregator_topic               = {
       name = "aggregator-${var.environment}",
-      service_account_name = var.aggregator_compute_service_account
+      service_account_name = module.service_accounts.service_accounts_map[var.aggregator_compute_service_account].email
     }
     modelupdater_topic             = {
       name = "modelupdater-${var.environment}",
-      service_account_name = var.model_updater_compute_service_account
+      service_account_name = module.service_accounts.service_accounts_map[var.model_updater_compute_service_account].email
     }
     aggregator_notifications_topic = {
       name = "aggregator-notifications-${var.environment}",
-      service_account_name = var.aggregator_compute_service_account
+      service_account_name = module.service_accounts.service_accounts_map[var.aggregator_compute_service_account].email
     }
   }
 }
@@ -32,7 +32,7 @@ locals {
 module "pubsub_dl" {
   for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
-  version              = "7.0.0"
+  version              = "8.2.0"
   project_id           = data.google_project.project.project_id
   topic                = "${each.value.name}-topic-dead-letter"
   create_subscriptions = true
@@ -54,7 +54,7 @@ module "pubsub_dl" {
 module "pubsub" {
   for_each             = local.topics
   source               = "terraform-google-modules/pubsub/google"
-  version              = "7.0.0"
+  version              = "8.2.0"
   project_id           = data.google_project.project.project_id
   topic                = "${each.value.name}-topic"
   create_subscriptions = true

@@ -409,6 +409,12 @@ variable "parent_domain_name" {
 }
 
 variable "namespace" {
-  default = "fltenant1"
-  type    = string
+  description = "Namespace where the cross-device workload will be deployed"
+  default     = "fltenant1"
+  type        = string
+}
+
+variable "acm_config_sync_tenants_configuration_destination_directory_path" {
+  description = "Path to the Config Management for tenants repository on the local machine"
+  type        = string
 }
