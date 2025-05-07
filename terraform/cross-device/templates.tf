@@ -13,7 +13,7 @@
 # limitations under the License.
 
 locals {
-  tenant = "test"
+  tenant = "${var.namespace}-sync"
   cross_device_workloads = [{
     name = "taskassignment"
     port = 8083
@@ -32,9 +32,30 @@ resource "local_file" "gateway" {
     "${path.module}/templates/cross_device_gateway.yaml",
     {
       namespace_name = var.namespace
+      ip_address_name = google_compute_address.default.name
     }
   )
   filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/cross_device_gateway.yaml"
+}
+
+resource "local_file" "mesh" {
+  content = templatefile(
+    "${path.module}/templates/cross_device_mesh.yaml",
+    {
+      namespace_name = var.namespace
+    }
+  )
+  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/cross_device_mesh.yaml"
+}
+
+resource "local_file" "telemetry" {
+  content = templatefile(
+    "${path.module}/templates/cross_device_telemetry.yaml",
+    {
+      namespace_name = var.namespace
+    }
+  )
+  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/cross_device_telemetry.yaml"
 }
 
 resource "local_file" "authorization_policies" {
@@ -68,7 +89,7 @@ resource "local_file" "destination_rules" {
       namespace_name             = var.namespace
     }
   )
-  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/${each.key}.destinationrules.yaml"
+  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/cross_device_${each.key}_destination_rule.yaml"
 }
 
 resource "local_file" "virtual_services" {
@@ -83,5 +104,5 @@ resource "local_file" "virtual_services" {
       namespace_name             = var.namespace
     }
   )
-  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/${each.key}.virtualservices.yaml"
+  filename = "${var.acm_config_sync_tenants_configuration_destination_directory_path}/${local.tenant}/cross_device_${each.key}_virtual_service.yaml"
 }
