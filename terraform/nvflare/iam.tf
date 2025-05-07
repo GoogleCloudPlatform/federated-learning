@@ -14,7 +14,7 @@
 
 module "storage_bucket_iam_bindings" {
   source          = "terraform-google-modules/iam/google//modules/storage_buckets_iam"
-  version         = "8.0.0"
+  version         = "8.1.0"
   storage_buckets = ["fcp-${var.workspace_bucket_name}"]
 
   bindings = {
