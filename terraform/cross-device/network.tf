@@ -26,9 +26,7 @@ resource "google_compute_address" "default" {
 }
 
 data "google_dns_managed_zone" "dns_zone" {
-  ## (TODO) To be replaced
-  #  name = replace(var.parent_domain_name, ".", "-")
-  name = "lgrangeau-demo"
+  name = replace(var.parent_domain_name, ".", "-")
 }
 
 # Add A record for loadbalancer IPs.
