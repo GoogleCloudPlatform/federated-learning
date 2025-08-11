@@ -45,12 +45,12 @@ jobs:
           sudo rm -rf /usr/local/.ghcup || true
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v5.6.1
+        uses: docker/metadata-action@v5.8.0
         with:
           images: |
             ${{ env.CONTAINER_IMAGE_ID }}
