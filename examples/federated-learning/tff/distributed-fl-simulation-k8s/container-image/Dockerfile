@@ -16,7 +16,8 @@ FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:442.0.0 as gcloud
 
 ENV DATASET_DESTINATION_DIRECTORY_PATH="/tmp/dataset/emnist-partitions/2-partition"
 
-RUN gcloud storage cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_1.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_1.sqlite" \
+RUN gcloud config set auth/disable_credentials True
+    && gcloud storage cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_1.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_1.sqlite" \
     && gcloud storage cp gs://tff-datasets-public/emnist-partitions/2-partition/emnist_part_2.sqlite "${DATASET_DESTINATION_DIRECTORY_PATH}/emnist_part_2.sqlite"
 
 FROM python:3.9-buster
