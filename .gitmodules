@@ -1,0 +1,3 @@
+[submodule "accelerated-platforms"]
+	path = accelerated-platforms
+	url = https://github.com/GoogleCloudPlatform/accelerated-platforms.git
