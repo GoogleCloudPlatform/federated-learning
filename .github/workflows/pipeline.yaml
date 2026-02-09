@@ -48,10 +48,11 @@ jobs:
           # super-linter needs the full git history to get the
           # list of files that changed across commits
           fetch-depth: 0
+          persist-credentials: false
       - name: Load super-linter configuration
         run: cat config/lint/super-linter.env >> "$GITHUB_ENV"
       - name: Super-Linter
-        uses: super-linter/super-linter@v7.2.1
+        uses: super-linter/super-linter@v8.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -72,12 +73,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
       - name: Load super-linter configuration
         run: cat config/lint/super-linter.env >> "$GITHUB_ENV"
       - name: Load super-linter fix mode configuration
         run: cat config/lint/super-linter-fix-mode.env >> "$GITHUB_ENV"
       - name: Super-Linter
-        uses: super-linter/super-linter@v7.2.1
+        uses: super-linter/super-linter@v8.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit and push linting fixes
