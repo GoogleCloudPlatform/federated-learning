@@ -92,7 +92,6 @@ and configure the following infrastructure components:
 - A
   [private GKE cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept)
   that helps you:
-
   - Isolate cluster nodes from the internet.
   - Limit exposure of your cluster nodes and control plane to the internet.
   - Use shielded GKE nodes.
@@ -130,7 +129,6 @@ and configure the following infrastructure components:
   traversing the internet.
 
 - [Cloud Identity and Access Management (IAM) service accounts](https://cloud.google.com/iam/docs/understanding-service-accounts):
-
   - A service account for GKE nodes in each GKE node pool with only the
     [minimum amount of permissions needed by GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa).
   - A service account for workloads in each tenant. These service don't have any
@@ -200,7 +198,6 @@ controls to each Kubernetes namespace:
    ```
 
    Where:
-
    - `<CONFIG_PROJECT_ID>` is the Google Cloud project ID.
 
 1. Configure the ID of the Google Cloud project where you want to deploy the
@@ -212,7 +209,6 @@ controls to each Kubernetes namespace:
    ```
 
    Where:
-
    - `<PROJECT_ID>` is the Google Cloud project ID. Can be different from
      `<CONFIG_PROJECT_ID>`.
 
@@ -229,7 +225,6 @@ controls to each Kubernetes namespace:
    ```
 
    Where:
-
    - `<RESOURCE_NAME_PREFIX>` and `<PLATFORM_NAME>` are strings that compose the
      unique identifier to append to the name of all the resources in the
      reference architecture.
@@ -264,8 +259,7 @@ Federated computation in FL use cases is typically defined as either:
 - Cross-device computation is a type of federated computation where the
   participating members are end user devices such as mobile phones and vehicles.
   The number of members can reach up to a scale of millions or even tens of
-  millions. You can deploy a cross-device infrastructure by following
-  [this README.md](./terraform/cross-device/README.md)
+  millions.
 
 ## Configure the reference architecture
 

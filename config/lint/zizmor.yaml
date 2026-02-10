@@ -1,0 +1,12 @@
+---
+rules:
+  dependabot-cooldown:
+    disable: true
+  unpinned-uses:
+    ignore:
+      - dependabot.yaml
+      - lint.yaml
+      - lint-commit.yaml
+      - pipeline.yaml
+      - preview-release-notes.yaml
+      - release.yaml
