@@ -1,0 +1,3 @@
+[codespell]
+check-hidden =
+skip = */package-lock.json,*.log,super-linter-output,.git,*.svg
