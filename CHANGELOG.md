@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.1](https://github.com/GoogleCloudPlatform/federated-learning/compare/v3.0.0...v3.0.1) (2026-02-13)
+
+
+### 🧰 Maintenance
+
+* **deps:** bump brace-expansion in /container-images/ci-tooling ([#617](https://github.com/GoogleCloudPlatform/federated-learning/issues/617)) ([00b477e](https://github.com/GoogleCloudPlatform/federated-learning/commit/00b477e412f41a83c57c2658475bcbd62057eeff))
+* **deps:** bump diff in /container-images/ci-tooling ([#631](https://github.com/GoogleCloudPlatform/federated-learning/issues/631)) ([6168355](https://github.com/GoogleCloudPlatform/federated-learning/commit/61683552a7f84fb5f682a7b2b5222f88d5b8c8ea))
+* **deps:** bump js-yaml from 4.1.0 to 4.1.1 in /container-images/ci-tooling ([#623](https://github.com/GoogleCloudPlatform/federated-learning/issues/623)) ([b4b7728](https://github.com/GoogleCloudPlatform/federated-learning/commit/b4b772892a97670df81ac4df2c56538906ce5f1d))
+* **deps:** bump node ([#603](https://github.com/GoogleCloudPlatform/federated-learning/issues/603)) ([b9cc15f](https://github.com/GoogleCloudPlatform/federated-learning/commit/b9cc15f4bb1135f5ee0e66f9e22118abf07e5ca9))
+* **deps:** bump node ([#632](https://github.com/GoogleCloudPlatform/federated-learning/issues/632)) ([db698ac](https://github.com/GoogleCloudPlatform/federated-learning/commit/db698ac17076dd137df592060c897b8311a663e9))
+* **deps:** bump stefanzweifel/git-auto-commit-action ([#625](https://github.com/GoogleCloudPlatform/federated-learning/issues/625)) ([9b06195](https://github.com/GoogleCloudPlatform/federated-learning/commit/9b061959300c86500be7dd4119cbbaedd377019a))
+* **deps:** bump super-linter/super-linter in /.github/workflows ([#629](https://github.com/GoogleCloudPlatform/federated-learning/issues/629)) ([122ca61](https://github.com/GoogleCloudPlatform/federated-learning/commit/122ca612dd55c1117ce5e32c380a0d026ca79087))
+* **deps:** bump the dev-ci-tools group across 1 directory with 2 updates ([#627](https://github.com/GoogleCloudPlatform/federated-learning/issues/627)) ([c2df966](https://github.com/GoogleCloudPlatform/federated-learning/commit/c2df966364f28866a49ebedaa5abf6d6be10a2d1))
+* **deps:** bump the dev-ci-tools group across 1 directory with 3 updates ([#615](https://github.com/GoogleCloudPlatform/federated-learning/issues/615)) ([ef2c998](https://github.com/GoogleCloudPlatform/federated-learning/commit/ef2c99877fd4fc8c716a9db59a037eff51dc3ed2))
+* ignore generated changelog when linting ([#630](https://github.com/GoogleCloudPlatform/federated-learning/issues/630)) ([72de1de](https://github.com/GoogleCloudPlatform/federated-learning/commit/72de1dec32e65b185eac9b909f29e7e9b45ad30c))
+
 ## [3.0.0](https://github.com/GoogleCloudPlatform/federated-learning/compare/2.0.0...v3.0.0) (2026-01-16)
 
 ### ⚠ BREAKING CHANGES
